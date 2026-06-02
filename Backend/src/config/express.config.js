@@ -22,7 +22,6 @@ app.use("/health", (req, res) => {
   });
 });
 
-app.use("/api", router);
 
 app.use((req, res, next)=>{
   next({

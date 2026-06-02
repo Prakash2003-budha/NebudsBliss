@@ -1,6 +1,29 @@
+.header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;           
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
 
-.header{
-    height: 50px;
-    width: 100%;
-    background-color: bisque;
+.logo {
+  height: 40px; 
+  width: auto;
+  display: block;
+}
+
+.nav {
+  display: flex;
+  gap: 1.5rem; 
+}
+
+.navLink {
+  text-decoration: none;
+  color: #333333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.navLink:hover {
+  color: #0070f3; 
 }
