@@ -34,7 +34,7 @@ class AuthService{
     }  
     publicUserProfile = (userObj)=>{
         return{
-            name:userObj.fullName,
+            fullName:userObj.fullName,
             email:userObj.email,
             role:userObj.role,
             address:userObj.address,
@@ -64,7 +64,7 @@ class AuthService{
         }
     }
 
-    notifyActivationEmail = async ({name, email, activationToken})=>{
+    notifyActivationEmail = async ({fullName, email, activationToken})=>{
         try{
              let activationUrl = `${AppConfig.backend_Url}/auth/activater/${activationToken}`;
             let msg = `
@@ -74,7 +74,7 @@ class AuthService{
                         <h2 style="color: #ffffff; margin: 0; font-size: 24px;">Resturent Management System</h2>
                     </div>
                     <div style="padding: 30px; color: #333333; line-height: 1.6;">
-                        <p style="font-size: 18px; margin-top: 0;">Hi <strong>${name}</strong>,</p>
+                        <p style="font-size: 18px; margin-top: 0;">Hi <strong>${fullName}</strong>,</p>
                         <p>Thank you for registering! Your account has been created successfully with the username: <br/>
                            <span style="color: #2c3e50; font-weight: bold;">${email}</span>
                         </p>
@@ -108,7 +108,7 @@ class AuthService{
         }
     }
 
-    notifyForgotPassword = async ({name, email, resetToken}) => {
+    notifyForgotPassword = async ({fullName, email, resetToken}) => {
     try {
 
         let resetUrl = `${AppConfig.backend_Url}/auth/verify-token/${resetToken}`;
@@ -120,7 +120,7 @@ class AuthService{
                     <h2 style="color: #ffffff; margin: 0; font-size: 24px;">Restaurant Management System</h2>
                 </div>
                 <div style="padding: 30px; color: #333333; line-height: 1.6;">
-                    <p style="font-size: 18px; margin-top: 0;">Hi <strong>${name}</strong>,</p>
+                    <p style="font-size: 18px; margin-top: 0;">Hi <strong>${fullName}</strong>,</p>
                     <p>We received a request to reset the password for your account associated with: <br/>
                        <span style="color: #2c3e50; font-weight: bold;">${email}</span>
                     </p>

@@ -18,10 +18,11 @@ export default function Header() {
         <div className={styles.categoryDropdown}>
           <span className={styles.navLink}>Categories</span>
           <div className={styles.dropdownMenu}>
-            <Link to="/category/earbuds" className={styles.dropdownItem}>Earbuds</Link>
-            <Link to="/category/powerbank" className={styles.dropdownItem}>Powerbanks</Link>
-            <Link to="/category/camera" className={styles.dropdownItem}>Cameras</Link>
+            <Link to="/category/earbuds" className={styles.dropdownItem}></Link>
+            <Link to="/category/powerbanks" className={styles.dropdownItem}>Powerbank</Link>
+            <Link to="/category/cameras" className={styles.dropdownItem}>Camera</Link>
             <Link to="/category/accessories" className={styles.dropdownItem}>Accessories</Link>
+            <Link to="/category/fans" className={styles.dropdownItem}>Fan</Link>
           </div>
         </div>
         <Link to="/AboutUs" className={styles.navLink}>About Us</Link>
@@ -30,7 +31,7 @@ export default function Header() {
       <div className={styles.signButton}>
         {/* 3. navigate() will now work perfectly */}
         <button className={styles.SignInButton} onClick={() => navigate('/LoginPage')}>Sign In</button>
-        <button className={styles.SignUpButton}>Sign Up</button>
+        <button className={styles.SignUpButton}onClick={() => navigate('/SignUp')}>Sign Up</button>
       </div>
     </header>
   );

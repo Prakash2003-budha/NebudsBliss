@@ -9,7 +9,7 @@ const CloudinaryConfig = {
 export default CloudinaryConfig;
 export const DBConfig = {
     mongodbUrl: process.env.MONGODB_URL,
-    dbName: process.env.MONGO_DB_NAME || "Prakash"
+    dbName: process.env.MONGO_DB_NAME || "NebudsBliss"
 };
 export const UserRole = {
     ADMIN: "Admin",
@@ -22,9 +22,9 @@ export const Gender = {
     OTHER: "Other"
 };
 export const Category = {
-    Cake: 'Cake',
-    BREAD: 'Bread',
-    PASTERY: 'Pastry',
+    FAN: 'Fan',
+    BREAD: 'Earbuds',
+    POWERBANK: 'PowerBank',
     COOKIE: 'Cookie',
     DRINKS: 'Drinks'
 };

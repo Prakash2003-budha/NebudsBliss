@@ -3,6 +3,8 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import multer from 'multer'; // <-- ADDED: Needed for your error handler below
 import router from "./router.config.js";
+import './db.config.js'
+
 
 const app = express();
 
