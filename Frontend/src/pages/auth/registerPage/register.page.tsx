@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import styles from "./register.page.module.scss";
 import logo from "../../../img/logo/logo.transparent.png";
 
@@ -10,7 +12,12 @@ import phoneIcon from "../../../img/icons/phone.png";
 import locationIcon from "../../../img/icons/location.png";
 import calendarIcon from "../../../img/icons/calender.png";
 
+import { API_ENDPOINTS} from "../../../constants/constants";
+
 const SignUpPage: React.FC = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); // To disable button during submit
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -33,11 +40,61 @@ const SignUpPage: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Because you have an image file, you will eventually need to 
-    // submit this using FormData instead of standard JSON!
-    console.log("Registering with:", formData);
+    setLoading(true);
+    
+    // 1. Package the data using FormData so the image file is sent correctly
+    const submitData = new FormData();
+    submitData.append("fullName", formData.fullName);
+    submitData.append("email", formData.email);
+    submitData.append("password", formData.password);
+    submitData.append("dob", formData.dob);
+    submitData.append("gender", formData.gender);
+    submitData.append("phone", formData.phone);
+    submitData.append("address", formData.address);
+
+    // Only append the image if the user selected one
+    if (formData.image) {
+      submitData.append("image", formData.image);
+    }
+
+    try {
+      // 2. Send POST request to backend
+      // IMPORTANT: Update this URL to match your actual backend endpoint!
+      const response = await axios.post(API_ENDPOINTS.REGISTER, submitData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Registration successful:", response.data);
+      
+      // Optional: Add a success alert or toast notification here
+      alert("Account created successfully! Please log in.");
+      
+      // 3. Redirect to the login page
+      navigate("/loginpage");
+
+    } catch (error: unknown) {
+      console.error("Registration failed:", error);
+      
+      // Check if the error came from the Axios request
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message || "Registration failed. Please try again.");
+      } 
+      // Check if it's a standard JavaScript error
+      else if (error instanceof Error) {
+        alert(error.message);
+      } 
+      // Fallback for anything else
+      else {
+        alert("An unexpected error occurred.");
+      }
+      
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -192,8 +249,8 @@ const SignUpPage: React.FC = () => {
             </div>
           </div>
 
-          <button type="submit" className={styles.submitBtn}>
-            CREATE ACCOUNT
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? "CREATING..." : "CREATE ACCOUNT"}
           </button>
         </form>
 

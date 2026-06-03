@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
-import cloudianarySvc from "../../services/cloudinary.service.js";
-import { randomStringGenerator } from "../../utils/helpers.js";
+import cloudianarySvc from "../../services/cloudinary.services.js";
+import { randomStringGenerator } from "../../utils/helper.js";
 import {AppConfig, SMTPConfig} from "../../config/constants.js"
-import UserModel from "../User/user.model.js";
+import UserModel from "../userModel/user.model.js";
 import emailSvc from "../../services/email.service.js";
 class AuthService{
     userRegisterDataTrans= async (req, res) => {
