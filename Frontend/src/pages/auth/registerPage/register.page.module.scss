@@ -1,0 +1,223 @@
+// Colors - Matching your Nebuds Bliss brand variables
+$bg-color: #fff;
+$card-bg: #1c1c1e;
+$text-color: #aaaaaa;
+$title-color: #ffffff;
+$accent-color: #3ce3ff;
+$input-bg: #262629;
+$border-color: #333333;
+
+.signupWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-color;
+  padding: 2rem 1.5rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.signupCard {
+  width: 100%;
+  max-width: 650px; /* Made wider than login to fit the grid */
+  background-color: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  padding: 2.5rem 2.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 2rem;
+  width: 100%;
+
+  .logo {
+    max-height: 42px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 1.5rem;
+  }
+
+  .title {
+    color: $title-color;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .subtitle {
+    color: $text-color;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* The new 2-column grid for the schema fields */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr; /* Stacks to 1 column on mobile */
+  }
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    color: $title-color;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .inputFieldWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      position: absolute;
+      left: 1rem;
+      width: 18px;
+      height: 18px;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.8rem 1rem 0.8rem 2.5rem;
+      background-color: $input-bg;
+      border: 1px solid $border-color;
+      border-radius: 6px;
+      color: $title-color;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $accent-color;
+        box-shadow: 0 0 0 2px rgba($accent-color, 0.15);
+      }
+
+      &::placeholder {
+        color: #555555;
+      }
+    }
+
+    /* Specific fixes for select/date/file inputs */
+    select.selectField {
+      padding-left: 1rem; /* No icon on select */
+      appearance: none;
+      cursor: pointer;
+    }
+
+    input[type="date"] {
+      padding-left: 2.5rem;
+      color: $title-color;
+      
+      &::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        cursor: pointer;
+      }
+    }
+
+    input.fileInput {
+      padding: 0.7rem 1rem;
+      padding-left: 1rem; /* No icon on file upload */
+      font-size: 0.85rem;
+      cursor: pointer;
+
+      &::file-selector-button {
+        background-color: $border-color;
+        color: $title-color;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        margin-right: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #444;
+        }
+      }
+    }
+  }
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: $accent-color;
+  border: none;
+  border-radius: 6px;
+  color: #000000;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, filter 0.2s ease;
+  margin-top: 1rem;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin: 1.5rem 0;
+  color: #555555;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid $border-color;
+  }
+
+  span {
+    padding: 0 0.75rem;
+  }
+}
+
+.loginPrompt {
+  font-size: 0.85rem;
+  color: $text-color;
+  margin: 0;
+
+  a {
+    color: $accent-color;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
