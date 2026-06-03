@@ -1,18 +1,22 @@
-import express from "express"
+import express from "express";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
-import  router from "./router.config.js"
+import multer from 'multer'; // <-- ADDED: Needed for your error handler below
+import router from "./router.config.js";
 
 const app = express();
 
-app.use(express.json())
+// 1. ADDED: You MUST use cors here so the frontend can talk to the backend!
+app.use(cors({
+  origin: 'http://localhost:5173', // Your Vite frontend URL
+  credentials: true 
+}));
 
-app.use(express.urlencoded({
-  extended:false
-}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-app.use(cookieParser ())
-
+// Health Check Route
 app.use("/health", (req, res) => {
   res.json({
     data: "health",
@@ -22,18 +26,22 @@ app.use("/health", (req, res) => {
   });
 });
 
+// 2. ADDED: Attach your main router so your auth routes actually work!
+// If your frontend sends requests to "/api/auth/...", change "/" to "/api" below.
+app.use("/", router);
 
+// 404 Route Handler (Runs if no other route matches)
 app.use((req, res, next)=>{
   next({
-    code:404,
-    message:"Route not found",
-    status:"Route_error"
-  })
-})
+    code: 404,
+    message: "Route not found",
+    status: "Route_error"
+  });
+});
 
-
+// Global Error Handler
 app.use((error, req, res, next) => {
-  console.log(error)
+  console.log(error);
 
   let statusCode = 500;
   let message = error.message || "Internal Server Error";
@@ -41,21 +49,21 @@ app.use((error, req, res, next) => {
   let errorDetail = error.error || null;
 
   if (error.name === "MongoServerError") {
-  statusCode = 422; 
-  status = "DATABASE_ERROR";
-
-  if (error.code === 11000) {
-    const key = Object.keys(error.keyPattern)[0]; 
     statusCode = 422; 
-    errorDetail = {
-      [key]: `${key} has already been used`
-    };
-    message = "Unique Validation failed";
-    status = "VALIDATION_ERROR";
-  }
-}
+    status = "DATABASE_ERROR";
 
-  // Multer errors
+    if (error.code === 11000) {
+      const key = Object.keys(error.keyPattern)[0]; 
+      statusCode = 422; 
+      errorDetail = {
+        [key]: `${key} has already been used`
+      };
+      message = "Unique Validation failed";
+      status = "VALIDATION_ERROR";
+    }
+  }
+
+  // Multer errors (This works safely now because multer is imported at the top!)
   if (error instanceof multer.MulterError) {
     statusCode = 400;
 
@@ -70,8 +78,9 @@ app.use((error, req, res, next) => {
   }
 
   if (typeof error.code === "number" && error.code >= 100 && error.code < 600) {
-  statusCode = error.code;
-}
+    statusCode = error.code;
+  }
+  
   res.status(statusCode).json({
     error: errorDetail,
     message,
@@ -79,6 +88,5 @@ app.use((error, req, res, next) => {
     option: null
   });
 });
-
 
 export default app;
