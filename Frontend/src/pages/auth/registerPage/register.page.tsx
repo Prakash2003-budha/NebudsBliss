@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./register.page.module.scss";
@@ -118,7 +119,9 @@ const SignUpPage: React.FC = () => {
       <main className={styles.signupCard}>
         
         <header className={styles.headerSection}>
-          <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
+          <Link to="/">
+            <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
+          </Link>
           <h1 className={styles.title}>Create Account</h1>
           <p className={styles.subtitle}>Join Nebuds Bliss today</p>
         </header>

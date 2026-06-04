@@ -1,6 +1,4 @@
-
-
-
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./login.page.module.scss";
 import logo from "../../../img/logo/logo.transparent.png";
@@ -22,8 +20,12 @@ const LoginPage: React.FC = () => {
       <main className={styles.loginCard}>
         
         <header className={styles.headerSection}>
-          <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
-          <h1 className={styles.title}>Welcome Back</h1>
+          <Link to="/">
+            <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
+          </Link>
+            <h1 className={styles.title}>Welcome Back</h1>
+          
+          
           <p className={styles.subtitle}>Sign in to your account</p>
         </header>
 
@@ -58,7 +60,7 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          <a href="/forgot-password" className={styles.forgotPassword}>
+          <a href="/Forgot-Password" className={styles.forgotPassword}>
             Forgot Password?
           </a>
 
