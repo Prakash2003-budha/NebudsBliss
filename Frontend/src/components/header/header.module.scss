@@ -2,6 +2,7 @@ $navbar-font: 'Montserrat', sans-serif;
 $main-color: #0261fe;
 $secoundary-color: #3ce3ff;
 $dark-text: #222222;
+$breakpoint-mobile: 768px;
 
 .header {
   width: 100%;
@@ -28,6 +29,27 @@ $dark-text: #222222;
     }
   }
 
+  /* Hamburger Toggle Styling */
+  .menuToggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1005;
+
+    .hamburgerIcon {
+      width: 30px;
+      height: auto;
+      display: block;
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      display: block;
+    }
+  }
+
+  /* Navigation Layout */
   .nav {
     display: flex;
     align-items: center;
@@ -73,6 +95,7 @@ $dark-text: #222222;
       flex-direction: column;
       opacity: 0;
       visibility: hidden;
+      transform: translateY(10px);
       transition: opacity 0.3s ease, transform 0.2s ease, visibility 0.2s ease;
 
       .dropdownItem {
@@ -89,12 +112,52 @@ $dark-text: #222222;
         }
       }
     }
+
+    /* Mobile Responsive Transformation */
+    @media (max-width: $breakpoint-mobile) {
+      position: fixed;
+      top: 0;
+      right: -100%; 
+      width: 280px;
+      height: 100vh;
+      background-color: #ffffff;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 90px 2rem 2rem 2rem;
+      gap: 1.5rem;
+      transition: right 0.3s ease-in-out;
+
+      &.open {
+        right: 0;
+      }
+
+      .categoryDropdown {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+
+        &:hover .dropdownMenu {
+          position: static;
+          opacity: 1;
+          visibility: visible;
+          transform: none;
+          box-shadow: none;
+          padding-left: 15px;
+        }
+      }
+    }
   }
 
+  /* Desktop Sign In Buttons */
   .signButton {
     display: flex;
     align-items: center;
-    gap: 5px; 
+    gap: 10px; 
+
+    @media (max-width: $breakpoint-mobile) {
+      display: none; /* Hide desktop variations on mobile viewports */
+    }
 
     button {
       border: none;
@@ -104,31 +167,102 @@ $dark-text: #222222;
       font-size: 0.9rem;
       cursor: pointer;
       font-family: $navbar-font;
-      
     }
 
     .SignInButton {
       background-color: $main-color;
       color: white;
-      transition: background-color 0.4s ease, transform 0.1s ease;     
-
-      &:hover {
-        background-color: $secoundary-color;
-      }
-      &:active {
-        transform: scale(0.98); 
-      }
+      transition: background-color 0.3s ease;     
+      &:hover { background-color: $secoundary-color; }
     }
 
     .SignUpButton {
       background-color: transparent;
       color: $dark-text;
-      transition: background-color 0.4s ease, color 0.2s ease, transform 0.1s ease;
-
-      &:hover {
-        background-color: $dark-text;
-        color: #ffffff;
-      }
+      transition: background-color 0.3s ease, color 0.3s ease;
+      &:hover { background-color: $dark-text; color: #ffffff; }
     }
+  }
+
+  /* Mobile Sign Buttons Container */
+  .mobileSignButton {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+
+    @media (max-width: $breakpoint-mobile) {
+      display: flex;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .SignInButton { background-color: $main-color; color: white; }
+    .SignUpButton { border: 1px solid $dark-text; background: transparent; color: $dark-text; }
+  }
+}
+
+/* --- MODAL UI DIALOG STYLES --- */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modalContent {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 8px;
+  width: 420px;
+  max-width: 90%;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  text-align: center;
+  font-family: $navbar-font;
+
+  h3 { margin-bottom: 25px; font-size: 1.5rem; color: $dark-text; }
+
+  .closeBtn {
+    position: absolute; top: 15px; right: 20px;
+    font-size: 28px; border: none; background: none; cursor: pointer; color: #999;
+    &:hover { color: $dark-text; }
+  }
+
+  .inputGroup {
+    display: flex; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 15px;
+    
+    .countryCode { background-color: #f5f5f5; padding: 12px; font-size: 0.9rem; border-right: 1px solid #ddd; color: #666; }
+    input { border: none; outline: none; padding: 12px; width: 100%; font-size: 0.9rem; }
+  }
+
+  .termsGroup {
+    display: flex; gap: 8px; text-align: left; margin-bottom: 20px;
+    input { margin-top: 4px; }
+    label { font-size: 0.75rem; color: #666; line-height: 1.4; a { color: $main-color; text-decoration: none; }}
+  }
+
+  .btn {
+    width: 100%; padding: 12px; font-weight: 600; border-radius: 4px; border: none; margin-bottom: 10px; cursor: pointer; font-size: 0.95rem;
+  }
+  .btnWhatsapp { background-color: #f26a21; color: white; &:hover { background-color: #d95914; } } // Daraz Orange
+  .btnSms { background-color: #ffffff; color: #f26a21; border: 1px solid #f26a21; &:hover { background-color: #fff4ee; } }
+
+  .divider { margin: 20px 0; font-size: 0.8rem; color: #aaa; position: relative; }
+
+  .socialGroup {
+    display: flex; gap: 10px;
+    .btnSocial { flex: 1; padding: 10px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer; font-weight: 500; font-size: 0.85rem; &:hover { background-color: #f9f9f9; } }
   }
 }
