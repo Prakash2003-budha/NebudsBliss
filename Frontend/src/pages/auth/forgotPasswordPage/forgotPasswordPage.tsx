@@ -30,11 +30,9 @@ const ForgotPassword: React.FC = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // Success! Tell the user to check their email.
         setMessage({ type: "success", text: "If that email is in our system, a reset link has been sent." });
-        setEmail(""); // Optional: clear the input
+        setEmail(""); 
       } else {
-        // Backend returned an error (e.g., 400 or 404)
         setMessage({ type: "error", text: data.message || "Failed to send reset link. Please try again." });
       }
     } catch {
@@ -76,7 +74,6 @@ const ForgotPassword: React.FC = () => {
             </div>
           </div>
 
-          {/* Display Success or Error Messages */}
           {message.type && (
             <div style={{ 
               color: message.type === "success" ? "#4ade80" : "#f87171", 

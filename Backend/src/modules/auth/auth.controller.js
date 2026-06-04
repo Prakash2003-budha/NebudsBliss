@@ -137,12 +137,20 @@ class AuthController {
             const { email } = req.body;
             const user = await autSvc.getSingleUserByFilter({ email: email });
 
+            // 1. Check if user exists
             if (!user) {
                 return next({
                     code: 400,
                     detail: { email: "User email has not been registered yet" },
                     message: "User not found",
                     status: "USER_NOT_FOUND"
+                });
+            }
+            if (user.status === false) {
+                return next({
+                    code: 403, 
+                    message: "Your account is not activated. Please verify your email before resetting your password.",
+                    status: "ACCOUNT_NOT_ACTIVATED"
                 });
             }
 
@@ -152,8 +160,9 @@ class AuthController {
             };
 
             await autSvc.updateSingleUserByFilter({ email: email }, updateData);
+            
             await autSvc.notifyForgotPassword({
-                name: user.fullName || 'User',
+                fullName: user.fullName || 'User', 
                 email: user.email,
                 resetToken: updateData.forgotPasswordToken
             });
@@ -204,8 +213,7 @@ class AuthController {
                 expireToken: new Date(Date.now() + 30 * 60 * 1000)
             });
 
-            // FIX: removed the second 'return res.redirect(redirectUrl)' which crashed the server
-            // because 'redirectUrl' was undefined
+
             res.redirect(`${AppConfig.frontend_Url}/reset-password?token=${verifyToken}`);
 
         } catch (exception) {
