@@ -7,18 +7,15 @@ import { API_ENDPOINTS } from "../../../constants/constants";
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState("");
-  
-  // New states for handling the API request UI
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error" | null; text: string }>({ type: null, text: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setMessage({ type: null, text: "" }); // Reset message on new submission
+    setMessage({ type: null, text: "" }); 
 
     try {
-      // ✅ Fixed the stray parenthesis here
       const response = await fetch(API_ENDPOINTS.FORGETPASSWORD, {
         method: "POST",
         headers: {
@@ -27,16 +24,19 @@ const ForgotPassword: React.FC = () => {
         body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (response.ok) {
         setMessage({ type: "success", text: "If that email is in our system, a reset link has been sent." });
         setEmail(""); 
       } else {
-        setMessage({ type: "error", text: data.message || "Failed to send reset link. Please try again." });
+        if (data && data.status === "ACCOUNT_NOT_ACTIVATED") {
+            setMessage({ type: "error", text: "Your account is not activated. Please verify your email first." });
+        } else {
+            setMessage({ type: "error", text: data?.message || "Failed to send reset link. Please try again." });
+        }
       }
     } catch {
-      // Network error (e.g., backend is down)
       setMessage({ type: "error", text: "Cannot connect to the server right now." });
     } finally {
       setIsLoading(false);
@@ -51,7 +51,6 @@ const ForgotPassword: React.FC = () => {
             <Link to="/">
                 <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />            
             </Link>
-          
           <h1 className={styles.title}>Reset Password</h1>
           <p className={styles.subtitle}>Enter your email to receive a reset link</p>
         </header>
