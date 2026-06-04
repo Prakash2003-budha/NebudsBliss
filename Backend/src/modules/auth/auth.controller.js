@@ -223,13 +223,24 @@ class AuthController {
     resetPassword = async (req, res, next) => {
         try {
             const { token, password } = req.body;
-            const user = await autSvc.getSingleUserByFilter({ forgotPasswordToken: token })
+            
+            // NOTE: We MUST include "+password" in the select fields here, 
+            // otherwise user.password might be hidden by your mongoose schema defaults!
+            const user = await autSvc.getSingleUserByFilter({ forgotPasswordToken: token }, "+password")
+            
             if (!user) {
                 return next({
-                    code: 402,
+                    code: 422, // Switched to 422 Unprocessable Entity (standard for invalid tokens)
                     message: "Token does not exist or already used",
                     status: "TOKEN_NOT_FOUND"
                 })
+            }
+            if (bcrypt.compareSync(password, user.password)) {
+                return next({
+                    code: 400, // Bad Request
+                    message: "Your new password cannot be exactly the same as your old password. Please choose a different password.",
+                    status: "PASSWORD_UNCHANGED"
+                });
             }
             const data = {
                 forgotPasswordToken: null,
@@ -237,8 +248,10 @@ class AuthController {
                 password: bcrypt.hashSync(password, 12),
                 status: true
             }
+            
             await autSvc.updateSingleUserByFilter({ _id: user._id }, data)
-            res.status(201).json({
+            
+            res.status(200).json({ // Changed to 200 OK (201 is usually for resource creation)
                 data: null,
                 message: "Your password has been reset successfully. Please log in to continue",
                 status: "PASSWORD_RESET_SUCCESSFUL",
