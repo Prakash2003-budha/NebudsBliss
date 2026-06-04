@@ -4,6 +4,7 @@ import styles from "./login.page.module.scss";
 import logo from "../../../img/logo/logo.transparent.png";
 import gmail from "../../../img/icons/gmailIcon.png";
 import passwordIcon from "../../../img/icons/password.png";
+import { API_ENDPOINTS } from "../../../constants/constants";
 // import { API_ENDPOINTS } from "../../../constants/constants";
 
 const LoginPage: React.FC = () => {
@@ -21,7 +22,7 @@ const LoginPage: React.FC = () => {
     setErrorMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

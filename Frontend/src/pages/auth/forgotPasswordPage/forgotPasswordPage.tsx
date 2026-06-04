@@ -27,7 +27,7 @@ const ForgotPassword: React.FC = () => {
       const data = await response.json().catch(() => null);
 
       if (response.ok) {
-        setMessage({ type: "success", text: "If that email is in our system, a reset link has been sent." });
+        setMessage({ type: "success", text: "A reset link has been sent to your gmail account to reset your password." });
         setEmail(""); 
       } else {
         if (data && data.status === "ACCOUNT_NOT_ACTIVATED") {
@@ -37,6 +37,7 @@ const ForgotPassword: React.FC = () => {
         }
       }
     } catch {
+        console.log("erroe here")
       setMessage({ type: "error", text: "Cannot connect to the server right now." });
     } finally {
       setIsLoading(false);

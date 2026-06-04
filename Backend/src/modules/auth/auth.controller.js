@@ -136,7 +136,6 @@ class AuthController {
         try {
             const { email } = req.body;
             const user = await autSvc.getSingleUserByFilter({ email: email });
-
             // 1. Check if user exists
             if (!user) {
                 return next({
