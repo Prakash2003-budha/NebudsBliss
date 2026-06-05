@@ -1,11 +1,17 @@
 // Variables
-$primary-color: #f26a21; // Brand Accent Orange
+$primary-color: #085ff6;
 $dark-text: #222222;
 $light-bg: #f8f9fa;
 $border-color: #eeeeee;
-$breakpoint-mobile: 768px; // Viewport width below which sidebar activates
+$secoundary-color: #3ce3ff;
+$breakpoint-mobile: 768px;
+
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .header {
+  font-family: $font-primary;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,10 +19,9 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
   background-color: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
-  top: 0;
   z-index: 100;
   box-sizing: border-box;
-
+  
   .logoContainer {
     display: flex;
     align-items: center;
@@ -28,24 +33,24 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
   }
 }
 
-// Desktop Main Navigation Style definitions
 .nav {
   display: flex;
   align-items: center;
   gap: 2rem;
 
   @media (max-width: $breakpoint-mobile) {
-    display: none; // Hides entire desktop nav layout on smaller layouts
+    display: none; 
   }
 }
 
 .navLink {
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 500; // Dropped slightly for a cleaner look
   color: $dark-text;
   text-decoration: none;
   cursor: pointer;
   padding: 6px 0;
+  letter-spacing: 0.3px; // Adds a touch of breathing room
   transition: color 0.2s ease;
 
   &:hover {
@@ -53,7 +58,6 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
   }
 }
 
-// Category Hover Dropdown Panel (Desktop Only)
 .categoryDropdown {
   position: relative;
 
@@ -68,27 +72,25 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
 
 .dropdownMenu {
   position: absolute;
-  top: 100%;
-  left: 50%;
   transform: translateX(-50%) translateY(8px);
   background: #ffffff;
   min-width: 160px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px; 
   padding: 0.5rem 0;
   display: flex;
   flex-direction: column;
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;
-  z-index: 110;
+  z-index: 120;
 
   .dropdownItem {
     padding: 10px 16px;
     text-decoration: none;
     color: $dark-text;
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 400; // Kept light for dropdown elegance
     transition: background 0.15s, color 0.15s;
 
     &:hover {
@@ -98,20 +100,21 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
   }
 }
 
-// Action Button Containers (Desktop Layouts)
 .signButton {
   display: flex;
   align-items: center;
   gap: 12px;
 
   @media (max-width: $breakpoint-mobile) {
-    display: none; // Hides them from the original flex row positioning
+    display: none; 
   }
 }
 
 .SignInButton, .SignUpButton {
+  font-family: inherit; // Ensures buttons grab the Outfit font
   font-size: 0.9rem;
   font-weight: 600;
+  letter-spacing: 0.5px; // Extra spacing makes buttons look premium
   padding: 8px 20px;
   border-radius: 6px;
   cursor: pointer;
@@ -122,38 +125,36 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
 .SignInButton {
   background-color: $primary-color;
   color: #ffffff;
-  &:hover { background-color: darken($primary-color, 6%); }
+  &:hover { background-color: $secoundary-color; }
 }
 
 .SignUpButton {
   background-color: transparent;
   color: $dark-text;
-  border: 1px solid #cccccc;
+  border: 1px solid #e0e0e0; // Softened the border color slightly
   &:hover { background-color: $dark-text; color: #ffffff; border-color: $dark-text; }
 }
 
-// Mobile Hamburger Icon Action Button (Hidden on Desktop)
 .hamburgerMenu {
   display: none;
   background: none;
   border: none;
   color: $dark-text;
   cursor: pointer;
-  z-index: 200; // Mounts on top of sidebar drawers cleanly
+  z-index: 200; 
   padding: 4px;
 
   @media (max-width: $breakpoint-mobile) {
-    display: block; // Displays explicitly when screen hits constraints
+    display: block; 
   }
 }
 
-/* ── RESPONSIVE MOBILE SIDEBAR DRAWERS STYLES ── */
 .sidebarOverlay {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(1px);
+  backdrop-filter: blur(2px); // Increased blur slightly for depth
   z-index: 150;
   opacity: 0;
   visibility: hidden;
@@ -166,22 +167,23 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
 }
 
 .sidebarDrawer {
+  font-family: $font-primary;
   position: fixed;
   top: 0;
-  left: -280px; // Default off-canvas placement state
+  left: -280px; 
   width: 280px;
   height: 100vh;
   background-color: #ffffff;
-  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
   z-index: 160;
   display: flex;
   flex-direction: column;
-  padding: 60px 24px 30px 24px; // Top spacing accommodates back button placement bounds
+  padding: 60px 24px 30px 24px; 
   box-sizing: border-box;
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.sidebarOpen {
-    left: 0; // Slides onto viewport workspace cleanly
+    left: 0;
   }
 }
 
@@ -192,8 +194,9 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
 }
 
 .sidebarNavLink {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
   color: $dark-text;
   text-decoration: none;
   padding: 10px 0;
@@ -201,11 +204,11 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
 }
 
 .sidebarSectionHeading {
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-transform: uppercase;
-  color: #888888;
-  letter-spacing: 0.5px;
+  color: #a0a0a0; // Softened the heading color so it doesn't shout
+  letter-spacing: 1px;
   margin-top: 14px;
   margin-bottom: 6px;
 }
@@ -218,9 +221,9 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
   margin-bottom: 10px;
 
   .sidebarSubLink {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #555555;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #666666;
     text-decoration: none;
     padding: 8px 0;
     
@@ -229,14 +232,16 @@ $breakpoint-mobile: 768px; // Viewport width below which sidebar activates
 }
 
 .sidebarAuthButtons {
-  margin-top: auto; // Shoves Auth actions explicitly down toward structural baseline boundaries
+  margin-top: auto; 
   display: flex;
   flex-direction: column;
   gap: 12px;
 
   button {
+    font-family: inherit;
     width: 100%;
     padding: 12px;
     font-size: 0.95rem;
+    letter-spacing: 0.5px;
   }
 }
