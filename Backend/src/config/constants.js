@@ -25,15 +25,12 @@ export const Gender = {
     OTHER: "Other"
 };
 
-// Updated Category object
 export const Category = {
-    // Your original categories
     FAN: 'Fan',
     EARBUDS: 'Earbuds', 
     POWERBANK: 'PowerBank',
     COOKIE: 'Cookie',
     DRINKS: 'Drinks',
-    // Added standard e-commerce categories
     ELECTRONICS: 'Electronics',
     CLOTHING: 'Clothing',
     HOME: 'Home & Kitchen',
