@@ -1,14 +1,13 @@
-// Colors - Change these to match your theme
 $bg-color: #1a1a1a;
 $text-color: #aaaaaa;
 $title-color: #ffffff;
-$accent-color: #3ce3ff; // Brand/Hover color
+$accent-color: #3ce3ff;
 $border-color: #333333;
 
 .footer {
   background-color: $bg-color;
   color: $text-color;
-  padding: 4rem 2rem 2rem 2rem;
+  padding: 2rem 1rem 2rem 1rem;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   .container {
@@ -16,7 +15,7 @@ $border-color: #333333;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 3rem;
+    gap: 2rem;
 
     @media (min-width: 768px) {
       flex-direction: row;
@@ -29,15 +28,14 @@ $border-color: #333333;
     display: flex;
     flex-direction: column;
     gap: 1.2rem;
-    max-width: 320px;
+    max-width: 300px;
 
     @media (max-width: 767px) {
       align-items: center;
       text-align: center;
     }
-
     .logo {
-      max-height: 42px;
+      max-height: 40px;
       width: auto;
       object-fit: contain;
     }
@@ -70,17 +68,12 @@ $border-color: #333333;
         }
 
         &:hover {
-          transform: translateY(-2px);
-          
-          img {
-            filter: grayscale(0) brightness(1); // Restores original brand colors on hover
-          }
+          transform: translateY(+2px);
         }
       }
     }
   }
 
-  // Navigation Links Columns
   .linksSection {
     .title {
       color: $title-color;

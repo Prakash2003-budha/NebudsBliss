@@ -21,6 +21,9 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   position: sticky;
   z-index: 100;
   box-sizing: border-box;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0.5rem 1rem;
+  }
   
   .logoContainer {
     display: flex;
@@ -29,6 +32,9 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
       height: 40px;
       width: auto;
       display: block;
+      @media (max-width: $breakpoint-mobile) {
+        height: 30px;
+      }
     }
   }
 }
@@ -45,16 +51,17 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .navLink {
   font-size: 0.95rem;
-  font-weight: 500; // Dropped slightly for a cleaner look
+  font-weight: bold;
   color: $dark-text;
   text-decoration: none;
+
   cursor: pointer;
   padding: 6px 0;
   letter-spacing: 0.3px; // Adds a touch of breathing room
   transition: color 0.2s ease;
 
   &:hover {
-    color: $primary-color;
+    color: $secoundary-color;
   }
 }
 
@@ -72,9 +79,8 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .dropdownMenu {
   position: absolute;
-  transform: translateX(-50%) translateY(8px);
   background: #ffffff;
-  min-width: 160px;
+  min-width: 200px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border-radius: 8px; 
   padding: 0.5rem 0;
@@ -83,19 +89,18 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s ease;
-  z-index: 120;
+  margin-top: 30px;
 
   .dropdownItem {
     padding: 10px 16px;
     text-decoration: none;
     color: $dark-text;
     font-size: 0.9rem;
-    font-weight: 400; // Kept light for dropdown elegance
     transition: background 0.15s, color 0.15s;
 
     &:hover {
       background-color: $light-bg;
-      color: $primary-color;
+      color: $secoundary-color;
     }
   }
 }
@@ -111,10 +116,10 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .SignInButton, .SignUpButton {
-  font-family: inherit; // Ensures buttons grab the Outfit font
+  font-family: inherit; 
   font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.5px; // Extra spacing makes buttons look premium
+  letter-spacing: 0.5px; 
   padding: 8px 20px;
   border-radius: 6px;
   cursor: pointer;
@@ -168,11 +173,12 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .sidebarDrawer {
   font-family: $font-primary;
+  font-weight: bolder;
   position: fixed;
   top: 0;
   left: -280px; 
   width: 280px;
-  height: 100vh;
+  height: 100%;
   background-color: #ffffff;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
   z-index: 160;

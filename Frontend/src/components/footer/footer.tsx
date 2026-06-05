@@ -11,7 +11,6 @@ const Footer: React.FC = () => {
     return (
         <footer className={styles.footer}>
             <div className={styles.container}>
-                {/* Brand & Socials Section */}
                 <div className={styles.brandSection}>
                     <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
                     <p className={styles.description}>
