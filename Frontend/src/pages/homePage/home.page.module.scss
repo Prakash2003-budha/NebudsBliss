@@ -1,10 +1,182 @@
+// Variables
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #085ff6;
+$dark-text: #1a1a1a;
+$light-text: #666666;
+$bg-color: #ffffff;
+$light-gray: #f8f9fa;
+$border-color: #eaeaea;
 
+.container {
+  font-family: $font-primary;
+  background-color: $bg-color;
+  padding-bottom: 4rem;
 
-.container{
-    .slideposters{
-        height: 400px;
-        background-color: rgb(189, 182, 182);
-        margin-top: 10px;
-        margin-bottom: 10px;
+  // --- Hero Section ---
+  .heroSection {
+    height: 60vh;
+    min-height: 400px;
+    background-color: $light-gray; // Placeholder for a background image
+    border-radius: 16px;
+    margin: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    
+    // If you add a background image later, you can use:
+    // background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('your-image.jpg') center/cover;
+    // color: white;
+
+    .heroContent {
+      max-width: 600px;
+
+      h1 {
+        font-size: 3rem;
+        font-weight: 300;
+        letter-spacing: -0.5px;
+        color: $dark-text;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        font-size: 1.1rem;
+        color: $light-text;
+        margin-bottom: 2rem;
+        font-weight: 400;
+      }
+
+      .heroBtn {
+        background-color: $dark-text;
+        color: #fff;
+        border: none;
+        padding: 12px 32px;
+        font-size: 1rem;
+        font-family: inherit;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: $primary-color;
+        }
+      }
     }
+  }
+
+  // --- Shared Section Headers ---
+  .sectionHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 500;
+      color: $dark-text;
+      letter-spacing: -0.3px;
+    }
+
+    .viewAll {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // --- Categories Section ---
+  .categorySection {
+    margin: 4rem 2rem;
+
+    .categoryList {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      
+      // Hide scrollbar for a cleaner look
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      .categoryPill {
+        background-color: $bg-color;
+        border: 1px solid $border-color;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: $dark-text;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+
+        &:hover {
+          border-color: $dark-text;
+          background-color: $light-gray;
+        }
+      }
+    }
+  }
+
+  // --- Featured Products Section ---
+  .productSection {
+    margin: 4rem 2rem;
+
+    .productGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+
+      .productCard {
+        cursor: pointer;
+        
+        &:hover {
+          .imageWrapper img {
+            transform: scale(1.03);
+          }
+        }
+
+        .imageWrapper {
+          width: 100%;
+          aspect-ratio: 4/5;
+          overflow: hidden;
+          border-radius: 12px;
+          background-color: $light-gray;
+          margin-bottom: 1rem;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+          }
+        }
+
+        .cardDetails {
+          h3 {
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: $dark-text;
+            margin-bottom: 0.3rem;
+          }
+
+          .price {
+            font-size: 1rem;
+            color: $light-text;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
 }
