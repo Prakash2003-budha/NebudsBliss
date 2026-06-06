@@ -12,8 +12,7 @@ $border-color: #eaeaea;
   background-color: $bg-color;
   padding-bottom: 4rem;
 
-  // --- Hero Section ---
-  .heroSection {
+  .PosterSection {
     height: 60vh;
     min-height: 400px;
     background-color: $light-gray; // Placeholder for a background image
@@ -24,10 +23,6 @@ $border-color: #eaeaea;
     justify-content: center;
     text-align: center;
     padding: 2rem;
-    
-    // If you add a background image later, you can use:
-    // background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url('your-image.jpg') center/cover;
-    // color: white;
 
     .heroContent {
       max-width: 600px;
@@ -91,7 +86,6 @@ $border-color: #eaeaea;
     }
   }
 
-  // --- Categories Section ---
   .categorySection {
     margin: 4rem 2rem;
 

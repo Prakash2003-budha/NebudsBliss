@@ -16,11 +16,9 @@ const Homepage: React.FC = () => {
     <Layout>
       <div className={styles.container}>
         
-        {/* Hero / Banner Section */}
-        <section className={styles.heroSection}>
+        <section className={styles.PosterSection}>
           <div className={styles.heroContent}>
-            <h1>Freshly Baked Elegance</h1>
-            <p>Discover our daily selection of handcrafted delights.</p>
+            <h1>Poster Will be displayd in here</h1>
             <button className={styles.heroBtn}>Shop Now</button>
           </div>
         </section>
