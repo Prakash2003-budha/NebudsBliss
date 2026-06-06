@@ -1,29 +1,27 @@
 // Variables
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: #085ff6;
+$secoundary-color: #3ce3ff;
 $dark-text: #1a1a1a;
 $light-text: #666666;
-$bg-color: #e8f7ff;
+$bg-color: #E0FFFF;
 $light-gray: #f8f9fa;
 $border-color: #eaeaea;
 
 .container {
   font-family: $font-primary;
   background-color: $bg-color;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
 
   .PosterSection {
     height: 60vh;
     min-height: 400px;
     background-color: $light-gray;
-    border-radius: 16px;
-    margin: 1.5rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 2rem;
-
     .heroContent {
       max-width: 600px;
 
@@ -54,7 +52,7 @@ $border-color: #eaeaea;
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: $primary-color;
+          background-color: $secoundary-color;
         }
       }
     }
