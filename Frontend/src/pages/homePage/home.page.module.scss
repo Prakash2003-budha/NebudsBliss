@@ -3,7 +3,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: #085ff6;
 $dark-text: #1a1a1a;
 $light-text: #666666;
-$bg-color: #ffffff;
+$bg-color: #e8f7ff;
 $light-gray: #f8f9fa;
 $border-color: #eaeaea;
 
@@ -15,7 +15,7 @@ $border-color: #eaeaea;
   .PosterSection {
     height: 60vh;
     min-height: 400px;
-    background-color: $light-gray; // Placeholder for a background image
+    background-color: $light-gray;
     border-radius: 16px;
     margin: 1.5rem 2rem;
     display: flex;
@@ -68,21 +68,10 @@ $border-color: #eaeaea;
     margin-bottom: 1.5rem;
 
     h2 {
-      font-size: 1.75rem;
-      font-weight: 500;
+      font-size: 2rem;
+      font-weight: 700;
       color: $dark-text;
       letter-spacing: -0.3px;
-    }
-
-    .viewAll {
-      color: $primary-color;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.95rem;
-      
-      &:hover {
-        text-decoration: underline;
-      }
     }
   }
 
@@ -95,7 +84,6 @@ $border-color: #eaeaea;
       overflow-x: auto;
       padding-bottom: 0.5rem;
       
-      // Hide scrollbar for a cleaner look
       &::-webkit-scrollbar {
         display: none;
       }

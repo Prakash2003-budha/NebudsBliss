@@ -3,7 +3,7 @@ import Layout from "../../components/layout/layout";
 import styles from "./home.page.module.scss";
 
 // Temporary mock data so you can see the design in action!
-const CATEGORIES = ["Cakes", "Pastries", "Breads", "Cookies", "Beverages"];
+const CATEGORIES = ["Powerbank", "Camera", "Earbuds", "Charger", "Fan"];
 const FEATURED_PRODUCTS = [
   { id: 1, name: "Vanilla Bean Cloud Cake", price: "Rs. 1200", img: "https://via.placeholder.com/300x400" },
   { id: 2, name: "Artisan Sourdough", price: "Rs. 350", img: "https://via.placeholder.com/300x400" },
@@ -27,7 +27,6 @@ const Homepage: React.FC = () => {
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>
             <h2>Shop by Category</h2>
-            <a href="/menu" className={styles.viewAll}>View Menu →</a>
           </div>
           <div className={styles.categoryList}>
             {CATEGORIES.map((cat, index) => (
