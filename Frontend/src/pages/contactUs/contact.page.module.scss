@@ -342,3 +342,49 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 }
+// NEW: Social Links Row
+  .socialRow {
+    grid-column: 1 / -1; // Forces the row to span across both columns
+    display: flex;
+    gap: 1rem;
+    padding-top: 0.5rem;
+    flex-wrap: wrap; // Allows them to stack on very small phones
+
+    .socialPill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 10px 20px;
+      background: $bg-color;
+      border: 1px solid $border-color;
+      border-radius: 999px; // Makes it a perfect pill shape
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: $dark-text;
+      transition: all 0.3s $ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+
+      svg {
+        transition: stroke 0.3s $ease;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: $shadow-sm;
+      }
+
+      // Specific brand colors on hover
+      &.whatsapp:hover {
+        border-color: #25D366;
+        color: #25D366;
+        svg { stroke: #25D366; }
+      }
+
+      &.facebook:hover {
+        border-color: #1877F2;
+        color: #1877F2;
+        svg { stroke: #1877F2; }
+      }
+    }
+  }
