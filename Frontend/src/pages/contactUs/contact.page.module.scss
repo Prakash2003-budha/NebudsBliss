@@ -9,31 +9,43 @@ $light-text: #5b6472;
 $muted-text: #8a93a2;
 
 $bg-color: #ffffff;
-$soft-bg: #f6f8fc;
-$light-gray: #f1f4f9;
-$border-color: #e6eaf1;
+$soft-bg: #f8fafc; // Lightened slightly for a cleaner look
+$border-color: #e2e8f0;
 
-$radius-sm: 10px;
-$radius-md: 14px;
-$radius-lg: 20px;
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
 
-$shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.04);
-$shadow-md: 0 16px 40px rgba(8, 95, 246, 0.08);
+$shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.03);
+$shadow-md: 0 16px 40px rgba(8, 95, 246, 0.06);
 
 $gradient-brand: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
 $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
+// ===== Animations =====
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // ===== Layout =====
 .container {
   font-family: $font-primary;
-  background:
-    radial-gradient(1200px 500px at 100% -200px, rgba(60, 227, 255, 0.10), transparent 60%),
-    radial-gradient(900px 400px at -200px 10%, rgba(8, 95, 246, 0.08), transparent 60%),
-    $bg-color;
-  padding: 5rem 1.5rem 6rem;
-  max-width: 1240px;
+  padding: 4rem 1.5rem;
+  max-width: 1200px;
   margin: 0 auto;
   color: $dark-text;
+  animation: fadeSlideUp 0.6s $ease forwards;
+
+  @media (max-width: 768px) {
+    padding: 2rem 1rem; // Tighter padding for mobile
+  }
 }
 
 // ===== Header =====
@@ -41,44 +53,49 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   text-align: center;
   margin-bottom: 4rem;
 
+  @media (max-width: 768px) {
+    margin-bottom: 2.5rem;
+  }
+
   .eyebrow {
     display: inline-block;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: $primary-color;
     background: rgba(8, 95, 246, 0.08);
     padding: 6px 14px;
     border-radius: 999px;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
   }
 
   h1 {
-    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    margin: 0 0 0.75rem;
-    background: $gradient-brand;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    margin: 0 0 1rem;
+    color: $dark-text;
   }
 
   p {
     font-size: 1.05rem;
     color: $light-text;
-    max-width: 560px;
+    max-width: 600px;
     margin: 0 auto;
     line-height: 1.6;
+
+    @media (max-width: 768px) {
+      font-size: 0.95rem;
+    }
   }
 }
 
 // ===== Grid =====
 .contentWrapper {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 3rem;
   align-items: start;
 
@@ -100,7 +117,10 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: $shadow-sm;
 
   @media (max-width: 500px) {
-    padding: 1.75rem;
+    padding: 1.5rem;
+    border: none;
+    box-shadow: none;
+    background: transparent;
   }
 }
 
@@ -109,41 +129,36 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   padding-bottom: 2rem;
-  border-bottom: 1px dashed $border-color;
+  border-bottom: 1px solid $border-color;
 
   @media (max-width: 560px) {
     grid-template-columns: 1fr;
   }
 
   .detailBlock {
-    background: $soft-bg;
+    background: $bg-color;
     border: 1px solid $border-color;
     border-radius: $radius-md;
-    padding: 1.25rem 1.25rem 1rem;
-    transition: transform 0.3s $ease, box-shadow 0.3s $ease, border-color 0.3s $ease;
+    padding: 1.25rem;
+    transition: transform 0.3s $ease, box-shadow 0.3s $ease;
 
     &:hover {
       transform: translateY(-2px);
-      border-color: rgba(8, 95, 246, 0.25);
-      box-shadow: $shadow-md;
+      box-shadow: $shadow-sm;
+      border-color: rgba(8, 95, 246, 0.3);
     }
 
     h3 {
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 600;
-      letter-spacing: 0.02em;
       color: $dark-text;
       margin: 0 0 0.75rem;
       display: flex;
       align-items: center;
       gap: 0.5rem;
 
-      &::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border-radius: 999px;
-        background: $gradient-brand;
+      svg {
+        color: $primary-color;
       }
     }
 
@@ -151,7 +166,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
       font-size: 0.92rem;
       color: $light-text;
       margin: 0 0 0.4rem;
-      line-height: 1.55;
+      line-height: 1.5;
 
       strong {
         color: $dark-text;
@@ -161,12 +176,10 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
       a {
         color: $light-text;
         text-decoration: none;
-        border-bottom: 1px solid transparent;
-        transition: color 0.2s, border-color 0.2s;
+        transition: color 0.2s;
 
         &:hover {
           color: $primary-color;
-          border-bottom-color: rgba(8, 95, 246, 0.4);
         }
       }
     }
@@ -192,10 +205,10 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   .inputGroup {
     display: flex;
     flex-direction: column;
-    gap: 0.45rem;
+    gap: 0.5rem;
 
     label {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 500;
       color: $dark-text;
     }
@@ -204,63 +217,52 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
     textarea {
       font-family: inherit;
       width: 100%;
-      padding: 13px 16px;
+      padding: 12px 16px;
       border: 1px solid $border-color;
       border-radius: $radius-sm;
-      font-size: 0.97rem;
+      font-size: 0.95rem;
       color: $dark-text;
       background-color: $soft-bg;
-      transition: border-color 0.2s $ease, box-shadow 0.2s $ease,
-        background-color 0.2s $ease;
+      transition: all 0.2s $ease;
       outline: none;
 
       &::placeholder {
         color: $muted-text;
       }
 
-      &:hover:not(:focus) {
-        border-color: darken($border-color, 6%);
-      }
-
       &:focus {
         background-color: $bg-color;
         border-color: $primary-color;
-        box-shadow: 0 0 0 4px rgba(8, 95, 246, 0.12);
+        box-shadow: 0 0 0 3px rgba(8, 95, 246, 0.1);
       }
     }
 
     textarea {
       resize: vertical;
-      min-height: 140px;
-      line-height: 1.55;
+      min-height: 120px;
     }
   }
 
   .submitBtn {
-    position: relative;
-    align-self: flex-start;
-    min-width: 200px;
-    background: $gradient-brand;
+    background: $dark-text; // Elegant black button
     color: #fff;
     border: none;
     padding: 14px 28px;
-    font-size: 0.98rem;
-    font-weight: 600;
-    letter-spacing: 0.01em;
+    font-size: 1rem;
+    font-weight: 500;
     border-radius: $radius-sm;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(8, 95, 246, 0.28);
-    transition: transform 0.25s $ease, box-shadow 0.25s $ease, filter 0.25s $ease;
+    transition: all 0.25s $ease;
     margin-top: 0.5rem;
 
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 32px rgba(8, 95, 246, 0.32);
-      filter: brightness(1.05);
+    @media (max-width: 560px) {
+      width: 100%; // Full width on mobile
     }
 
-    &:active:not(:disabled) {
-      transform: translateY(0);
+    &:hover:not(:disabled) {
+      background: $primary-color;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(8, 95, 246, 0.2);
     }
 
     &:disabled {
@@ -273,49 +275,50 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 // ===== Right column / Map =====
 .rightColumn {
   position: sticky;
-  top: 2rem;
+  top: 6rem; // Accounts for a potential sticky nav bar
+  height: fit-content;
 
   @media (max-width: 960px) {
     position: static;
   }
 
   .mapCard {
-    position: relative;
     background: $bg-color;
     border: 1px solid $border-color;
     border-radius: $radius-lg;
     padding: 1.5rem;
     box-shadow: $shadow-sm;
-    overflow: hidden;
-
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 4px;
-      background: $gradient-brand;
-    }
 
     h3 {
       font-size: 1.15rem;
       font-weight: 600;
       color: $dark-text;
-      margin: 0.25rem 0 1.25rem;
+      margin: 0 0 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      svg {
+        color: $primary-color;
+      }
     }
 
     .mapContainer {
       width: 100%;
-      min-height: 420px;
+      aspect-ratio: 4 / 3; // PERFECT SCALING: Ensures it looks great on any phone size
       border-radius: $radius-md;
       overflow: hidden;
-      background-color: $light-gray;
+      background-color: $soft-bg;
       border: 1px solid $border-color;
+
+      @media (max-width: 500px) {
+        aspect-ratio: 1 / 1; // Makes it a nice square on very small phones
+      }
 
       iframe {
         display: block;
         width: 100% !important;
         height: 100% !important;
-        min-height: 420px;
         border: none;
       }
     }
@@ -325,18 +328,15 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
       text-align: right;
 
       a {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
         color: $primary-color;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 500;
         font-size: 0.95rem;
-        transition: gap 0.25s $ease, color 0.2s;
+        transition: color 0.2s;
 
         &:hover {
-          gap: 0.6rem;
-          color: darken($primary-color, 8%);
+          color: darken($primary-color, 10%);
+          text-decoration: underline;
         }
       }
     }
