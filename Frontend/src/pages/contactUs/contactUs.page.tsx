@@ -49,9 +49,7 @@ const ContactPage: React.FC = () => {
   return (
     <Layout>
       <section className={styles.container}>
-        {/* Header */}
         <header className={styles.header}>
-          <span className={styles.eyebrow}>Contact</span>
           <h1>Get in Touch</h1>
           <p>
             We would love to hear from you. Drop us a line, give us a call,
