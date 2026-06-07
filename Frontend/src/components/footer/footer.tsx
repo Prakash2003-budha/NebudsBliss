@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
                         Building excellent digital experiences with modern web technologies.
                     </p>
                     <div className={styles.socials}>
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                        <a href="https://www.facebook.com/profile.php?id=61590495154162" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                             <img src={facebookIcon} alt="Facebook Profile" />
                         </a>
                         <a href="https://whatsapp.com" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">

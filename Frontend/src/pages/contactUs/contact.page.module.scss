@@ -1,208 +1,342 @@
-// Variables
+// ===== Variables =====
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-$primary-color: #085ff6;
-$dark-text: #1a1a1a;
-$light-text: #666666;
-$bg-color: #ffffff;
-$light-gray: #f8f9fa;
-$border-color: #eaeaea;
 
+$primary-color: #085ff6;
+$secondary-color: #3ce3ff;
+
+$dark-text: #0f172a;
+$light-text: #5b6472;
+$muted-text: #8a93a2;
+
+$bg-color: #ffffff;
+$soft-bg: #f6f8fc;
+$light-gray: #f1f4f9;
+$border-color: #e6eaf1;
+
+$radius-sm: 10px;
+$radius-md: 14px;
+$radius-lg: 20px;
+
+$shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.04);
+$shadow-md: 0 16px 40px rgba(8, 95, 246, 0.08);
+
+$gradient-brand: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+$ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ===== Layout =====
 .container {
   font-family: $font-primary;
-  background-color: $bg-color;
-  padding: 4rem 2rem;
-  max-width: 1200px;
+  background:
+    radial-gradient(1200px 500px at 100% -200px, rgba(60, 227, 255, 0.10), transparent 60%),
+    radial-gradient(900px 400px at -200px 10%, rgba(8, 95, 246, 0.08), transparent 60%),
+    $bg-color;
+  padding: 5rem 1.5rem 6rem;
+  max-width: 1240px;
   margin: 0 auto;
+  color: $dark-text;
+}
 
-  .header {
-    text-align: center;
-    margin-bottom: 4rem;
+// ===== Header =====
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
 
-    h1 {
-      font-size: 3rem;
-      font-weight: 300;
-      letter-spacing: -0.5px;
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $primary-color;
+    background: rgba(8, 95, 246, 0.08);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin: 0 0 0.75rem;
+    background: $gradient-brand;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  p {
+    font-size: 1.05rem;
+    color: $light-text;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+}
+
+// ===== Grid =====
+.contentWrapper {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+// ===== Left column =====
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  background: $bg-color;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 2.5rem;
+  box-shadow: $shadow-sm;
+
+  @media (max-width: 500px) {
+    padding: 1.75rem;
+  }
+}
+
+.contactDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px dashed $border-color;
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+
+  .detailBlock {
+    background: $soft-bg;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    padding: 1.25rem 1.25rem 1rem;
+    transition: transform 0.3s $ease, box-shadow 0.3s $ease, border-color 0.3s $ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      border-color: rgba(8, 95, 246, 0.25);
+      box-shadow: $shadow-md;
+    }
+
+    h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
       color: $dark-text;
-      margin-bottom: 0.5rem;
+      margin: 0 0 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: $gradient-brand;
+      }
     }
 
     p {
-      font-size: 1.1rem;
+      font-size: 0.92rem;
       color: $light-text;
-      font-weight: 400;
-    }
-  }
+      margin: 0 0 0.4rem;
+      line-height: 1.55;
 
-  .contentWrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-
-    @media (max-width: 900px) {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-    }
-  }
-
-  /* --- Left Column: Info & Form --- */
-  .leftColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-
-    .contactDetails {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid $border-color;
-
-      @media (max-width: 500px) {
-        grid-template-columns: 1fr;
-      }
-
-      .detailBlock {
-        h3 {
-          font-size: 1.1rem;
-          font-weight: 500;
-          color: $dark-text;
-          margin-bottom: 1rem;
-        }
-
-        p {
-          font-size: 0.95rem;
-          color: $light-text;
-          margin-bottom: 0.5rem;
-          line-height: 1.5;
-
-          strong {
-            color: $dark-text;
-            font-weight: 500;
-          }
-
-          a {
-            color: $light-text;
-            text-decoration: none;
-            transition: color 0.2s;
-
-            &:hover {
-              color: $primary-color;
-            }
-          }
-        }
-      }
-    }
-
-    .contactForm {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-
-      .inputGroup {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        label {
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: $dark-text;
-        }
-
-        input, textarea {
-          font-family: inherit;
-          padding: 14px 16px;
-          border: 1px solid $border-color;
-          border-radius: 8px;
-          font-size: 1rem;
-          background-color: $light-gray;
-          transition: all 0.2s ease;
-          outline: none;
-
-          &:focus {
-            background-color: $bg-color;
-            border-color: $dark-text;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
-          }
-
-          &::placeholder {
-            color: #b0b0b0;
-          }
-        }
-
-        textarea {
-          resize: vertical;
-          min-height: 120px;
-        }
-      }
-
-      .submitBtn {
-        background-color: $dark-text;
-        color: #fff;
-        border: none;
-        padding: 16px;
-        font-size: 1rem;
+      strong {
+        color: $dark-text;
         font-weight: 500;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        margin-top: 1rem;
+      }
+
+      a {
+        color: $light-text;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: color 0.2s, border-color 0.2s;
 
         &:hover {
-          background-color: $primary-color;
+          color: $primary-color;
+          border-bottom-color: rgba(8, 95, 246, 0.4);
         }
       }
     }
   }
+}
 
-  /* --- Right Column: Map --- */
-  .rightColumn {
-    .mapCard {
-      background: $bg-color;
+// ===== Form =====
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+
+    @media (max-width: 560px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: $dark-text;
+    }
+
+    input,
+    textarea {
+      font-family: inherit;
+      width: 100%;
+      padding: 13px 16px;
       border: 1px solid $border-color;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+      border-radius: $radius-sm;
+      font-size: 0.97rem;
+      color: $dark-text;
+      background-color: $soft-bg;
+      transition: border-color 0.2s $ease, box-shadow 0.2s $ease,
+        background-color 0.2s $ease;
+      outline: none;
 
-      h3 {
-        font-size: 1.25rem;
-        font-weight: 500;
-        color: $dark-text;
-        margin-bottom: 1.5rem;
+      &::placeholder {
+        color: $muted-text;
       }
 
-      .mapContainer {
-        flex-grow: 1;
-        width: 100%;
-        min-height: 400px;
-        border-radius: 12px;
-        overflow: hidden;
-        background-color: $light-gray;
-
-        /* Force the iframe to fit our responsive container perfectly */
-        iframe {
-          width: 100% !important;
-          height: 100% !important;
-          border: none;
-        }
+      &:hover:not(:focus) {
+        border-color: darken($border-color, 6%);
       }
 
-      .mapLink {
-        margin-top: 1.5rem;
-        text-align: right;
+      &:focus {
+        background-color: $bg-color;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 4px rgba(8, 95, 246, 0.12);
+      }
+    }
 
-        a {
-          color: $primary-color;
-          text-decoration: none;
-          font-weight: 500;
-          font-size: 0.95rem;
+    textarea {
+      resize: vertical;
+      min-height: 140px;
+      line-height: 1.55;
+    }
+  }
 
-          &:hover {
-            text-decoration: underline;
-          }
+  .submitBtn {
+    position: relative;
+    align-self: flex-start;
+    min-width: 200px;
+    background: $gradient-brand;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(8, 95, 246, 0.28);
+    transition: transform 0.25s $ease, box-shadow 0.25s $ease, filter 0.25s $ease;
+    margin-top: 0.5rem;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(8, 95, 246, 0.32);
+      filter: brightness(1.05);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ===== Right column / Map =====
+.rightColumn {
+  position: sticky;
+  top: 2rem;
+
+  @media (max-width: 960px) {
+    position: static;
+  }
+
+  .mapCard {
+    position: relative;
+    background: $bg-color;
+    border: 1px solid $border-color;
+    border-radius: $radius-lg;
+    padding: 1.5rem;
+    box-shadow: $shadow-sm;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: $gradient-brand;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: $dark-text;
+      margin: 0.25rem 0 1.25rem;
+    }
+
+    .mapContainer {
+      width: 100%;
+      min-height: 420px;
+      border-radius: $radius-md;
+      overflow: hidden;
+      background-color: $light-gray;
+      border: 1px solid $border-color;
+
+      iframe {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 420px;
+        border: none;
+      }
+    }
+
+    .mapLink {
+      margin-top: 1.25rem;
+      text-align: right;
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: $primary-color;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: gap 0.25s $ease, color 0.2s;
+
+        &:hover {
+          gap: 0.6rem;
+          color: darken($primary-color, 8%);
         }
       }
     }
