@@ -15,7 +15,6 @@ const Homepage: React.FC = () => {
   return (
     <Layout>
       <div className={styles.container}>
-        
         <section className={styles.PosterSection}>
           <div className={styles.heroContent}>
             <h1>Poster Will be displayd in here</h1>
@@ -37,7 +36,6 @@ const Homepage: React.FC = () => {
           </div>
         </section>
 
-        {/* Featured Products Section */}
         <section className={styles.productSection}>
           <div className={styles.sectionHeader}>
             <h2>Featured Treats</h2>

@@ -1,0 +1,210 @@
+// Variables
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #085ff6;
+$dark-text: #1a1a1a;
+$light-text: #666666;
+$bg-color: #ffffff;
+$light-gray: #f8f9fa;
+$border-color: #eaeaea;
+
+.container {
+  font-family: $font-primary;
+  background-color: $bg-color;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header {
+    text-align: center;
+    margin-bottom: 4rem;
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 300;
+      letter-spacing: -0.5px;
+      color: $dark-text;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: $light-text;
+      font-weight: 400;
+    }
+  }
+
+  .contentWrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+
+    @media (max-width: 900px) {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  /* --- Left Column: Info & Form --- */
+  .leftColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    .contactDetails {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid $border-color;
+
+      @media (max-width: 500px) {
+        grid-template-columns: 1fr;
+      }
+
+      .detailBlock {
+        h3 {
+          font-size: 1.1rem;
+          font-weight: 500;
+          color: $dark-text;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          font-size: 0.95rem;
+          color: $light-text;
+          margin-bottom: 0.5rem;
+          line-height: 1.5;
+
+          strong {
+            color: $dark-text;
+            font-weight: 500;
+          }
+
+          a {
+            color: $light-text;
+            text-decoration: none;
+            transition: color 0.2s;
+
+            &:hover {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+
+    .contactForm {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .inputGroup {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: $dark-text;
+        }
+
+        input, textarea {
+          font-family: inherit;
+          padding: 14px 16px;
+          border: 1px solid $border-color;
+          border-radius: 8px;
+          font-size: 1rem;
+          background-color: $light-gray;
+          transition: all 0.2s ease;
+          outline: none;
+
+          &:focus {
+            background-color: $bg-color;
+            border-color: $dark-text;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.03);
+          }
+
+          &::placeholder {
+            color: #b0b0b0;
+          }
+        }
+
+        textarea {
+          resize: vertical;
+          min-height: 120px;
+        }
+      }
+
+      .submitBtn {
+        background-color: $dark-text;
+        color: #fff;
+        border: none;
+        padding: 16px;
+        font-size: 1rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 1rem;
+
+        &:hover {
+          background-color: $primary-color;
+        }
+      }
+    }
+  }
+
+  /* --- Right Column: Map --- */
+  .rightColumn {
+    .mapCard {
+      background: $bg-color;
+      border: 1px solid $border-color;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 500;
+        color: $dark-text;
+        margin-bottom: 1.5rem;
+      }
+
+      .mapContainer {
+        flex-grow: 1;
+        width: 100%;
+        min-height: 400px;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: $light-gray;
+
+        /* Force the iframe to fit our responsive container perfectly */
+        iframe {
+          width: 100% !important;
+          height: 100% !important;
+          border: none;
+        }
+      }
+
+      .mapLink {
+        margin-top: 1.5rem;
+        text-align: right;
+
+        a {
+          color: $primary-color;
+          text-decoration: none;
+          font-weight: 500;
+          font-size: 0.95rem;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

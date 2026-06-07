@@ -48,7 +48,7 @@ export default function Header() {
           </div>
           
           <Link to="/AboutUs" className={styles.navLink}>About Us</Link>
-          <Link to="/contact" className={styles.navLink}>Contact</Link>
+          <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
         </nav>
 
         {/* Desktop Authentication Buttons */}
