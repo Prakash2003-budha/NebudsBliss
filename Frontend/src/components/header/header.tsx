@@ -20,13 +20,22 @@ export default function Header() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const [user] = useState(() => {
+  // 1. We brought setUser back so we can clear the user state on logout!
+  const [user, setUser] = useState(() => {
     const loggedInUser = localStorage.getItem('user');
     return loggedInUser ? JSON.parse(loggedInUser) : null;
   });
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
+
+  // 2. The Logout Function
+  const handleLogout = () => {
+    localStorage.removeItem('user'); // Removes the user from browser memory
+    setUser(null); // Instantly updates the UI back to Sign In / Sign Up
+    navigate('/'); // Optionally redirect them to the home page
+    closeSidebar(); // Closes the mobile menu if it's open
+  };
 
   return (
     <>
@@ -60,7 +69,6 @@ export default function Header() {
         {/* Desktop Authentication Buttons */}
         <div className={styles.signButton}>
           {user ? (
-            // REMOVED onClick from here. Added relative wrapper for dropdown.
             <div className={styles.profileContainer}>
               <img 
                 src={user.image?.url || profileIcon} 
@@ -68,11 +76,11 @@ export default function Header() {
                 className={styles.profileImage} 
               />
               
-              {/* NEW: Hover Dropdown Menu */}
+              {/* Desktop Hover Dropdown Menu */}
               <div className={styles.profileDropdown}>
                 <Link to="/profile" className={styles.dropdownItem}>My Profile</Link>
-                {/* You can easily add a Logout button here later! */}
-                {/* <button className={styles.dropdownItem}>Logout</button> */}
+                {/* Desktop Logout Button */}
+                <button onClick={handleLogout} className={styles.dropdownItem}>Logout</button>
               </div>
             </div>
           ) : (
@@ -113,20 +121,23 @@ export default function Header() {
         </nav>
 
         {/* Mobile Authentication / Profile Section */}
-        {/* Note: Kept mobile as click-to-profile since hover doesn't exist on phones */}
         <div className={styles.sidebarAuthButtons}>
           {user ? (
-            <div 
-              className={styles.sidebarProfileContainer} 
-              onClick={() => { navigate('/profile'); closeSidebar(); }}
-            >
-              <img 
-                src={user.image?.url || profileIcon} 
-                alt="User Profile" 
-                className={styles.sidebarProfileImage} 
-              />
-              <span className={styles.sidebarProfileName}>{user.fullName}</span>
-            </div>
+            <>
+              <div 
+                className={styles.sidebarProfileContainer} 
+                onClick={() => { navigate('/profile'); closeSidebar(); }}
+              >
+                <img 
+                  src={user.image?.url || profileIcon} 
+                  alt="User Profile" 
+                  className={styles.sidebarProfileImage} 
+                />
+                <span className={styles.sidebarProfileName}>{user.fullName}</span>
+              </div>
+              {/* Mobile Logout Button */}
+              <button className={styles.LogoutButton} onClick={handleLogout}>Logout</button>
+            </>
           ) : (
             <>
               <button className={styles.SignInButton} onClick={() => { navigate('/LoginPage'); closeSidebar(); }}>Sign In</button>

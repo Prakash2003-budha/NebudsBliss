@@ -353,3 +353,24 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     text-overflow: ellipsis;
   }
 }
+/* --- Mobile Logout Button Styling --- */
+.LogoutButton {
+  font-family: inherit;
+  width: 100%;
+  padding: 12px;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: transparent;
+  color: #e53e3e; // A distinct, nice red color
+  border: 1px solid #fc8181; // Soft red border
+  transition: all 0.2s ease;
+  margin-top: 8px; // Gives it a little space below the profile container
+
+  &:hover {
+    background-color: #e53e3e;
+    color: #ffffff;
+    border-color: #e53e3e;
+  }
+}
