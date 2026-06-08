@@ -21,6 +21,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   position: sticky;
   z-index: 100;
   box-sizing: border-box;
+  
   @media (max-width: $breakpoint-mobile) {
     padding: 0.5rem 1rem;
   }
@@ -54,7 +55,6 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: bold;
   color: $dark-text;
   text-decoration: none;
-
   cursor: pointer;
   padding: 6px 0;
   letter-spacing: 0.3px; // Adds a touch of breathing room
@@ -138,6 +138,28 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   color: $dark-text;
   border: 1px solid #e0e0e0; // Softened the border color slightly
   &:hover { background-color: $dark-text; color: #ffffff; border-color: $dark-text; }
+}
+
+/* --- NEW: Desktop Profile Styling --- */
+.profileContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  .profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $border-color;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      border-color: $secoundary-color;
+    }
+  }
 }
 
 .hamburgerMenu {
@@ -249,5 +271,39 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     padding: 12px;
     font-size: 0.95rem;
     letter-spacing: 0.5px;
+  }
+}
+
+/* --- NEW: Mobile Sidebar Profile Styling --- */
+.sidebarProfileContainer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  cursor: pointer;
+  background-color: $light-bg;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  margin-top: auto; // Pushes it to the bottom like the auth buttons
+
+  &:hover {
+    background-color: darken(#f8f9fa, 5%);
+  }
+  
+  .sidebarProfileImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $primary-color;
+  }
+
+  .sidebarProfileName {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: $dark-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

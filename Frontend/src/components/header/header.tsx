@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../img/logo/logoFull.jpg';
 import styles from './header.module.scss';
+import profileIcon from "../../img/icons/profile.white.png"; // Renamed slightly to avoid confusion
 
 const HamburgerIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -21,6 +22,15 @@ export default function Header() {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
+
+  // ------------------------------------------------------------------
+  // TODO: Replace this mock user with your actual authentication state
+  // Example: const { user, logout } = useAuth(); 
+  // ------------------------------------------------------------------
+  const user = {
+    name: "User Name",
+    profilePic: null // If null, it will fall back to your imported profileIcon
+  }; 
 
   return (
     <>
@@ -51,26 +61,35 @@ export default function Header() {
           <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
         </nav>
 
-        {/* Desktop Authentication Buttons */}
         <div className={styles.signButton}>
-          <button className={styles.SignInButton} onClick={() => navigate('/LoginPage')}>Sign In</button>
-          <button className={styles.SignUpButton} onClick={() => navigate('/SignUp')}>Sign Up</button>
+          {user ? (
+            <div className={styles.profileContainer} onClick={() => navigate('/profile')}>
+              <img 
+                src={user.profilePic || profileIcon} 
+                alt="User Profile" 
+                className={styles.profileImage} 
+              />
+            </div>
+          ) : (
+            <>
+              <button className={styles.SignInButton} onClick={() => navigate('/LoginPage')}>Sign In</button>
+              <button className={styles.SignUpButton} onClick={() => navigate('/SignUp')}>Sign Up</button>
+            </>
+          )}
         </div>
 
-        {/* Hamburger Menu Trigger (Only shows on mobile/small viewports) */}
+        {/* Hamburger Menu Trigger */}
         <button className={styles.hamburgerMenu} onClick={toggleSidebar} aria-label="Toggle Navigation">
           {isSidebarOpen ? <CloseIcon /> : <HamburgerIcon />}
         </button>
       </header>
 
       {/* ── MOBILE SIDEBAR DRAWERS ── */}
-      {/* Background Overlay Dimmer */}
       <div 
         className={`${styles.sidebarOverlay} ${isSidebarOpen ? styles.overlayVisible : ''}`} 
         onClick={closeSidebar} 
       />
 
-      {/* Actual Slide-out Panel */}
       <aside className={`${styles.sidebarDrawer} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
         <nav className={styles.sidebarNav}>
           <Link to="/" className={styles.sidebarNavLink} onClick={closeSidebar}>Home</Link>
@@ -88,9 +107,26 @@ export default function Header() {
           <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
         </nav>
 
+        {/* Mobile Authentication / Profile Section */}
         <div className={styles.sidebarAuthButtons}>
-          <button className={styles.SignInButton} onClick={() => { navigate('/LoginPage'); closeSidebar(); }}>Sign In</button>
-          <button className={styles.SignUpButton} onClick={() => { navigate('/SignUp'); closeSidebar(); }}>Sign Up</button>
+          {user ? (
+            <div 
+              className={styles.sidebarProfileContainer} 
+              onClick={() => { navigate('/profile'); closeSidebar(); }}
+            >
+              <img 
+                src={user.profilePic || profileIcon} 
+                alt="User Profile" 
+                className={styles.sidebarProfileImage} 
+              />
+              <span className={styles.sidebarProfileName}>{user.name}</span>
+            </div>
+          ) : (
+            <>
+              <button className={styles.SignInButton} onClick={() => { navigate('/LoginPage'); closeSidebar(); }}>Sign In</button>
+              <button className={styles.SignUpButton} onClick={() => { navigate('/SignUp'); closeSidebar(); }}>Sign Up</button>
+            </>
+          )}
         </div>
       </aside>
     </>
