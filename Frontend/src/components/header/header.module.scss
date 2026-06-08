@@ -4,6 +4,7 @@ $dark-text: #222222;
 $light-bg: #f8f9fa;
 $border-color: #eeeeee;
 $secoundary-color: #3ce3ff;
+$hover-color: #bcf5ff;
 $breakpoint-mobile: 768px;
 
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -139,15 +140,14 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   border: 1px solid #e0e0e0; 
   &:hover { background-color: $dark-text; color: #ffffff; border-color: $dark-text; }
 }
-
-/* --- UPDATED: Desktop Profile Styling with Dropdown Hover --- */
+/* --- UPDATED: Desktop Profile Styling with Premium Glow --- */
 .profileContainer {
-  position: relative; // Needed to attach the dropdown menu to this area
+  position: relative; 
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 10px 0; // Gives a slightly larger invisible hover area
+  padding: 10px 0; 
 
   &:hover {
     .profileDropdown {
@@ -156,8 +156,15 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
       transform: translateY(0);
     }
     .profileImage {
-      transform: scale(1.05);
-      border-color: $secoundary-color;
+      /* Highlight the border slightly */
+      border-color: rgba($secoundary-color, 0.5);
+      
+      /* The Premium Stacked Glow:
+         Layer 1: A tight, 4px soft ring directly around the image
+         Layer 2: A wider, very soft 15px shadow that blends into the background
+      */
+      box-shadow: 
+        0 0 0 4px rgba($secoundary-color, 0.15), 
     }
   }
 
@@ -166,8 +173,10 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid $border-color;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    /* Added the border back so it has something to transition from */
+    border: 2px solid $border-color; 
+    /* Changed to 'all' so both the shadow and the border fade smoothly */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
   }
 }
 
@@ -333,7 +342,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   margin-top: auto; 
 
   &:hover {
-    background-color: darken(#f8f9fa, 5%);
+    background-color: #d2d2d2;
   }
   
   .sidebarProfileImage {
@@ -353,7 +362,6 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     text-overflow: ellipsis;
   }
 }
-/* --- Mobile Logout Button Styling --- */
 .LogoutButton {
   font-family: inherit;
   width: 100%;
@@ -363,10 +371,10 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   border-radius: 6px;
   cursor: pointer;
   background-color: transparent;
-  color: #e53e3e; // A distinct, nice red color
-  border: 1px solid #fc8181; // Soft red border
+  color: #e53e3e; 
+  border: 1px solid #fc8181; 
   transition: all 0.2s ease;
-  margin-top: 8px; // Gives it a little space below the profile container
+  margin-top: 8px; 
 
   &:hover {
     background-color: #e53e3e;

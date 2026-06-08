@@ -97,7 +97,6 @@ export default function Header() {
         </button>
       </header>
 
-      {/* ── MOBILE SIDEBAR DRAWERS ── */}
       <div 
         className={`${styles.sidebarOverlay} ${isSidebarOpen ? styles.overlayVisible : ''}`} 
         onClick={closeSidebar} 
@@ -119,8 +118,6 @@ export default function Header() {
           <Link to="/AboutUs" className={styles.sidebarNavLink} onClick={closeSidebar}>About Us</Link>
           <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
         </nav>
-
-        {/* Mobile Authentication / Profile Section */}
         <div className={styles.sidebarAuthButtons}>
           {user ? (
             <>
@@ -135,7 +132,6 @@ export default function Header() {
                 />
                 <span className={styles.sidebarProfileName}>{user.fullName}</span>
               </div>
-              {/* Mobile Logout Button */}
               <button className={styles.LogoutButton} onClick={handleLogout}>Logout</button>
             </>
           ) : (
