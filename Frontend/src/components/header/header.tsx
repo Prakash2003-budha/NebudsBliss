@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../img/logo/logoFull.jpg';
 import styles from './header.module.scss';
-import profileIcon from "../../img/icons/profile.white.png"; // Renamed slightly to avoid confusion
+import profileIcon from "../../img/icons/profile.white.png";
 
 const HamburgerIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,17 +20,14 @@ export default function Header() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Removed setUser to fix the ESLint unused variable warning
+  const [user] = useState(() => {
+    const loggedInUser = localStorage.getItem('user');
+    return loggedInUser ? JSON.parse(loggedInUser) : null;
+  });
+
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
-
-  // ------------------------------------------------------------------
-  // TODO: Replace this mock user with your actual authentication state
-  // Example: const { user, logout } = useAuth(); 
-  // ------------------------------------------------------------------
-  const user = {
-    name: "User Name",
-    profilePic: null // If null, it will fall back to your imported profileIcon
-  }; 
 
   return (
     <>
@@ -61,11 +58,13 @@ export default function Header() {
           <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
         </nav>
 
+        {/* Desktop Authentication Buttons */}
         <div className={styles.signButton}>
           {user ? (
             <div className={styles.profileContainer} onClick={() => navigate('/profile')}>
               <img 
-                src={user.profilePic || profileIcon} 
+                // CHANGED: Using the exact path from your Cloudinary database structure
+                src={user.image?.url || profileIcon} 
                 alt="User Profile" 
                 className={styles.profileImage} 
               />
@@ -115,11 +114,13 @@ export default function Header() {
               onClick={() => { navigate('/profile'); closeSidebar(); }}
             >
               <img 
-                src={user.profilePic || profileIcon} 
+                // CHANGED: Using the exact path from your Cloudinary database structure
+                src={user.image?.url || profileIcon} 
                 alt="User Profile" 
                 className={styles.sidebarProfileImage} 
               />
-              <span className={styles.sidebarProfileName}>{user.name}</span>
+              {/* CHANGED: Using fullName instead of name to match your database */}
+              <span className={styles.sidebarProfileName}>{user.fullName}</span>
             </div>
           ) : (
             <>
