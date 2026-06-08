@@ -1,5 +1,5 @@
 import cloudianarySvc from "../../services/cloudinary.services.js";
-import ItemModel from "./item.model.js";
+import ItemModel from "../ItemModel/item.model.js";
 
 class ItemService {
     itemDataTransform = async (req) => {

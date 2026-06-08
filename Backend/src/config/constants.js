@@ -25,7 +25,7 @@ export const Gender = {
     OTHER: "Other"
 };
 
-export const Category = {
+export const ItemCategory = {
     FAN: 'Fan',
     EARBUDS: 'Earbuds', 
     POWERBANK: 'PowerBank',
