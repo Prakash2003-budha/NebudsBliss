@@ -20,7 +20,6 @@ export default function Header() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Removed setUser to fix the ESLint unused variable warning
   const [user] = useState(() => {
     const loggedInUser = localStorage.getItem('user');
     return loggedInUser ? JSON.parse(loggedInUser) : null;
@@ -61,13 +60,20 @@ export default function Header() {
         {/* Desktop Authentication Buttons */}
         <div className={styles.signButton}>
           {user ? (
-            <div className={styles.profileContainer} onClick={() => navigate('/profile')}>
+            // REMOVED onClick from here. Added relative wrapper for dropdown.
+            <div className={styles.profileContainer}>
               <img 
-                // CHANGED: Using the exact path from your Cloudinary database structure
                 src={user.image?.url || profileIcon} 
                 alt="User Profile" 
                 className={styles.profileImage} 
               />
+              
+              {/* NEW: Hover Dropdown Menu */}
+              <div className={styles.profileDropdown}>
+                <Link to="/profile" className={styles.dropdownItem}>My Profile</Link>
+                {/* You can easily add a Logout button here later! */}
+                {/* <button className={styles.dropdownItem}>Logout</button> */}
+              </div>
             </div>
           ) : (
             <>
@@ -107,6 +113,7 @@ export default function Header() {
         </nav>
 
         {/* Mobile Authentication / Profile Section */}
+        {/* Note: Kept mobile as click-to-profile since hover doesn't exist on phones */}
         <div className={styles.sidebarAuthButtons}>
           {user ? (
             <div 
@@ -114,12 +121,10 @@ export default function Header() {
               onClick={() => { navigate('/profile'); closeSidebar(); }}
             >
               <img 
-                // CHANGED: Using the exact path from your Cloudinary database structure
                 src={user.image?.url || profileIcon} 
                 alt="User Profile" 
                 className={styles.sidebarProfileImage} 
               />
-              {/* CHANGED: Using fullName instead of name to match your database */}
               <span className={styles.sidebarProfileName}>{user.fullName}</span>
             </div>
           ) : (

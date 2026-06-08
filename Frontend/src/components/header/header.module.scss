@@ -57,7 +57,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   text-decoration: none;
   cursor: pointer;
   padding: 6px 0;
-  letter-spacing: 0.3px; // Adds a touch of breathing room
+  letter-spacing: 0.3px; 
   transition: color 0.2s ease;
 
   &:hover {
@@ -136,16 +136,30 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 .SignUpButton {
   background-color: transparent;
   color: $dark-text;
-  border: 1px solid #e0e0e0; // Softened the border color slightly
+  border: 1px solid #e0e0e0; 
   &:hover { background-color: $dark-text; color: #ffffff; border-color: $dark-text; }
 }
 
-/* --- NEW: Desktop Profile Styling --- */
+/* --- UPDATED: Desktop Profile Styling with Dropdown Hover --- */
 .profileContainer {
+  position: relative; // Needed to attach the dropdown menu to this area
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  padding: 10px 0; // Gives a slightly larger invisible hover area
+
+  &:hover {
+    .profileDropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .profileImage {
+      transform: scale(1.05);
+      border-color: $secoundary-color;
+    }
+  }
 
   .profileImage {
     width: 40px;
@@ -154,10 +168,42 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     object-fit: cover;
     border: 2px solid $border-color;
     transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+}
+
+/* --- NEW: Desktop Profile Dropdown Menu --- */
+.profileDropdown {
+  position: absolute;
+  top: 100%; // Pushes it directly underneath the profile picture
+  right: 0; // Aligns it to the right edge
+  background: #ffffff;
+  min-width: 150px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px; 
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px); // Starts slightly lower so it slides up
+  transition: all 0.2s ease;
+  z-index: 100;
+
+  .dropdownItem {
+    padding: 10px 16px;
+    text-decoration: none;
+    color: $dark-text;
+    font-size: 0.9rem;
+    transition: background 0.15s, color 0.15s;
+    text-align: left;
+    background: none;
+    border: none;
+    width: 100%;
+    box-sizing: border-box;
 
     &:hover {
-      transform: scale(1.05);
-      border-color: $secoundary-color;
+      background-color: $light-bg;
+      color: $secoundary-color;
     }
   }
 }
@@ -181,7 +227,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px); // Increased blur slightly for depth
+  backdrop-filter: blur(2px); 
   z-index: 150;
   opacity: 0;
   visibility: hidden;
@@ -235,7 +281,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: #a0a0a0; // Softened the heading color so it doesn't shout
+  color: #a0a0a0; 
   letter-spacing: 1px;
   margin-top: 14px;
   margin-bottom: 6px;
@@ -274,7 +320,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 }
 
-/* --- NEW: Mobile Sidebar Profile Styling --- */
+/* --- Mobile Sidebar Profile Styling --- */
 .sidebarProfileContainer {
   display: flex;
   align-items: center;
@@ -284,7 +330,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: $light-bg;
   border-radius: 8px;
   transition: background-color 0.2s ease;
-  margin-top: auto; // Pushes it to the bottom like the auth buttons
+  margin-top: auto; 
 
   &:hover {
     background-color: darken(#f8f9fa, 5%);
