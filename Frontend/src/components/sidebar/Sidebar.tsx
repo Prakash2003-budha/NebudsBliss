@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
 
+// 1. Types
 interface UserType {
   fullName: string;
   image?: {
@@ -17,32 +18,44 @@ interface SidebarProps {
   handleLogout: () => void;
 }
 
+// 2. Component
 export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: SidebarProps) {
   const navigate = useNavigate();
 
   return (
     <div className={styles.sidebarWrapper}>
       
+      {/* Overlay */}
       <div 
         className={`${styles.sidebarOverlay} ${isOpen ? styles.overlayVisible : ''}`} 
         onClick={closeSidebar} 
       />
 
+      {/* Drawer */}
       <aside className={`${styles.sidebarDrawer} ${isOpen ? styles.sidebarOpen : ''}`}>
         
-        {user && (
-          <div 
-            className={styles.sidebarProfileHeader} 
-            onClick={() => { navigate('/profile'); closeSidebar(); }}
-          >
-            <img 
-              src={user.image?.url || profileIcon} 
-              alt="User Profile" 
-              className={styles.sidebarProfileImage} 
-            />
-            <span className={styles.sidebarProfileName}>{user.fullName}</span>
-          </div>
-        )}
+        {/* Profile Header (Always shows: User or Guest) */}
+        <div 
+          className={styles.sidebarProfileHeader} 
+          onClick={() => { 
+            if (user) { navigate('/profile'); } 
+            else { navigate('/LoginPage'); }
+            closeSidebar(); 
+          }}
+        >
+          <img 
+            src={user?.image?.url || profileIcon} 
+            alt="User Profile" 
+            className={styles.sidebarProfileImage} 
+            // Adds a dark background if they are a guest so the white icon is visible
+            style={!user?.image?.url ? { backgroundColor: '#000' } : {}} 
+          />
+          <span className={styles.sidebarProfileName}>
+            {user ? user.fullName : 'Welcome, Guest!'}
+          </span>
+        </div>
+
+        {/* Navigation */}
         <nav className={styles.sidebarNav}>
           <Link to="/" className={styles.sidebarNavLink} onClick={closeSidebar}>Home</Link>
           
@@ -56,9 +69,10 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
           </div>
 
           <Link to="/AboutUs" className={styles.sidebarNavLink} onClick={closeSidebar}>About Us</Link>
-          <Link to="/ContactPage" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
+          <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
         </nav>
 
+        {/* Bottom Action Buttons */}
         <div className={styles.sidebarAuthButtons}>
           {user ? (
             <button className={styles.LogoutButton} onClick={handleLogout}>Logout</button>

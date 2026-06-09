@@ -2,11 +2,10 @@ $breakpoint-mobile: 768px;
 $primary-color: #085ff6;
 $dark-text: #222222;
 $light-bg: #f8f9fa;
-
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 /* =========================================
-   WRAPPER
+   WRAPPER (Hides on Desktop)
 ========================================= */
 .sidebarWrapper {
   font-family: $font-primary;
@@ -44,11 +43,11 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 ========================================= */
 .sidebarDrawer {
   font-family: $font-primary;
-  box-sizing: border-box; // <-- FIX: Ensures padding doesn't break the 300px width
+  box-sizing: border-box; 
   position: fixed;
   top: 0;
-  right: -300px;          // <-- FIX: Perfectly matches the width so it hides exactly off-screen
-  width: 300px;           
+  right: -300px; 
+  width: 300px; 
   height: 100vh;
   background: #ffffff; 
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
@@ -154,7 +153,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-top: auto; // Pushes buttons to the bottom
+  margin-top: auto; 
 
   .SignInButton,
   .SignUpButton,
