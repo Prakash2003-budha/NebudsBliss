@@ -36,7 +36,6 @@ export default function Header() {
     closeSidebar(); 
   };
 
-  // NEW: Automatically close the sidebar if the screen gets resized to desktop
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768 && isSidebarOpen) {
@@ -75,7 +74,6 @@ export default function Header() {
           <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
         </nav>
 
-        {/* Desktop Authentication Buttons */}
         <div className={styles.signButton}>
           {user ? (
             <div className={styles.profileContainer}>

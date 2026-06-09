@@ -9,7 +9,7 @@ interface UserType {
     url: string;
   };
 }
-// 2. Update your SidebarProps
+
 interface SidebarProps {
   isOpen: boolean;
   closeSidebar: () => void;
@@ -23,14 +23,26 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
   return (
     <div className={styles.sidebarWrapper}>
       
-      {/* Overlay */}
       <div 
         className={`${styles.sidebarOverlay} ${isOpen ? styles.overlayVisible : ''}`} 
         onClick={closeSidebar} 
       />
 
-      {/* Drawer */}
       <aside className={`${styles.sidebarDrawer} ${isOpen ? styles.sidebarOpen : ''}`}>
+        
+        {user && (
+          <div 
+            className={styles.sidebarProfileHeader} 
+            onClick={() => { navigate('/profile'); closeSidebar(); }}
+          >
+            <img 
+              src={user.image?.url || profileIcon} 
+              alt="User Profile" 
+              className={styles.sidebarProfileImage} 
+            />
+            <span className={styles.sidebarProfileName}>{user.fullName}</span>
+          </div>
+        )}
         <nav className={styles.sidebarNav}>
           <Link to="/" className={styles.sidebarNavLink} onClick={closeSidebar}>Home</Link>
           
@@ -44,25 +56,12 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
           </div>
 
           <Link to="/AboutUs" className={styles.sidebarNavLink} onClick={closeSidebar}>About Us</Link>
-          <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
+          <Link to="/ContactPage" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
         </nav>
 
         <div className={styles.sidebarAuthButtons}>
           {user ? (
-            <>
-              <div 
-                className={styles.sidebarProfileContainer} 
-                onClick={() => { navigate('/profile'); closeSidebar(); }}
-              >
-                <img 
-                  src={user.image?.url || profileIcon} 
-                  alt="User Profile" 
-                  className={styles.sidebarProfileImage} 
-                />
-                <span className={styles.sidebarProfileName}>{user.fullName}</span>
-              </div>
-              <button className={styles.LogoutButton} onClick={handleLogout}>Logout</button>
-            </>
+            <button className={styles.LogoutButton} onClick={handleLogout}>Logout</button>
           ) : (
             <>
               <button className={styles.SignInButton} onClick={() => { navigate('/LoginPage'); closeSidebar(); }}>Sign In</button>
@@ -70,8 +69,8 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
             </>
           )}
         </div>
+
       </aside>
-      
     </div>
   );
 }

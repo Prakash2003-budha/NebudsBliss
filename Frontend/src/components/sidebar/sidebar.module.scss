@@ -5,7 +5,21 @@ $light-bg: #f8f9fa;
 
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
+/* =========================================
+   WRAPPER
+========================================= */
+.sidebarWrapper {
+  font-family: $font-primary;
+  display: block;
 
+  @media (min-width: 769px) {
+    display: none !important;
+  }
+}
+
+/* =========================================
+   OVERLAY
+========================================= */
 .sidebarOverlay {
   position: fixed;
   top: 0;
@@ -25,27 +39,69 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 }
 
+/* =========================================
+   DRAWER
+========================================= */
 .sidebarDrawer {
-    font-family: $font-primary;
+  font-family: $font-primary;
+  box-sizing: border-box; // <-- FIX: Ensures padding doesn't break the 300px width
   position: fixed;
   top: 0;
-  right: -350px; 
-  width: 300px;
+  right: -300px;          // <-- FIX: Perfectly matches the width so it hides exactly off-screen
+  width: 300px;           
   height: 100vh;
   background: #ffffff; 
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 100;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 2rem 1.5rem;
   transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto; 
 
   &.sidebarOpen {
     right: 0;
   }
 }
 
+/* =========================================
+   PROFILE HEADER
+========================================= */
+.sidebarProfileHeader {
+  display: flex;
+  flex-direction: column; 
+  align-items: center;    
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  margin: -2rem -1.5rem 1.5rem -1.5rem; 
+  background-color: $light-bg;
+  border-bottom: 1px solid #eeeeee;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #eeeeee;
+  }
+
+  .sidebarProfileImage {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid $primary-color;
+  }
+
+  .sidebarProfileName {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: $dark-text;
+    text-align: center;
+  }
+}
+
+/* =========================================
+   NAVIGATION
+========================================= */
 .sidebarNav {
   display: flex;
   flex-direction: column;
@@ -91,16 +147,19 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 }
 
-
+/* =========================================
+   AUTH BUTTONS
+========================================= */
 .sidebarAuthButtons {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-top: auto;
+  margin-top: auto; // Pushes buttons to the bottom
 
   .SignInButton,
   .SignUpButton,
   .LogoutButton {
+    font-family: inherit; 
     width: 100%;
     padding: 12px;
     border-radius: 8px;
@@ -138,43 +197,5 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     &:hover {
       background: #fff0f0;
     }
-  }
-}
-
-.sidebarProfileContainer {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: $light-bg;
-  }
-}
-
-.sidebarProfileImage {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.sidebarProfileName {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333333;
-}
-
-
-.sidebarWrapper {
-  font-family: $font-primary;
-
-  display: block;
-
-  @media (min-width: 769px) {
-    display: none !important;
   }
 }
