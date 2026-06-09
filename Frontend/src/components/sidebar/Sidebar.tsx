@@ -3,8 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
 
-// 1. Define what types of data your props are
-// 1. Define the exact shape of your User data
 interface UserType {
   fullName: string;
   image?: {

@@ -3,6 +3,10 @@ $primary-color: #085ff6;
 $dark-text: #222222;
 $light-bg: #f8f9fa;
 
+/* =========================================
+   1. OVERLAY & DRAWER
+========================================= */
+
 .sidebarOverlay {
   position: fixed;
   top: 0;
@@ -41,6 +45,10 @@ $light-bg: #f8f9fa;
     right: 0;
   }
 }
+
+/* =========================================
+   2. NAVIGATION LINKS
+========================================= */
 
 .sidebarNav {
   display: flex;
@@ -86,6 +94,10 @@ $light-bg: #f8f9fa;
     color: $primary-color;
   }
 }
+
+/* =========================================
+   3. AUTHENTICATION & PROFILE
+========================================= */
 
 .sidebarAuthButtons {
   display: flex;
@@ -163,24 +175,15 @@ $light-bg: #f8f9fa;
   color: #333333;
 }
 
-@media (min-width: 769px) {
-  .sidebarOverlay,
-  .sidebarDrawer {
-    display: none !important;
-  }
-}
+/* =========================================
+   4. DESKTOP OVERRIDE (HIDDEN ON LARGE SCREENS)
+========================================= */
 
 .sidebarWrapper {
-  display: block; 
+  display: block; // Shows the sidebar normally on mobile
 
+  // Completely deletes the sidebar from the screen if wider than 768px
   @media (min-width: 769px) {
-    display: none !important;
-  }
-}
-
-@media (min-width: 769px) {
-  .sidebarOverlay,
-  .sidebarDrawer {
     display: none !important;
   }
 }
