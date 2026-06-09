@@ -234,7 +234,6 @@ $breakpoint-mobile: 768px;
 
 
 .mobileOnlySidebar {
-  // If the screen is larger than 768px, completely hide the sidebar wrapper
   @media (min-width: 769px) {
     display: none !important;
   }

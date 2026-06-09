@@ -57,7 +57,6 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Desktop Navigation Links */}
         <nav className={styles.nav}>
           <Link to="/" className={styles.navLink}>Home</Link>
           
@@ -98,14 +97,11 @@ export default function Header() {
             </>
           )}
         </div>
-
-        {/* Hamburger Menu Trigger */}
         <button className={styles.hamburgerMenu} onClick={toggleSidebar} aria-label="Toggle Navigation">
           {isSidebarOpen ? <CloseIcon /> : <HamburgerIcon />}
         </button>
       </header>
 
-      {/* NEW: Wrapped Sidebar in a mobile-only container */}
       <div className={styles.mobileOnlySidebar}>
         <Sidebar 
           isOpen={isSidebarOpen} 
