@@ -3,9 +3,8 @@ $primary-color: #085ff6;
 $dark-text: #222222;
 $light-bg: #f8f9fa;
 
-/* =========================================
-   1. OVERLAY & DRAWER
-========================================= */
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+
 
 .sidebarOverlay {
   position: fixed;
@@ -45,10 +44,6 @@ $light-bg: #f8f9fa;
     right: 0;
   }
 }
-
-/* =========================================
-   2. NAVIGATION LINKS
-========================================= */
 
 .sidebarNav {
   display: flex;
@@ -95,9 +90,6 @@ $light-bg: #f8f9fa;
   }
 }
 
-/* =========================================
-   3. AUTHENTICATION & PROFILE
-========================================= */
 
 .sidebarAuthButtons {
   display: flex;
@@ -175,15 +167,33 @@ $light-bg: #f8f9fa;
   color: #333333;
 }
 
-/* =========================================
-   4. DESKTOP OVERRIDE (HIDDEN ON LARGE SCREENS)
-========================================= */
 
 .sidebarWrapper {
-  display: block; // Shows the sidebar normally on mobile
+  font-family: $font-primary;
 
-  // Completely deletes the sidebar from the screen if wider than 768px
+  display: block;
+
   @media (min-width: 769px) {
     display: none !important;
+  }
+}
+.sidebarDrawer {
+  font-family: $font-primary; // <-- ADD THIS HERE
+  position: fixed;
+  top: 0;
+  right: -350px; 
+  width: 300px;
+  height: 100vh;
+  background: #ffffff; 
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 1.5rem;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.sidebarOpen {
+    right: 0;
   }
 }

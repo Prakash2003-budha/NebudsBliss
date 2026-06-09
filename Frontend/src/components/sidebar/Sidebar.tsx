@@ -13,12 +13,10 @@ interface UserType {
 interface SidebarProps {
   isOpen: boolean;
   closeSidebar: () => void;
-  // Tell TS the user is either the UserType object, or null (if not logged in)
   user: UserType | null; 
   handleLogout: () => void;
 }
 
-// 2. Attach the SidebarProps interface to your function parameters
 export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: SidebarProps) {
   const navigate = useNavigate();
 
