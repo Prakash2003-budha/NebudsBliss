@@ -3,11 +3,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
 
-export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }) {
+// 1. Define what types of data your props are
+// 1. Define the exact shape of your User data
+interface UserType {
+  fullName: string;
+  image?: {
+    url: string;
+  };
+}
+// 2. Update your SidebarProps
+interface SidebarProps {
+  isOpen: boolean;
+  closeSidebar: () => void;
+  // Tell TS the user is either the UserType object, or null (if not logged in)
+  user: UserType | null; 
+  handleLogout: () => void;
+}
+
+// 2. Attach the SidebarProps interface to your function parameters
+export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: SidebarProps) {
   const navigate = useNavigate();
 
   return (
-    // WE WRAP EVERYTHING IN THIS NEW DIV
     <div className={styles.sidebarWrapper}>
       
       {/* Overlay */}
