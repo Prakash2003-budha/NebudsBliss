@@ -19,7 +19,6 @@ class ItemController {
 
     getAllItems = async (req, res, next) => {
         try {
-            // Optional: extract query params for filtering (e.g., ?category=Starter)
             let filter = {};
             if (req.query.category) {
                 filter.category = req.query.category;
@@ -93,8 +92,6 @@ class ItemController {
 
             await itemSvc.deleteItemById(req.params.id);
             
-            // Optional: Add logic here to delete associated images from Cloudinary if needed
-
             res.json({
                 data: null,
                 message: "Item deleted successfully",
