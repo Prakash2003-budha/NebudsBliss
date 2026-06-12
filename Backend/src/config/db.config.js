@@ -13,7 +13,7 @@ const dhInit = async()=>{
     }catch(exception){
         console.log("***************Error while connecting to mangoos database**********************");
         throw exception
-    }
+    } 
 }
 
 dhInit()
