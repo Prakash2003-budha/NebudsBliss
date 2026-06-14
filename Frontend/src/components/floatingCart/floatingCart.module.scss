@@ -1,3 +1,12 @@
+
+$primary-color: #085ff6;
+$dark-text: #222222;
+$light-bg: #f8f9fa;
+$border-color: #eeeeee;
+$secoundary-color: #3ce3ff;
+$hover-color: #bcf5ff;
+$breakpoint-mobile: 768px;
+
 .floatingCartButton {
   position: fixed;
   bottom: 24px;
@@ -5,10 +14,10 @@
   z-index: 999;
   width: 64px;
   height: 64px;
-  background-color: #4f46e5; // Modern Indigo background
+  background-color: $secoundary-color; 
   border: none;
   border-radius: 50%;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(8, 95, 246, 0.25); 
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -17,42 +26,49 @@
 
   &:hover {
     transform: scale(1.1);
-    background-color: #4338ca;
+    background-color: $hover-color; 
   }
 
   &:active {
     transform: scale(0.95);
   }
+
+  @media (max-width: $breakpoint-mobile) {
+    bottom: 16px;
+    right: 16px;
+    width: 56px;
+    height: 56px;
+  }
 }
 
 .cartIcon {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
-  // Optional: If your cart.png icon is black, this CSS filter turns it crisp white
-  filter: brightness(0) invert(1); 
+  
+  filter: brightness(0) saturate(100%) invert(9%) sepia(0%) saturate(0%) hue-rotate(174deg) brightness(96%) contrast(89%);
 }
 
 .cartBadge {
   position: absolute;
-  top: -4px;
-  right: -4px;
-  background-color: #f43f5e; // Vibrant rose/red badge
+  top: -2px;
+  right: -2px;
+  background-color: $primary-color; // Using your deep blue primary color for the badge
   color: white;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: bold;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: pulse 2s infinite;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  animation: pulse 2.5s infinite;
 }
 
 @keyframes pulse {
   0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
+  50% { transform: scale(1.06); }
   100% { transform: scale(1); }
 }
