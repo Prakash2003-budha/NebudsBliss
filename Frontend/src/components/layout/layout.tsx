@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
-import styles from "./layout.module.scss"; // Import layout styles
+import styles from "./layout.module.scss"; 
+import FloatingCart from "../floatingCart/floatingCart";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className={styles.mainContent}>
         {children}
       </main>
+      <FloatingCart />
       <Footer />
     </div>
   );
