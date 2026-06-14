@@ -17,14 +17,11 @@ const FloatingCart: React.FC<FloatingCartProps> = ({
       className={styles.floatingCartButton}
       aria-label="View Shopping Cart"
     >
-      {/* Cart Icon */}
       <img 
         src={cartIcon} 
         alt="Cart" 
         className={styles.cartIcon} 
       />
-
-      {/* Item Count Badge (Only displays if count is greater than 0) */}
       {itemCount > 0 && (
         <span className={styles.cartBadge}>
           {itemCount}

@@ -3,6 +3,7 @@ import Header from "../header/header";
 import Footer from "../footer/footer";
 import styles from "./layout.module.scss"; 
 import FloatingCart from "../floatingCart/floatingCart";
+import AdminButton from "../adminButten/AdminButton";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
-      {/* This will now work without props because we made them optional! */}
+      <AdminButton />      
       <FloatingCart />
       
       <Footer />

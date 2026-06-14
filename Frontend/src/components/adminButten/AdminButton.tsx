@@ -1,23 +1,20 @@
 import React from "react";
 import styles from "./adminButton.module.scss";
-import addButton from "../../img/icons/add.png"
+import addButton from "../../img/icons/add.png"; // Your icon import
 
 interface AdminButtonProps {
-  userRole: string; // "admin", "customer", etc.
-  onAdd: () => void;
-  onModify: () => void;
+  onAdd?: () => void; // Optional click handler
 }
 
-const AdminButton: React.FC<AdminButtonProps> = ({ userRole, onAdd, onModify }) => {
-  if (userRole !== "admin") return null;
-
+const AdminButton: React.FC<AdminButtonProps> = ({ onAdd }) => {
   return (
     <div className={styles.adminControlPanel}>
-      <button onClick={onAdd} className={styles.addButton}>
-       <img src={addButton} alt="" />Add New Item
-      </button>
-      <button onClick={onModify} className={styles.modifyButton}>
-        ⚙️ Modify Items
+      <button 
+        onClick={onAdd} 
+        className={styles.addButton}
+        aria-label="Add New Item"
+      >
+        <img src={addButton} alt="Add Item" className={styles.btnIcon} />
       </button>
     </div>
   );
