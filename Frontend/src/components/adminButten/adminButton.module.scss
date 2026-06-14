@@ -1,0 +1,47 @@
+$primary-color: #085ff6;
+$dark-text: #222222;
+$light-bg: #f8f9fa;
+$border-color: #eeeeee;
+$secoundary-color: #3ce3ff;
+$hover-color: #bcf5ff;
+
+.adminControlPanel {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: $light-bg;
+  border: 1px dashed $primary-color; // Gives it an "admin management" look
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.addButton, .modifyButton {
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.addButton {
+  background-color: $primary-color;
+  color: white;
+
+  &:hover {
+    background-color: darken($primary-color, 10%);
+  }
+}
+
+.modifyButton {
+  background-color: $dark-text;
+  color: white;
+
+  &:hover {
+    background-color: lighten($dark-text, 15%);
+  }
+}
