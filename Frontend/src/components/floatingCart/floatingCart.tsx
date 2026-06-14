@@ -1,29 +1,32 @@
-import React from 'react';
-import cartIcon from "../../img/icons/cart.png"; // Your imported icon
+import React from "react";
+import cartIcon from "../../img/icons/cart.png"; // Matches your file tree path
+import styles from "./floatingCart.module.scss"; // Imports your SCSS module
 
 interface FloatingCartProps {
-  itemCount: number;
-  onClick: () => void;
+  itemCount?: number;     // The '?' makes it optional so Layout doesn't break
+  onClick?: () => void;   // The '?' makes it optional
 }
 
-const FloatingCart: React.FC<FloatingCartProps> = ({ itemCount, onClick }) => {
+const FloatingCart: React.FC<FloatingCartProps> = ({ 
+  itemCount = 0,          // Default value if no prop is passed
+  onClick 
+}) => {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-indigo-600 shadow-xl transition-all duration-300 hover:scale-110 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 active:scale-95"
+      className={styles.floatingCartButton}
       aria-label="View Shopping Cart"
     >
       {/* Cart Icon */}
       <img 
         src={cartIcon} 
         alt="Cart" 
-        className="h-7 w-7 object-contain brightness-0 invert" 
-        /* Note: 'brightness-0 invert' turns a black icon white. Remove if your icon is already colored */
+        className={styles.cartIcon} 
       />
 
-      {/* Item Count Badge (Only shows if there are items) */}
+      {/* Item Count Badge (Only displays if count is greater than 0) */}
       {itemCount > 0 && (
-        <span className="absolute -top-1 -right-1 flex h-6 w-6 animate-pulse items-center justify-center rounded-full bg-rose-500 text-xs font-bold text-white shadow-md">
+        <span className={styles.cartBadge}>
           {itemCount}
         </span>
       )}
