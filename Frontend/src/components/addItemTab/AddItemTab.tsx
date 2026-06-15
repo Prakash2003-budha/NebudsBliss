@@ -66,7 +66,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     if (formData.description.length < 10) return alert("Description must be at least 10 characters.");
     if (parseFloat(formData.price) < 0) return alert("Price cannot be negative.");
 
-    // Convert types exactly as Mongoose expects them
     const itemDataPacket = {
       name: formData.name,
       description: formData.description,
@@ -96,7 +95,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
         <form className={styles.tabContent} onSubmit={handleSubmit}>
           <div className={styles.scrollableFormFields}>
             
-            {/* Image Box Section */}
             <div className={styles.inputGroup}>
               <label>Item Image</label>
               <div className={styles.imageUploadArea} onClick={() => fileInputRef.current?.click()}>
@@ -116,7 +114,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
             <div className={styles.inputGroup}>
               <label>Item Name *</label>
               <input 
-                type="text" name="name" required placeholder="e.g. Butter Croissant"
+                type="text" name="name" required placeholder="e.g. Earbuds"
                 value={formData.name} onChange={handleChange}
               />
             </div>
@@ -130,14 +128,17 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
-            {/* Category Option Selector */}
             <div className={styles.inputGroup}>
               <label>Category *</label>
               <select name="category" required value={formData.category} onChange={handleChange}>
                 <option value="">Choose Category</option>
-                <option value="Bakery">Bakery</option>
-                <option value="Desserts">Desserts</option>
-                <option value="Beverages">Beverages</option>
+                <option value="Bakery">Earbuds</option>
+                <option value="Desserts">Powerbank</option>
+                <option value="Beverages">Camera</option>
+                <option value="Beverages">Accessories</option>
+                <option value="Beverages">Fan</option>
+
+
               </select>
             </div>
 
