@@ -123,7 +123,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
 
             {/* SKU Input */}
             <div className={styles.inputGroup}>
-              <label>SKU Code *</label>
+              <label>SKU Code</label>
               <input 
                 type="text" name="sku" required placeholder="e.g. CROI-BUTR-01"
                 value={formData.sku} onChange={handleChange}
@@ -134,14 +134,13 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
             <div className={styles.inputGroup}>
               <label>Category *</label>
               <select name="category" required value={formData.category} onChange={handleChange}>
-                <option value="">-- Choose Category --</option>
+                <option value="">Choose Category</option>
                 <option value="Bakery">Bakery</option>
                 <option value="Desserts">Desserts</option>
                 <option value="Beverages">Beverages</option>
               </select>
             </div>
 
-            {/* Price & Discount Row */}
             <div className={styles.formRow}>
               <div className={styles.inputGroup}>
                 <label>Price *</label>
@@ -159,7 +158,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* Brand & Stock Quantity Row */}
             <div className={styles.formRow}>
               <div className={styles.inputGroup}>
                 <label>Brand Name</label>
@@ -176,8 +174,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                 />
               </div>
             </div>
-
-            {/* Description Textarea Area */}
             <div className={styles.inputGroup}>
               <label>Description * (Min. 10 Chars)</label>
               <textarea 
