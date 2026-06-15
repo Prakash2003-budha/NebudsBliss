@@ -1,19 +1,22 @@
+// Variables
+$primary-color:      #085ff6;
+$secoundary-color:   #3ce3ff; // Matches your original spelling
+$hover-color:        #bcf5ff;
+$breakpoint-mobile:  768px;
 
-$primary-color: #085ff6;
-$dark-text: #222222;
-$light-bg: #f8f9fa;
-$border-color: #eeeeee;
-$secoundary-color: #3ce3ff;
-$hover-color: #bcf5ff;
-$breakpoint-mobile: 768px;
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
 
 .floatingCartButton {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 24px;       // Base position at the bottom right
+  right: 24px;        // Alignment line
   z-index: 999;
-  width: 64px;
-  height: 64px;
+  width: 60px;        // Matched size
+  height: 60px;       // Matched size
   background-color: $secoundary-color; 
   border: none;
   border-radius: 50%;
@@ -35,17 +38,16 @@ $breakpoint-mobile: 768px;
 
   @media (max-width: $breakpoint-mobile) {
     bottom: 16px;
-    right: 16px;
-    width: 56px;
-    height: 56px;
+    right: 16px;      
+    width: 52px;     
+    height: 52px;     
   }
 }
 
 .cartIcon {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
-  
   filter: brightness(0) saturate(100%) invert(9%) sepia(0%) saturate(0%) hue-rotate(174deg) brightness(96%) contrast(89%);
 }
 
@@ -65,10 +67,4 @@ $breakpoint-mobile: 768px;
   justify-content: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
   animation: pulse 2.5s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.06); }
-  100% { transform: scale(1); }
 }

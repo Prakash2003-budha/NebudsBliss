@@ -1,27 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "./adminButton.module.scss";
 import addButton from "../../img/icons/add.png";
 
 const AdminButton: React.FC = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    // 1. Grab the user data string from localStorage (or sessionStorage)
-    const storedUser = localStorage.getItem("user"); // Change "user" to whatever key you use to store the login data
-
-    if (storedUser) {
-      try {
-        // 2. Parse the JSON string into an object
+  const getIsAdmin = (): boolean => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
         const userData = JSON.parse(storedUser);
-
-        if (userData && userData.role === "Admin") {
-          setIsAdmin(true);
-        }
-      } catch (error) {
-        console.error("Error parsing user data from localStorage:", error);
+        return userData?.role === "Admin";
       }
+    } catch (error) {
+      console.error("Error parsing user data from localStorage:", error);
     }
-  }, []);
+    return false;
+  };
+
+  const isAdmin = getIsAdmin();
 
   const handleAddItem = () => {
     alert("Add product action triggered!");
@@ -29,16 +24,16 @@ const AdminButton: React.FC = () => {
 
   if (!isAdmin) return null;
 
+  // Render ONLY the button now
   return (
-    <div className={styles.adminControlPanel} title="Admin Panel">
-      <button 
-        onClick={handleAddItem} 
-        className={styles.addButton}
-        aria-label="Add New Item"
-      >
-        <img src={addButton} alt="Add Item" className={styles.btnIcon} />
-      </button>
-    </div>
+    <button 
+      onClick={handleAddItem} 
+      className={styles.addButton}
+      aria-label="Add New Item"
+      title="Admin Panel: Add New Item"
+    >
+      <img src={addButton} alt="Add Item" className={styles.btnIcon} />
+    </button>
   );
 };
 

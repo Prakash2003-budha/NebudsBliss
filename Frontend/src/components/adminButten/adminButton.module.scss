@@ -1,31 +1,22 @@
-$primary-color: #085ff6;
-$light-bg: #f8f9fa;
-$breakpoint-mobile: 768px;
-
-.adminControlPanel {
-  position: fixed;   /* Fixes it to the screen so it floats while scrolling */
-  bottom: 100px;     /* Places it directly above the floating cart button (which is at 24px) */
-  right: 24px;       /* Aligns it perfectly with the cart button horizontally */
-  z-index: 999;      /* Forces it to stay on top of background content */
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-  background-color: $light-bg;
-  border: 1px dashed $primary-color;
-  border-radius: 50%; /* Changed to a circle to look clean right above your circular cart! */
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-}
+// Variables
+$primary-color:      #085ff6;
+$breakpoint-mobile:  768px;
 
 .addButton {
+  position: fixed;
+  bottom: 100px;      // Placed exactly 16px above the 60px cart button (24 + 60 + 16)
+  right: 24px;        // Identical alignment line to match the cart
+  z-index: 999;
+  width: 60px;        // Identical size to match the cart
+  height: 60px;       // Identical size to match the cart
+  background-color: $primary-color;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px -5px rgba(8, 95, 246, 0.25); // Matching shadow strength
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;  
-  height: 44px;
-  background-color: $primary-color;
-  border: none;
-  border-radius: 50%; /* Keeps the inner button circular */
-  cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
 
   &:hover {
@@ -36,12 +27,18 @@ $breakpoint-mobile: 768px;
   &:active {
     transform: scale(0.95);
   }
+
+  @media (max-width: $breakpoint-mobile) {
+    bottom: 80px;     // Placed exactly 12px above the 52px mobile cart button (16 + 52 + 12)
+    right: 16px;      // Identical mobile alignment line to match the cart
+    width: 52px;      // Identical mobile size to match the cart
+    height: 52px;     // Identical mobile size to match the cart
+  }
 }
 
 .btnIcon {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
-  filter: brightness(0) invert(1); 
+  filter: brightness(0) invert(1);
 }
-
