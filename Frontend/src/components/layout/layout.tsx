@@ -4,7 +4,7 @@ import Footer from "../footer/footer";
 import styles from "./layout.module.scss"; 
 import FloatingCart from "../floatingCart/floatingCart";
 import AdminButton from "../adminButten/AdminButton";
-import AddItemTab from "../addItemTab/addItemTab"; // Import your new tab component
+import AddItemTab from "../addItemTab/addItemTab"; 
 
 interface LayoutProps {
   children: React.ReactNode;
