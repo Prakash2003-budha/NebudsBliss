@@ -1,35 +1,156 @@
-// Append these style definitions to the bottom of your module file:
+$primary-color: #085ff6;
+$dark-text: #222222;
+$light-bg: #f8f9fa;
+$breakpoint-mobile: 768px;
 
-.imageUploadArea {
-  width: 100%;
-  height: 140px;
-  border: 2px dashed #cccccc;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  overflow: hidden;
-  background-color: #fafafa;
-  transition: border-color 0.2s ease;
+:global {
+  @keyframes slideInRight {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+  }
 
-  &:hover {
-    border-color: #085ff6;
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
   }
 }
 
-.uploadPlaceholder {
-  color: #777777;
-  font-size: 14px;
-  font-weight: 500;
+// This wrapper blocks out the rest of the screen
+.addItemOverlay {
+  position: fixed !important; // !important ensures it overrides any container constraints
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); // Darken background slightly more
+  z-index: 99999; // Force it above headers, footers, and floating buttons
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    align-items: flex-end; 
+  }
 }
 
-.previewImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+// This is the actual slide-out white sheet container
+.addItemTab {
+  background-color: white;
+  width: 400px;
+  height: 100vh; // Ensure full height on desktop
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+  animation: slideInRight 0.3s ease-out;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    height: 75vh; // 75% height on mobile screen viewports
+    border-radius: 20px 20px 0 0;
+    animation: slideUp 0.3s ease-out;
+  }
 }
 
-.hiddenFileInput {
-  display: none;
+.tabHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 16px;
+
+  h3 {
+    margin: 0;
+    color: $dark-text;
+    font-size: 20px;
+  }
+
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    &:hover { color: $dark-text; }
+  }
+}
+
+.tabContent {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: $dark-text;
+      text-align: left;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .imageUploadArea {
+    width: 100%;
+    height: 140px;
+    border: 2px dashed #cccccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #fafafa;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+    &:hover { border-color: $primary-color; }
+  }
+
+  .uploadPlaceholder {
+    color: #777777;
+    font-size: 14px;
+  }
+
+  .previewImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hiddenFileInput {
+    display: none;
+  }
+
+  .submitButton {
+    margin-top: 16px;
+    padding: 14px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.2s;
+    &:hover { opacity: 0.9; }
+  }
 }

@@ -4,14 +4,13 @@ import Footer from "../footer/footer";
 import styles from "./layout.module.scss"; 
 import FloatingCart from "../floatingCart/floatingCart";
 import AdminButton from "../adminButten/AdminButton";
-import AddItemTab from "../addItemTab/addItemTab"; 
+import AddItemTab from "../addItemTab/addItemTab"; // Make sure path casing matches your files
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  // State to control if the Add Item Tab panel is visible
   const [isTabOpen, setIsTabOpen] = useState<boolean>(false);
 
   return (
@@ -22,11 +21,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
       
+      {/* Pass the state setter down to your updated Admin Button */}
       <AdminButton onClick={() => setIsTabOpen(true)} />      
       
       <FloatingCart />
       
-      {/* Render the drawer panel component and pass its state hooks */}
+      {/* This renders globally on top of the entire application layout */}
       <AddItemTab isOpen={isTabOpen} onClose={() => setIsTabOpen(false)} />
       
       <Footer />
