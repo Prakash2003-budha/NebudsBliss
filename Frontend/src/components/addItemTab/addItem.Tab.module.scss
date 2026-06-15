@@ -1,0 +1,117 @@
+$primary-color: #085ff6;
+$dark-text: #222222;
+$light-bg: #f8f9fa;
+$breakpoint-mobile: 768px;
+
+.addItemOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000; // Sits above the floating buttons (999)
+  display: flex;
+  justify-content: flex-end; // Slides out from the right side on desktop
+  align-items: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    align-items: flex-end; // Slides up from the bottom on mobile
+  }
+}
+
+.addItemTab {
+  background-color: white;
+  width: 400px;
+  height: 100%;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  box-sizing: border-box;
+  animation: slideInRight 0.3s ease-out;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    height: 70%; // Covers most of the screen on mobile devices
+    border-radius: 20px 20px 0 0;
+    animation: slideUp 0.3s ease-out;
+  }
+}
+
+.tabHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eeeeee;
+  padding-bottom: 16px;
+
+  h3 {
+    margin: 0;
+    color: $dark-text;
+    font-size: 20px;
+  }
+
+  .closeButton {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #999;
+    &:hover { color: $dark-text; }
+  }
+}
+
+.tabContent {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: $dark-text;
+    }
+
+    input {
+      padding: 12px;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      font-size: 16px;
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+  }
+
+  .submitButton {
+    margin-top: 16px;
+    padding: 14px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    &:hover { opacity: 0.9; }
+  }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

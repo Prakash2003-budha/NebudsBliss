@@ -1,6 +1,6 @@
 // Variables
 $primary-color:      #085ff6;
-$secoundary-color:   #3ce3ff; // Matches your original spelling
+$secoundary-color:   #3ce3ff; 
 $hover-color:        #bcf5ff;
 $breakpoint-mobile:  768px;
 
@@ -12,11 +12,11 @@ $breakpoint-mobile:  768px;
 
 .floatingCartButton {
   position: fixed;
-  bottom: 24px;       // Base position at the bottom right
-  right: 24px;        // Alignment line
+  bottom: 24px;     
+  right: 24px;      
   z-index: 999;
-  width: 60px;        // Matched size
-  height: 60px;       // Matched size
+  width: 60px;       
+  height: 60px;    
   background-color: $secoundary-color; 
   border: none;
   border-radius: 50%;
