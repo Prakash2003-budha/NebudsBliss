@@ -241,7 +241,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       <PasswordConfirmModal 
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
-        // 👈 FIXED: Since handleFinalDatabaseSave doesn't accept parameters anymore, we call it cleanly here
         onConfirm={() => handleFinalDatabaseSave()}
       />
     </>
