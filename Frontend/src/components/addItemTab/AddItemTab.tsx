@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import styles from './addItem.Tab.module.scss';
 import PasswordConfirmModal from '../passwordAsking/PasswordConfirmModal'; 
+import axios from 'axios';
+import { API_ENDPOINTS } from '../../constants/constants'; // Adjust this import path to match your project structure
 
 interface AddItemTabProps {
   isOpen: boolean;
@@ -21,10 +23,10 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
 
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // State flag tracking whether the user validation password screen is active
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Tracks active loading state
+  
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
 
@@ -55,10 +57,10 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     setImage(null);
     setImagePreview(null);
     setShowPasswordModal(false);
+    setIsSubmitting(false);
     onClose();
   };
 
-  // Step 1: Intercept the regular submission event layout flow
   const handlePreSubmitCheck = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -67,41 +69,64 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     if (parseFloat(formData.price) < 0) return alert("Price cannot be negative.");
     if (!formData.category) return alert("Please select a product category.");
 
-    // Form validation checks passed cleanly, show password modal prompt now
     setShowPasswordModal(true);
   };
 
-  // Step 2: Executes when the password modal handles validation confirmation
-  const handleFinalDatabaseSave = (adminPassword: string) => {
-    const itemDataPacket = {
-      name: formData.name,
-      description: formData.description,
-      price: parseFloat(formData.price),
-      discountPrice: formData.discountPrice ? parseFloat(formData.discountPrice) : undefined,
-      sku: formData.sku.toUpperCase().trim(),
-      category: formData.category,
-      brand: formData.brand || undefined,
-      stockQuantity: parseInt(formData.stockQuantity, 10),
-      imageFile: image,
-      verificationPassword: adminPassword // Send this over to your node backend API router to cross check hash keys
-    };
+  // Step 2: Hits your backend route using the constant values
+  const handleFinalDatabaseSave = async (adminPassword: string) => {
+    setShowPasswordModal(false); 
+    setIsSubmitting(true);
 
-    console.log("Mongoose Payload Securely Authorized. Sending to API server:", itemDataPacket);
-    
-    // Perform your backend Axios/Fetch POST dispatch call here:
-    // axios.post('/api/items', itemDataPacket)...
+    // 1. Prepare FormData because your backend uses a file upload middleware
+    const dataPayload = new FormData();
+    dataPayload.append('name', formData.name);
+    dataPayload.append('description', formData.description);
+    dataPayload.append('price', formData.price);
+    dataPayload.append('sku', formData.sku.toUpperCase().trim());
+    dataPayload.append('category', formData.category);
+    dataPayload.append('stockQuantity', formData.stockQuantity);
+    dataPayload.append('verificationPassword', adminPassword); // Sends admin password for backend authentication if needed
 
-    alert("Product saved successfully to database catalog!");
-    resetForm();
+    if (formData.discountPrice) dataPayload.append('discountPrice', formData.discountPrice);
+    if (formData.brand) dataPayload.append('brand', formData.brand);
+
+    // 2. Attach file binary matching the 'images' key required by your backend: uploader().array('images', 5)
+    if (image) {
+      dataPayload.append('images', image);
+    }
+
+    try {
+      // 3. Make the API post request hitting: itemRouter.post('/items')
+      const response = await axios.post(API_ENDPOINTS.CREATE_ITEM, dataPayload, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // Automatically sends the login token to pass your allowUser("Admin") middleware restriction
+          'Authorization': `Bearer ${localStorage.getItem('token')}` 
+        },
+        withCredentials: true // Includes cookies/sessions if your backend uses them for verification
+      });
+
+      console.log("Database update successful:", response.data);
+      alert("Product saved successfully to database catalog!");
+      resetForm();
+    } catch (error: any) {
+      console.error("API error details:", error);
+      
+      // Grabs error message from backend body validation or general failure
+      const errorMessage = error?.response?.data?.message || "Failed to communicate with catalog database server.";
+      alert(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <>
-      <div className={styles.addItemOverlay} onClick={resetForm}>
+      <div className={styles.addItemOverlay} onClick={isSubmitting ? undefined : resetForm}>
         <div className={styles.addItemTab} onClick={(e) => e.stopPropagation()}>
           <div className={styles.tabHeader}>
             <h3>Add New Catalog Item</h3>
-            <button className={styles.closeButton} onClick={resetForm}>&times;</button>
+            <button className={styles.closeButton} disabled={isSubmitting} onClick={resetForm}>&times;</button>
           </div>
           
           <form className={styles.tabContent} onSubmit={handlePreSubmitCheck}>
@@ -109,7 +134,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               
               <div className={styles.inputGroup}>
                 <label>Item Image</label>
-                <div className={styles.imageUploadArea} onClick={() => fileInputRef.current?.click()}>
+                <div className={styles.imageUploadArea} onClick={() => !isSubmitting && fileInputRef.current?.click()}>
                   {imagePreview ? (
                     <img src={imagePreview} alt="Preview" className={styles.previewImg} />
                   ) : (
@@ -117,7 +142,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   )}
                 </div>
                 <input 
-                  type="file" accept="image/*" ref={fileInputRef} 
+                  type="file" accept="image/*" ref={fileInputRef} disabled={isSubmitting}
                   className={styles.hiddenFileInput} onChange={handleImageChange} 
                 />
               </div>
@@ -125,22 +150,22 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               <div className={styles.inputGroup}>
                 <label>Item Name *</label>
                 <input 
-                  type="text" name="name" required placeholder="e.g. Earbuds"
+                  type="text" name="name" required placeholder="e.g. Earbuds" disabled={isSubmitting}
                   value={formData.name} onChange={handleChange}
                 />
               </div>
 
               <div className={styles.inputGroup}>
-                <label>SKU Code</label>
+                <label>SKU Code *</label>
                 <input 
-                  type="text" name="sku" required placeholder="e.g. CROI-BUTR-01"
+                  type="text" name="sku" required placeholder="e.g. EAR-BLIS-01" disabled={isSubmitting}
                   value={formData.sku} onChange={handleChange}
                 />
               </div>
 
               <div className={styles.inputGroup}>
                 <label>Category *</label>
-                <select name="category" required value={formData.category} onChange={handleChange}>
+                <select name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
                   <option value="">Choose Category</option>
                   <option value="Earbuds">Earbuds</option>
                   <option value="Powerbank">Powerbank</option>
@@ -154,14 +179,14 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                 <div className={styles.inputGroup}>
                   <label>Price *</label>
                   <input 
-                    type="number" name="price" required step="0.01" min="0" placeholder="0.00"
+                    type="number" name="price" required step="0.01" min="0" placeholder="0.00" disabled={isSubmitting}
                     value={formData.price} onChange={handleChange}
                   />
                 </div>
                 <div className={styles.inputGroup}>
                   <label>Discount Price</label>
                   <input 
-                    type="number" name="discountPrice" step="0.01" min="0" placeholder="0.00"
+                    type="number" name="discountPrice" step="0.01" min="0" placeholder="0.00" disabled={isSubmitting}
                     value={formData.discountPrice} onChange={handleChange}
                   />
                 </div>
@@ -171,14 +196,14 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                 <div className={styles.inputGroup}>
                   <label>Brand Name</label>
                   <input 
-                    type="text" name="brand" placeholder="e.g. NebudsBliss"
+                    type="text" name="brand" placeholder="e.g. NebudsBliss" disabled={isSubmitting}
                     value={formData.brand} onChange={handleChange}
                   />
                 </div>
                 <div className={styles.inputGroup}>
                   <label>Stock Quantity *</label>
                   <input 
-                    type="number" name="stockQuantity" required min="0" placeholder="0"
+                    type="number" name="stockQuantity" required min="0" placeholder="0" disabled={isSubmitting}
                     value={formData.stockQuantity} onChange={handleChange}
                   />
                 </div>
@@ -187,19 +212,20 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               <div className={styles.inputGroup}>
                 <label>Description * (Min. 10 Chars)</label>
                 <textarea 
-                  name="description" required rows={3} placeholder="Provide descriptive item details here..."
+                  name="description" required rows={3} placeholder="Provide descriptive item details here..." disabled={isSubmitting}
                   value={formData.description} onChange={handleChange}
                 />
               </div>
 
             </div>
 
-            <button type="submit" className={styles.submitButton}>Save Product Item</button>
+            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+              {isSubmitting ? "Uploading to Server..." : "Save Product Item"}
+            </button>
           </form>
         </div>
       </div>
 
-      {/* Render password modal window overlay tier */}
       <PasswordConfirmModal 
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}

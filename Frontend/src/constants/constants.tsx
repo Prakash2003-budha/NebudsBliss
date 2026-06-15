@@ -1,20 +1,28 @@
-
-export const RONTEND_URL= 'http://localhost:5173'
-export const BACKEND_URL = 'http://localhost:9005'
+export const FRONTEND_URL = 'http://localhost:5173';
+export const BACKEND_URL = 'http://localhost:9005';
 
 export const API_ENDPOINTS = {
+    // Auth Endpoints
     LOGIN: `${BACKEND_URL}/auth/login`,
     REGISTER: `${BACKEND_URL}/auth/register`,
     FORGETPASSWORD: `${BACKEND_URL}/auth/forgot_password`,
     RESETPASSWORD: `${BACKEND_URL}/auth/reset-password`,
 
-}
+    VERIFY_PASSWORD: `${BACKEND_URL}/auth/verify-password`,
+
+    GET_ALL_ITEMS: `${BACKEND_URL}/items`,          
+    CREATE_ITEM: `${BACKEND_URL}/items`,            
+    GET_ITEM_DETAIL: (id: string) => `${BACKEND_URL}/items/${id}`, 
+    UPDATE_ITEM: (id: string) => `${BACKEND_URL}/items/${id}`,    
+    DELETE_ITEM: (id: string) => `${BACKEND_URL}/items/${id}`,   
+};
+
 export const CATEGORY = {
   POWERBANK: 'Powerbank',
   CAMERA: 'Camera',
   EARBUDS: 'Earbuds',
   CHARGER: 'Charger',
-  FAN:'Fan'
+  FAN: 'Fan'
 };
 
 export const MAPURL = {

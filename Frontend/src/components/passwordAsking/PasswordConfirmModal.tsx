@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styles from './passwordConfirmModal.module.scss';
+import axios from 'axios';
+import { API_ENDPOINTS } from '../../constants/constants'; // Adjusted to match your directory tree
 
 interface PasswordConfirmModalProps {
   isOpen: boolean;
@@ -9,48 +11,88 @@ interface PasswordConfirmModalProps {
 
 const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [password, setPassword] = useState('');
+  const [isValidATING, setIsValidating] = useState(false); // Tracks backend request status
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password) return alert("Please enter your password to authorize this action.");
     
-    onConfirm(password);
-    setPassword(''); // Clear input field
+    setIsValidating(true);
+
+    try {
+      // Hit your backend authentication controller to confirm the password
+      const response = await axios.post(
+        API_ENDPOINTS.VERIFY_PASSWORD, 
+        { password }, 
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          withCredentials: true
+        }
+      );
+
+      // If backend confirms the user password checks out successfully:
+      if (response.data.success || response.status === 200) {
+        onConfirm(password); // Callback triggers handleFinalDatabaseSave inside AddItemTab
+        setPassword(''); 
+      }
+    } catch (error: unknown) {
+      console.error("Password verification failed:", error);
+      
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message || "Incorrect password. Access denied.";
+        alert(errorMessage);
+      } else {
+        alert("An error occurred during verification. Please try again.");
+      }
+    } finally {
+      setIsValidating(false);
+    }
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalOverlay} onClick={isValidATING ? undefined : onClose}>
       <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h3>Confirm Admin Action</h3>
-          <button className={styles.closeButton} onClick={onClose}>&times;</button>
+          <button className={styles.closeButton} disabled={isValidATING} onClick={onClose}>&times;</button>
         </div>
         
-        <p className={styles.warningText}>
-          You are about to modify the catalog database. Please type your password to confirm.
+        <p className={styles.warningText}>Please type your password to confirm.
         </p>
 
         <form onSubmit={handleSubmit} className={styles.modalForm}>
           <div className={styles.inputGroup}>
-            <label>Admin Password</label>
+            <label>Password</label>
             <input 
               type="password" 
               placeholder="Enter your security password..." 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
+              disabled={isValidATING}
               required
             />
           </div>
 
           <div className={styles.actionButtonGroup}>
-            <button type="button" className={styles.cancelButton} onClick={onClose}>
+            <button 
+              type="button" 
+              className={styles.cancelButton} 
+              disabled={isValidATING} 
+              onClick={onClose}
+            >
               Cancel
             </button>
-            <button type="submit" className={styles.confirmButton}>
-              Verify & Save
+            <button 
+              type="submit" 
+              className={styles.confirmButton} 
+              disabled={isValidATING}
+            >
+              {isValidATING ? "Verifying..." : "Verify & Save"}
             </button>
           </div>
         </form>
