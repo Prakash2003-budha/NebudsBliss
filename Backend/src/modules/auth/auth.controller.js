@@ -261,6 +261,46 @@ class AuthController {
             next(exception)
         }
     }
+    // 👈 ADD THIS METHOD INSIDE YOUR AuthController CLASS BEFORE THE CLOSING BRACE
+    verifyUserPassword = async (req, res, next) => {
+        try {
+            const { password } = req.body;
+            
+            // req.authUser is set automatically by your allowUser() middleware
+            // We fetch the user record explicitly adding "+password" to check the hash
+            const user = await autSvc.getSingleUserByFilter({ _id: req.authUser._id }, "+password");
+
+            if (!user) {
+                throw {
+                    code: 404,
+                    message: "User context not found.",
+                    status: "USER_NOT_FOUND"
+                };
+            }
+
+            // Compare incoming password string to database salted hash
+            const isMatched = bcrypt.compareSync(password, user.password);
+
+            if (!isMatched) {
+                throw {
+                    code: 401, // Unauthorized
+                    message: "Verification failed. The security password you entered is incorrect.",
+                    status: "PASSWORD_NOT_MATCHED"
+                };
+            }
+
+            // If matched, respond with clear success indicators
+            res.json({
+                data: null,
+                message: "Password verification successful",
+                success: true,
+                status: "VERIFICATION_SUCCESS"
+            });
+
+        } catch (exception) {
+            next(exception);
+        }
+    }
 }
 
 const authCtr = new AuthController()

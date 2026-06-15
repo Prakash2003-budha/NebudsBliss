@@ -98,3 +98,10 @@ export const ResetPasswordDTO = Joi.object({
       "any.required": "Confirm password is required"
     }),
 });
+
+export const VerifyPasswordDTO = Joi.object({
+  password: Joi.string().required().messages({
+    "string.empty": "Password verification field cannot be empty",
+    "any.required": "Password verification field is required"
+  })
+});

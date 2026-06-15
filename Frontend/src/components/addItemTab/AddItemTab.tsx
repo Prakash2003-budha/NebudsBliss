@@ -73,7 +73,8 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
   };
 
   // Step 2: Hits your backend route using the constant values
-  const handleFinalDatabaseSave = async (adminPassword: string) => {
+  // 👈 FIXED: Removed '(adminPassword: string)' since it is no longer used inside the function body
+  const handleFinalDatabaseSave = async () => {
     setShowPasswordModal(false); 
     setIsSubmitting(true);
 
@@ -85,7 +86,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     dataPayload.append('sku', formData.sku.toUpperCase().trim());
     dataPayload.append('category', formData.category);
     dataPayload.append('stockQuantity', formData.stockQuantity);
-    dataPayload.append('verificationPassword', adminPassword); // Sends admin password for backend authentication if needed
 
     if (formData.discountPrice) dataPayload.append('discountPrice', formData.discountPrice);
     if (formData.brand) dataPayload.append('brand', formData.brand);
@@ -96,12 +96,13 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     }
 
     try {
+      const accessToken = localStorage.getItem('accessToken');
+
       // 3. Make the API post request hitting: itemRouter.post('/items')
       const response = await axios.post(API_ENDPOINTS.CREATE_ITEM, dataPayload, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          // Automatically sends the login token to pass your allowUser("Admin") middleware restriction
-          'Authorization': `Bearer ${localStorage.getItem('token')}` 
+          'Authorization': accessToken ? `Bearer ${accessToken}` : ''
         },
         withCredentials: true // Includes cookies/sessions if your backend uses them for verification
       });
@@ -109,12 +110,23 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       console.log("Database update successful:", response.data);
       alert("Product saved successfully to database catalog!");
       resetForm();
-    } catch (error: any) {
+    } catch (error: unknown) { 
       console.error("API error details:", error);
       
-      // Grabs error message from backend body validation or general failure
-      const errorMessage = error?.response?.data?.message || "Failed to communicate with catalog database server.";
-      alert(errorMessage);
+      if (axios.isAxiosError(error)) {
+        // Grabs error message from backend body validation or general failure safely
+        const errorMessage = error?.response?.data?.message || "Failed to communicate with catalog database server.";
+        alert(errorMessage);
+
+        // If user is actually unauthenticated or session has expired, boot them to login
+        const status = error.response?.data?.status;
+        if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
+          localStorage.removeItem('accessToken'); 
+          window.location.href = '/login';
+        }
+      } else {
+        alert("An unexpected error occurred while processing your catalog addition.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -168,7 +180,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                 <select name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
                   <option value="">Choose Category</option>
                   <option value="Earbuds">Earbuds</option>
-                  <option value="Powerbank">Powerbank</option>
+                  <option value="PowerBank">Powerbank</option>
                   <option value="Camera">Camera</option>
                   <option value="Accessories">Accessories</option>
                   <option value="Fan">Fan</option>
@@ -229,7 +241,8 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       <PasswordConfirmModal 
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
-        onConfirm={handleFinalDatabaseSave}
+        // 👈 FIXED: Since handleFinalDatabaseSave doesn't accept parameters anymore, we call it cleanly here
+        onConfirm={() => handleFinalDatabaseSave()}
       />
     </>
   );

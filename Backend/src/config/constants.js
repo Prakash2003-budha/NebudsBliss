@@ -28,14 +28,10 @@ export const Gender = {
 export const ItemCategory = {
     FAN: 'Fan',
     EARBUDS: 'Earbuds', 
-    POWERBANK: 'PowerBank',
-    COOKIE: 'Cookie',
-    DRINKS: 'Drinks',
+    POWERBANK: 'Powerbank',
+    ACCESSORIES: 'Accessories',
     ELECTRONICS: 'Electronics',
-    CLOTHING: 'Clothing',
-    HOME: 'Home & Kitchen',
-    SPORTS: 'Sports',
-    BOOKS: 'Books'
+    CAMERA:'Camera'
 };
 
 export const AppConfig = {   

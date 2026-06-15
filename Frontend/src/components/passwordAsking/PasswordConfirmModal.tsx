@@ -22,13 +22,17 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
     setIsValidating(true);
 
     try {
+      // 👈 FIXED: Look for 'accessToken' instead of 'token'
+      const accessToken = localStorage.getItem('accessToken');
+
       // Hit your backend authentication controller to confirm the password
       const response = await axios.post(
         API_ENDPOINTS.VERIFY_PASSWORD, 
         { password }, 
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            // 👈 FIXED: Safely check if accessToken exists to prevent sending a malformed string ("Bearer null")
+            'Authorization': accessToken ? `Bearer ${accessToken}` : ''
           },
           withCredentials: true
         }
@@ -39,12 +43,20 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
         onConfirm(password); // Callback triggers handleFinalDatabaseSave inside AddItemTab
         setPassword(''); 
       }
-    } catch (error: unknown) {
+    } catch (error: unknown) { // 👈 FIXED: Changed 'any' to 'unknown' to fix the TypeScript ESLint error
       console.error("Password verification failed:", error);
       
       if (axios.isAxiosError(error)) {
+        // Grab the precise message sent by our backend global error handler
         const errorMessage = error.response?.data?.message || "Incorrect password. Access denied.";
         alert(errorMessage);
+        
+        // If the backend threw a session expiry error, clear out local storage and redirect
+        const status = error.response?.data?.status;
+        if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
+          localStorage.removeItem('accessToken'); // 👈 FIXED: Clear 'accessToken'
+          window.location.href = '/login';
+        }
       } else {
         alert("An error occurred during verification. Please try again.");
       }
@@ -61,7 +73,8 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
           <button className={styles.closeButton} disabled={isValidATING} onClick={onClose}>&times;</button>
         </div>
         
-        <p className={styles.warningText}>Please type your password to confirm.
+        <p className={styles.warningText}>
+          Please type your password to confirm.
         </p>
 
         <form onSubmit={handleSubmit} className={styles.modalForm}>
