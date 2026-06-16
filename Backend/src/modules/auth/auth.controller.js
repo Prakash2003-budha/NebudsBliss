@@ -84,7 +84,7 @@ class AuthController {
         await autSvc.updateSingleUserByFilter({ _id: associatedUser._id }, userData)
 
         // ✅ Redirect to frontend login page after successful activation
-        res.redirect(`${AppConfig.frontend_Url}/login?activated=true`);
+        res.redirect(`${AppConfig.frontend_Url}/loginpage?activated=true`);
 
     } catch (exception) {
         // ✅ Redirect to frontend error page if activation fails
