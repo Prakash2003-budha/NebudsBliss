@@ -12,7 +12,6 @@ class AuthController {
         try {
             const existingUser = await autSvc.getSingleUserByFilter({ email: req.body.email });
             if (existingUser) {
-                // ✅ Email already exists — delete the local file multer saved, then throw
                 if (req.file && req.file.path) {
                     cloudianarySvc.removeLocalFile(req.file.path);
                 }
@@ -59,40 +58,42 @@ class AuthController {
     }
 
     activateUser = async (req, res, next) => {
-        try {
-            let token = req.params.token || null;
-            if (!token) {
-                throw {
-                    code: 422,
-                    message: "Activation token is expected",
-                    status: "ACTIVATION_TOKEN_MISSING"
-                }
+    try {
+        let token = req.params.token || null;
+        if (!token) {
+            throw {
+                code: 422,
+                message: "Activation token is expected",
+                status: "ACTIVATION_TOKEN_MISSING"
             }
-            const associatedUser = await autSvc.getSingleUserByFilter({
-                activationToken: token
-            })
-            if (!associatedUser) {
-                throw {
-                    code: 422,
-                    message: "Token already used or does not exists",
-                    status: "ACTIVATION_TOKEN_NOT_FOUND"
-                }
-            }
-            let userData = {
-                status: true,
-                activationToken: null
-            }
-            await autSvc.updateSingleUserByFilter({ _id: associatedUser._id }, userData)
-            res.json({
-                data: null,
-                message: 'Thank you for registering with us. Your account has been successfully activated',
-                status: "ACTIVATION_SUCCESS",
-                option: null
-            })
-        } catch (exception) {
-            next(exception)
         }
+        const associatedUser = await autSvc.getSingleUserByFilter({
+            activationToken: token
+        })
+        if (!associatedUser) {
+            throw {
+                code: 422,
+                message: "Token already used or does not exists",
+                status: "ACTIVATION_TOKEN_NOT_FOUND"
+            }
+        }
+        let userData = {
+            status: true,
+            activationToken: null
+        }
+        await autSvc.updateSingleUserByFilter({ _id: associatedUser._id }, userData)
+
+        // ✅ Redirect to frontend login page after successful activation
+        res.redirect(`${AppConfig.frontend_Url}/login?activated=true`);
+
+    } catch (exception) {
+        // ✅ Redirect to frontend error page if activation fails
+        if (exception.status === "ACTIVATION_TOKEN_NOT_FOUND" || exception.status === "ACTIVATION_TOKEN_MISSING") {
+            return res.redirect(`${AppConfig.frontend_Url}/login?activated=false`);
+        }
+        next(exception)
     }
+}
 
     loginUser = async (req, res, next) => {
         try {

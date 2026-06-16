@@ -14,6 +14,10 @@ import calendarIcon from "../../../img/icons/calender.png";
 
 import { API_ENDPOINTS } from "../../../constants/constants";
 
+// ✅ Import toastify
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false); 
@@ -31,19 +35,15 @@ const SignUpPage: React.FC = () => {
   });
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  
-  // NEW: Added state to handle global form errors (like "Email already exists")
   const [globalError, setGlobalError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     
-    // Clear specific field errors when the user starts typing
     if (formErrors[name]) {
       setFormErrors((prev) => ({ ...prev, [name]: "" }));
     }
-    // Clear the global error when the user starts typing
     if (globalError) {
       setGlobalError(null);
     }
@@ -65,7 +65,7 @@ const SignUpPage: React.FC = () => {
 
     setLoading(true);
     setFormErrors({}); 
-    setGlobalError(null); // Clear previous global errors on new submit
+    setGlobalError(null);
     
     const submitData = new FormData();
     submitData.append("fullName", formData.fullName);
@@ -89,8 +89,20 @@ const SignUpPage: React.FC = () => {
       });
 
       console.log("Registration successful:", response.data);
-      alert("Account created successfully! Please log in.");
-      navigate("/loginpage");
+
+      // ✅ Replace alert() with toast and navigate after toast closes
+      toast.success(
+        `📧 A verification email has been sent to ${formData.email}. Please check your inbox to activate your account.`,
+        {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: false,
+          onClose: () => navigate("/loginpage"),
+        }
+      );
 
     } catch (error: unknown) {
       console.error("Registration failed:", error);
@@ -100,12 +112,27 @@ const SignUpPage: React.FC = () => {
         
         if (backendErrors && typeof backendErrors === 'object') {
           setFormErrors(backendErrors as Record<string, string>);
+          // ✅ Show toast for validation errors too
+          toast.error("Please fix the errors in the form and try again.", {
+            position: "top-center",
+            autoClose: 4000,
+          });
         } else {
-          // Set the global error text instead of alerting
-          setGlobalError(error.response.data?.message || "Registration failed. Please try again.");
+          const message = error.response.data?.message || "Registration failed. Please try again.";
+          setGlobalError(message);
+          // ✅ Show toast for global errors like "email already exists"
+          toast.error(message, {
+            position: "top-center",
+            autoClose: 4000,
+          });
         }
       } else {
-        setGlobalError("An unexpected error occurred. Please check your connection.");
+        const message = "An unexpected error occurred. Please check your connection.";
+        setGlobalError(message);
+        toast.error(message, {
+          position: "top-center",
+          autoClose: 4000,
+        });
       }
       
     } finally {
@@ -117,6 +144,10 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div className={styles.signupWrapper}>
+
+      {/* ✅ ToastContainer must be placed inside your component's JSX */}
+      <ToastContainer />
+
       <main className={styles.signupCard}>
         
         <header className={styles.headerSection}>
@@ -215,7 +246,7 @@ const SignUpPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Profile Image (Full Width) */}
+          {/* Profile Image */}
           <div className={styles.inputGroup} style={{ marginTop: "0.5rem" }}>
             <label htmlFor="image">Profile Image (Optional)</label>
             <div className={styles.inputFieldWrapper}>
@@ -223,7 +254,6 @@ const SignUpPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Render the global error here, right above the button */}
           {globalError && (
             <div className={styles.globalErrorText}>
               {globalError}
