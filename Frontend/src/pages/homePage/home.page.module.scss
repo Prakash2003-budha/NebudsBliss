@@ -2,51 +2,66 @@
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: #085ff6;
 $secoundary-color: #3ce3ff;
-$dark-text: #1a1a1a;
-$light-text: #666666;
-$bg-color: #E0FFFF;
-$light-gray: #f8f9fa;
+$dark-text: #222222;
+$light-text: #888888;
+$bg-color: #f7f8f9; // Changed to a subtle gray to let the grid pattern show
+$light-gray: #f0f0f0;
 $border-color: #eaeaea;
+$card-bg: #ffffff;
+
+@mixin shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmerAnim 1.5s infinite;
+}
+
+@keyframes shimmerAnim {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
 .container {
   font-family: $font-primary;
   background-color: $bg-color;
-  padding-bottom: 2rem;
+  
+  // Background Grid Pattern matching your screenshot
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  padding-bottom: 4rem;
 
+  // --- Hero Section ---
   .PosterSection {
     height: 60vh;
     min-height: 400px;
-    background-color: $light-gray;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 
     .heroContent {
       max-width: 600px;
 
       h1 {
         font-size: 3rem;
-        font-weight: 300;
+        font-weight: 800;
         letter-spacing: -0.5px;
         color: $dark-text;
         margin-bottom: 1rem;
-      }
-
-      p {
-        font-size: 1.1rem;
-        color: $light-text;
-        margin-bottom: 2rem;
-        font-weight: 400;
       }
 
       .heroBtn {
         background-color: $dark-text;
         color: #fff;
         border: none;
-        padding: 12px 32px;
+        padding: 14px 36px;
         font-size: 1rem;
+        font-weight: 600;
         font-family: inherit;
         border-radius: 30px;
         cursor: pointer;
@@ -54,6 +69,7 @@ $border-color: #eaeaea;
 
         &:hover {
           background-color: $secoundary-color;
+          color: $dark-text;
         }
       }
     }
@@ -61,216 +77,260 @@ $border-color: #eaeaea;
 
   // --- Shared Section Headers ---
   .sectionHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 1.5rem;
-
+    margin-bottom: 2rem;
     h2 {
       font-size: 2rem;
-      font-weight: 700;
+      font-weight: 800;
       color: $dark-text;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.5px;
     }
   }
 
+  // --- Category Section ---
   .categorySection {
-    margin: 4rem 2rem;
+    margin: 4rem auto;
+    max-width: 1200px;
+    padding: 0 2rem;
 
     .categoryList {
       display: flex;
       gap: 1rem;
       overflow-x: auto;
-      padding-bottom: 0.5rem;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-      -ms-overflow-style: none;
+      padding-bottom: 1rem;
+      &::-webkit-scrollbar { display: none; }
       scrollbar-width: none;
 
       .categoryPill {
-        background-color: $bg-color;
+        background-color: $card-bg;
         border: 1px solid $border-color;
         padding: 10px 24px;
         border-radius: 30px;
         font-size: 0.95rem;
-        font-weight: 500;
-        color: $dark-text;
+        font-weight: 600;
+        color: $light-text;
         cursor: pointer;
         white-space: nowrap;
         transition: all 0.2s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 
         &:hover {
           border-color: $dark-text;
-          background-color: $light-gray;
+          color: $dark-text;
         }
       }
     }
   }
 
-  // --- Featured Products Section ---
+  // --- Product Section ---
   .productSection {
-    margin: 4rem 2rem;
+    margin: 4rem auto;
+    max-width: 1200px;
+    padding: 0 2rem;
 
+    // --- Product Grid ---
     .productGrid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
-
-      .productCard {
-        cursor: pointer;
-
-        &:hover {
-          .imageWrapper img {
-            transform: scale(1.03);
-          }
-        }
-
-        .imageWrapper {
-          width: 100%;
-          aspect-ratio: 4/5;
-          overflow: hidden;
-          border-radius: 12px;
-          background-color: $light-gray;
-          margin-bottom: 1rem;
-
-          img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-          }
-        }
-
-        .cardDetails {
-          h3 {
-            font-size: 1.1rem;
-            font-weight: 400;
-            color: $dark-text;
-            margin-bottom: 0.3rem;
-          }
-
-          // --- Price Display ---
-          .priceWrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.25rem;
-          }
-
-          .price {
-            font-size: 1rem;
-            color: $light-text;
-            font-weight: 500;
-          }
-
-          .discountPrice {
-            font-size: 1rem;
-            color: #e74c3c;
-            font-weight: 700;
-          }
-
-          .originalPrice {
-            font-size: 0.85rem;
-            color: #aaa;
-            font-weight: 400;
-            text-decoration: line-through;
-          }
-
-          // --- Category Badge ---
-          .categoryBadge {
-            display: inline-block;
-            margin-top: 0.6rem;
-            padding: 3px 12px;
-            background-color: rgba($primary-color, 0.08);
-            color: $primary-color;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-          }
-        }
-      }
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2.5rem;
     }
 
-    // --- Loading Skeleton ---
-    .loadingWrapper {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
+    // --- Product Card ---
+    .productCard {
+      // Dynamic Theme Variables for Alternating Colors
+      --theme-main: #e65c4f;      // Orange/Red
+      --theme-light: #fcdbd8;     // Light Orange/Red
 
-      .skeletonCard {
-        border-radius: 12px;
+      // Alternating Logic (Every 2nd card becomes Teal)
+      &:nth-child(even) {
+        --theme-main: #4a8494;    // Teal
+        --theme-light: #bde9f5;   // Light Teal
+      }
+
+      background-color: $card-bg;
+      border-radius: 24px;
+      padding: 16px; // Internal padding creates the white frame
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      }
+
+      // Folder Tab Container
+      .categoryTabContainer {
+        display: flex;
+        align-items: flex-end;
+        padding-left: 8px;
+        margin-bottom: -1px; // seamless overlap with image
+      }
+
+      .categoryTab {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $light-text;
+        background: transparent;
+        padding: 4px 16px 8px 16px;
+        border-radius: 12px 12px 0 0;
+        z-index: 2;
+      }
+
+      // Folder Image Shape
+      .imageWrapper {
+        width: 100%;
+        aspect-ratio: 4/3;
+        border-radius: 0 20px 20px 20px; // The magical shape
         overflow: hidden;
+        background-color: $light-gray;
+        margin-bottom: 1.5rem;
 
-        .skeletonImage {
+        img {
           width: 100%;
-          aspect-ratio: 4/5;
-          border-radius: 12px;
-          background: linear-gradient(
-            90deg,
-            darken($light-gray, 3%) 25%,
-            lighten($light-gray, 2%) 50%,
-            darken($light-gray, 3%) 75%
-          );
-          background-size: 200% 100%;
-          animation: shimmer 1.5s infinite;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.4s ease;
+          filter: grayscale(100%); // Added to match your black and white image style
+        }
+      }
+
+      &:hover .imageWrapper img {
+        transform: scale(1.05);
+        filter: grayscale(0%); // Returns to color on hover
+      }
+
+      // Card Body
+      .cardBody {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        flex: 1;
+        padding: 0 8px; // alignment with folder image
+
+        .nameRow {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: $dark-text;
+            margin: 0;
+          }
+
+          .priceBadge {
+            background-color: var(--theme-main);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+          }
         }
 
-        .skeletonText {
-          height: 16px;
-          width: 80%;
-          border-radius: 4px;
-          margin-top: 14px;
-          background: linear-gradient(
-            90deg,
-            darken($light-gray, 3%) 25%,
-            lighten($light-gray, 2%) 50%,
-            darken($light-gray, 3%) 75%
-          );
-          background-size: 200% 100%;
-          animation: shimmer 1.5s infinite;
+        .description {
+          font-size: 0.9rem;
+          color: $light-text;
+          line-height: 1.5;
+          margin: 0;
         }
 
-        .skeletonTextShort {
-          height: 14px;
-          width: 45%;
-          border-radius: 4px;
-          margin-top: 8px;
-          background: linear-gradient(
-            90deg,
-            darken($light-gray, 3%) 25%,
-            lighten($light-gray, 2%) 50%,
-            darken($light-gray, 3%) 75%
-          );
-          background-size: 200% 100%;
-          animation: shimmer 1.5s infinite;
+        .tagsContainer {
+          display: flex;
+          gap: 8px;
+          margin: 0.5rem 0;
+
+          .tag {
+            background-color: var(--theme-light);
+            color: var(--theme-main);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 12px;
+          }
+        }
+
+        .addToCartBtn {
+          margin-top: auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px;
+          background-color: var(--theme-main);
+          color: #fff;
+          border: none;
+          border-radius: 20px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: filter 0.3s ease, transform 0.2s ease;
+
+          .cartIcon {
+            width: 18px;
+            height: 18px;
+          }
+
+          &:hover {
+            filter: brightness(0.9);
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
         }
       }
     }
 
-    // --- Error and Empty States ---
-    .errorWrapper,
-    .emptyWrapper {
+    // --- Loading / Empty States ---
+    .skeletonCard {
+      background-color: $card-bg;
+      border-radius: 24px;
+      padding: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+      .skeletonImage {
+        width: 100%;
+        aspect-ratio: 4/3;
+        border-radius: 0 20px 20px 20px;
+        margin-bottom: 1.5rem;
+        @include shimmer;
+      }
+
+      .skeletonBody {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 0 8px;
+
+        .skeletonText { height: 20px; width: 60%; border-radius: 8px; @include shimmer; }
+        .skeletonTextShort { height: 14px; width: 90%; border-radius: 6px; @include shimmer; }
+        .skeletonBtn { height: 48px; width: 100%; border-radius: 20px; margin-top: 1rem; @include shimmer; }
+      }
+    }
+
+    .errorWrapper, .emptyWrapper {
       text-align: center;
       padding: 4rem 1rem;
       color: $light-text;
-      font-size: 1rem;
-      font-weight: 400;
-      border: 1px dashed $border-color;
-      border-radius: 12px;
-      background-color: $light-gray;
+      font-size: 1.1rem;
+      border: 2px dashed $border-color;
+      border-radius: 20px;
+      background-color: $card-bg;
     }
   }
 }
 
-// --- Shimmer Keyframe ---
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+// --- Shimmer Mixin ---
+@mixin shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmerAnim 1.5s infinite;
+}
+
+@keyframes shimmerAnim {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
