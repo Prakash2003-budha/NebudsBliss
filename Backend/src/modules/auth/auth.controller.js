@@ -4,18 +4,18 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 import { AppConfig } from "../../config/constants.js";
 import { randomStringGenerator } from "../../utils/helper.js";
-import mongoose from "mongoose";
 
 class AuthController {
     
     registerUser = async (req, res, next) => {
         let userData;
         try {
-            // 1. NEW: Check if the email already exists in the DB
             const existingUser = await autSvc.getSingleUserByFilter({ email: req.body.email });
-            
             if (existingUser) {
-                // If the user exists, throw an error immediately before uploading images
+                // ✅ Email already exists — delete the local file multer saved, then throw
+                if (req.file && req.file.path) {
+                    cloudianarySvc.removeLocalFile(req.file.path);
+                }
                 throw {
                     code: 400,
                     message: "A user with this email address already exists.",
@@ -25,19 +25,15 @@ class AuthController {
 
             userData = await autSvc.userRegisterDataTrans(req);
             const userObj = await autSvc.userStore(userData);
-            
-            // 2. SPEED FIX: Remove 'await' so the email sends in the background (Fire-and-Forget)
-            // Note: I changed 'name' to 'fullName' to match your notifyActivationEmail parameters
+           
             autSvc.notifyActivationEmail({
                 fullName: userObj.fullName, 
                 email: userObj.email,
                 activationToken: userObj.activationToken
             }).catch((err) => {
-                // Catch any email errors so they don't crash the server in the background
                 console.error("Failed to send activation email:", err);
             });
 
-            // Immediately send the response back to the user while the email sends
             res.json({
                 data: {
                     user: autSvc.publicUserProfile(userObj),
@@ -46,11 +42,18 @@ class AuthController {
                 status: "Register_Success",
                 option: null
             });
+
         } catch (exception) {
-            // Rollback Cloudinary upload if something fails
+            // ✅ If failure happened BEFORE Cloudinary upload, local file still exists — delete it
+            if (req.file && req.file.path) {
+                cloudianarySvc.removeLocalFile(req.file.path);
+            }
+
+            // ✅ If failure happened AFTER Cloudinary upload, roll it back
             if (userData && userData.image_id) {
                 await cloudianarySvc.deleteFile(userData.image_id);
             }
+
             next(exception);
         }
     }
@@ -115,7 +118,6 @@ class AuthController {
                     status: "ACCOUNT_NOT_ACTIVATED"
                 };
             } else {
-                // FIX: was '3 hour' — changed to '7d' so staff don't get logged out mid-shift
                 let accessToken = jwt.sign({
                     sub: user._id,
                     type: "access"
@@ -157,7 +159,7 @@ class AuthController {
         try {
             const { email } = req.body;
             const user = await autSvc.getSingleUserByFilter({ email: email });
-            // 1. Check if user exists
+
             if (!user) {
                 return next({
                     code: 400,
@@ -233,7 +235,6 @@ class AuthController {
                 expireToken: new Date(Date.now() + 30 * 60 * 1000)
             });
 
-
             res.redirect(`${AppConfig.frontend_Url}/reset-password?token=${verifyToken}`);
 
         } catch (exception) {
@@ -244,21 +245,18 @@ class AuthController {
     resetPassword = async (req, res, next) => {
         try {
             const { token, password } = req.body;
-            
-            // NOTE: We MUST include "+password" in the select fields here, 
-            // otherwise user.password might be hidden by your mongoose schema defaults!
             const user = await autSvc.getSingleUserByFilter({ forgotPasswordToken: token }, "+password")
             
             if (!user) {
                 return next({
-                    code: 422, // Switched to 422 Unprocessable Entity (standard for invalid tokens)
+                    code: 422,
                     message: "Token does not exist or already used",
                     status: "TOKEN_NOT_FOUND"
                 })
             }
             if (bcrypt.compareSync(password, user.password)) {
                 return next({
-                    code: 400, // Bad Request
+                    code: 400,
                     message: "Your new password cannot be exactly the same as your old password. Please choose a different password.",
                     status: "PASSWORD_UNCHANGED"
                 });
@@ -272,7 +270,7 @@ class AuthController {
             
             await autSvc.updateSingleUserByFilter({ _id: user._id }, data)
             
-            res.status(200).json({ // Changed to 200 OK (201 is usually for resource creation)
+            res.status(200).json({
                 data: null,
                 message: "Your password has been reset successfully. Please log in to continue",
                 status: "PASSWORD_RESET_SUCCESSFUL",
@@ -282,13 +280,10 @@ class AuthController {
             next(exception)
         }
     }
-    // 👈 ADD THIS METHOD INSIDE YOUR AuthController CLASS BEFORE THE CLOSING BRACE
+
     verifyUserPassword = async (req, res, next) => {
         try {
             const { password } = req.body;
-            
-            // req.authUser is set automatically by your allowUser() middleware
-            // We fetch the user record explicitly adding "+password" to check the hash
             const user = await autSvc.getSingleUserByFilter({ _id: req.authUser._id }, "+password");
 
             if (!user) {
@@ -299,18 +294,16 @@ class AuthController {
                 };
             }
 
-            // Compare incoming password string to database salted hash
             const isMatched = bcrypt.compareSync(password, user.password);
 
             if (!isMatched) {
                 throw {
-                    code: 401, // Unauthorized
+                    code: 401,
                     message: "Verification failed. The security password you entered is incorrect.",
                     status: "PASSWORD_NOT_MATCHED"
                 };
             }
 
-            // If matched, respond with clear success indicators
             res.json({
                 data: null,
                 message: "Password verification successful",
