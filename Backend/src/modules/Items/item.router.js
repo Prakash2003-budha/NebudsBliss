@@ -10,8 +10,8 @@ const itemRouter = Router();
 itemRouter.get('/items', itemCtr.getAllItems);
 itemRouter.get('/items/:id', itemCtr.getItemDetail);
 
-itemRouter.post('/items',allowUser("Admin"),uploader().array('images', 5),bodyValidator(ItemCreateDTO),itemCtr.createItem);
-itemRouter.patch('/items/:id',allowUser(),uploader().array('images', 5),bodyValidator(ItemUpdateDTO),itemCtr.updateItem);
+itemRouter.post('/items', allowUser("Admin"), bodyValidator(ItemCreateDTO), uploader().array('images', 5), itemCtr.createItem);
+itemRouter.patch('/items/:id', allowUser(), bodyValidator(ItemUpdateDTO), uploader().array('images', 5), itemCtr.updateItem);
 itemRouter.delete('/items/:id',allowUser(),itemCtr.deleteItem);
 
 export default itemRouter;

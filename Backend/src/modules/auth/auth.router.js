@@ -6,7 +6,7 @@ import { uploader } from "../../middelware/file-handeling.middleware.js";
 import allowUser from "../../middelware/auth.middleware.js";
 const authRouter = Router();
 
-authRouter.post('/auth/register',uploader().single('image'),bodyValidator(RegisterUserDTO), authCtr.registerUser)
+authRouter.post('/auth/register', bodyValidator(RegisterUserDTO), uploader().single('image'), authCtr.registerUser)
 
 authRouter.get('/auth/activater/:token', authCtr.activateUser);
 authRouter.post('/auth/me',allowUser(),authCtr.getMyProfile);

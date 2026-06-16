@@ -53,12 +53,10 @@ class CloudianaryService {
         let uploadResponse;
 
         try {
-            // 1. Attempt the upload
             uploadResponse = await cloudinary.uploader.upload(filepath, {
                 unique_filename: true,
                 folder: "prakash_project/" + dir,
             });
-            // 2. Success: Delete local file and return URL
             this.removeLocalFile(filepath);
 
             return {
