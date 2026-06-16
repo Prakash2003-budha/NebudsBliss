@@ -3,6 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './main.scss'
 import HomePage from './pages/homePage/home.page.tsx';
+import LoginPage from './pages/auth/loginPage/login.page.tsx';
+import SignUpPage from './pages/auth/registerPage/register.page.tsx';
+import ForgotPassword from './pages/auth/forgotPasswordPage/forgotPasswordPage.tsx';
+import ResetPassword from './pages/auth/resetPasswordPage/resetPassword.page.tsx';
 
 
 createRoot(document.getElementById('root')!).render(
@@ -10,6 +14,10 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/LoginPage" element={<LoginPage/>}></Route>
+        <Route path="/SignUp" element={<SignUpPage />}></Route>
+        <Route path="/Forgot-Password" element={<ForgotPassword />}></Route>
+        <Route path="/reset-password" element={< ResetPassword/>} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

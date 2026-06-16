@@ -1,9 +1,9 @@
 import { Router } from "express";
 import authCtr from "./auth.controller.js";
-import { bodyValidator } from "../../middleware/request.validator.js";
+import { bodyValidator } from "../../middelware/request.validator.js";
 import { ForgetPasswordRequestDTO, LoginDTO, RegisterUserDTO } from "./auth.validator.js";
-import { uploader } from "../../middleware/file-handeling.middleware.js";
-import allowUser from "../../middleware/auth.middelware.js";
+import { uploader } from "../../middelware/file-handeling.middleware.js";
+import allowUser from "../../middelware/auth.middleware.js";
 const authRouter = Router();
 
 authRouter.post('/auth/register',uploader().single('image'),bodyValidator(RegisterUserDTO), authCtr.registerUser)
