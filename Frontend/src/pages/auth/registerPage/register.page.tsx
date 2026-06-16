@@ -14,7 +14,6 @@ import calendarIcon from "../../../img/icons/calender.png";
 
 import { API_ENDPOINTS } from "../../../constants/constants";
 
-// ✅ Import toastify
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -90,16 +89,29 @@ const SignUpPage: React.FC = () => {
 
       console.log("Registration successful:", response.data);
 
-      // ✅ Replace alert() with toast and navigate after toast closes
+      // ✅ Spacious multi-line toast message
       toast.success(
-        `📧 A verification email has been sent to ${formData.email}. Please check your inbox to activate your account.`,
+        <div>
+          <p style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
+            🎉 Registration Successful!
+          </p>
+          <p style={{ marginBottom: "8px", lineHeight: "1.5" }}>
+            A verification email has been sent to{" "}
+            <span style={{ fontWeight: "bold" }}>{formData.email}</span>
+          </p>
+          <p style={{ fontSize: "0.85rem", opacity: 0.9, lineHeight: "1.5" }}>
+            Please check your inbox and click the activation link to activate
+            your account before logging in.
+          </p>
+        </div>,
         {
           position: "top-center",
-          autoClose: 5000,
+          autoClose: 6000,
           hideProgressBar: false,
           closeOnClick: false,
           pauseOnHover: true,
           draggable: false,
+          style: { width: "420px" },
           onClose: () => navigate("/loginpage"),
         }
       );
@@ -112,7 +124,6 @@ const SignUpPage: React.FC = () => {
         
         if (backendErrors && typeof backendErrors === 'object') {
           setFormErrors(backendErrors as Record<string, string>);
-          // ✅ Show toast for validation errors too
           toast.error("Please fix the errors in the form and try again.", {
             position: "top-center",
             autoClose: 4000,
@@ -120,7 +131,6 @@ const SignUpPage: React.FC = () => {
         } else {
           const message = error.response.data?.message || "Registration failed. Please try again.";
           setGlobalError(message);
-          // ✅ Show toast for global errors like "email already exists"
           toast.error(message, {
             position: "top-center",
             autoClose: 4000,
@@ -145,7 +155,6 @@ const SignUpPage: React.FC = () => {
   return (
     <div className={styles.signupWrapper}>
 
-      {/* ✅ ToastContainer must be placed inside your component's JSX */}
       <ToastContainer />
 
       <main className={styles.signupCard}>
