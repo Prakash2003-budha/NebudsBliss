@@ -31,7 +31,7 @@ const Homepage: React.FC = () => {
         const activeItems = allItems.filter((item) => item.isActive);
         const shuffled = activeItems.sort(() => Math.random() - 0.5);
         setFeaturedItems(shuffled.slice(0, 4));
-      } catch (err) {
+      } catch  {
         setError("Failed to load featured products. Please try again later.");
       } finally {
         setLoading(false);
@@ -106,7 +106,7 @@ const Homepage: React.FC = () => {
           {/* Product Cards */}
           {!loading && !error && featuredItems.length > 0 && (
             <div className={styles.productGrid}>
-              {featuredItems.map((item, index) => (
+              {featuredItems.map((item) => (
                 <div key={item._id} className={styles.productCard}>
                   
                   {/* Category Tab (Folder style) */}
