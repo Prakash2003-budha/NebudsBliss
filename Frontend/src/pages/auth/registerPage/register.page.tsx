@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import styles from "./register.page.module.scss";
 import logo from "../../../img/logo/logo.transparent.png";
 
@@ -19,7 +18,6 @@ const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false); 
 
-  // 1. ADDED: confirmPassword to the state
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,16 +30,22 @@ const SignUpPage: React.FC = () => {
     image: null as File | null,
   });
 
-  // 2. ADDED: A state to hold specific field errors from the backend
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  
+  // NEW: Added state to handle global form errors (like "Email already exists")
+  const [globalError, setGlobalError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     
-    // Clear the specific error when the user starts typing to fix it
+    // Clear specific field errors when the user starts typing
     if (formErrors[name]) {
       setFormErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+    // Clear the global error when the user starts typing
+    if (globalError) {
+      setGlobalError(null);
     }
   };
 
@@ -54,20 +58,20 @@ const SignUpPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Quick frontend check so we don't bother the backend if passwords don't match
     if (formData.password !== formData.confirmPassword) {
       setFormErrors({ confirmPassword: "Passwords do not match!" });
       return;
     }
 
     setLoading(true);
-    setFormErrors({}); // Clear old errors
+    setFormErrors({}); 
+    setGlobalError(null); // Clear previous global errors on new submit
     
     const submitData = new FormData();
     submitData.append("fullName", formData.fullName);
     submitData.append("email", formData.email);
     submitData.append("password", formData.password);
-    submitData.append("confirmPassword", formData.confirmPassword); // Added to request
+    submitData.append("confirmPassword", formData.confirmPassword);
     submitData.append("dob", formData.dob);
     submitData.append("gender", formData.gender);
     submitData.append("phone", formData.phone);
@@ -92,18 +96,16 @@ const SignUpPage: React.FC = () => {
       console.error("Registration failed:", error);
       
       if (axios.isAxiosError(error) && error.response) {
-        // 3. CAPTURE: Look for that specific "error" object your backend sends
         const backendErrors = error.response.data?.error;
         
         if (backendErrors && typeof backendErrors === 'object') {
-          // If it exists, update our state so the red text shows up under the inputs!
           setFormErrors(backendErrors as Record<string, string>);
         } else {
-          // Fallback if it's a different type of error
-          alert(error.response.data?.message || "Registration failed. Please try again.");
+          // Set the global error text instead of alerting
+          setGlobalError(error.response.data?.message || "Registration failed. Please try again.");
         }
       } else {
-        alert("An unexpected error occurred.");
+        setGlobalError("An unexpected error occurred. Please check your connection.");
       }
       
     } finally {
@@ -111,7 +113,6 @@ const SignUpPage: React.FC = () => {
     }
   };
 
-  // Get today's date in YYYY-MM-DD format to prevent future dates in the calendar picker
   const today = new Date().toISOString().split("T")[0];
 
   return (
@@ -154,7 +155,6 @@ const SignUpPage: React.FC = () => {
               <label htmlFor="phone">Phone Number</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={phoneIcon} className={styles.icon} alt="" />
-                {/* Changed placeholder to reflect digits only */}
                 <input type="tel" id="phone" name="phone" placeholder="98XXXXXXXX" value={formData.phone} onChange={handleChange} required />
               </div>
               {formErrors.phone && <span className={styles.errorText}>{formErrors.phone}</span>}
@@ -165,7 +165,6 @@ const SignUpPage: React.FC = () => {
               <label htmlFor="dob">Date of Birth</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={calendarIcon} className={styles.icon} alt="" />
-                {/* Added max={today} to enforce past dates visually */}
                 <input type="date" id="dob" name="dob" max={today} value={formData.dob} onChange={handleChange} required />
               </div>
               {formErrors.dob && <span className={styles.errorText}>{formErrors.dob}</span>}
@@ -205,7 +204,7 @@ const SignUpPage: React.FC = () => {
               {formErrors.password && <span className={styles.errorText}>{formErrors.password}</span>}
             </div>
 
-            {/* Confirm Password (NEW) */}
+            {/* Confirm Password */}
             <div className={styles.inputGroup}>
               <label htmlFor="confirmPassword">Confirm Password</label>
               <div className={styles.inputFieldWrapper}>
@@ -224,6 +223,13 @@ const SignUpPage: React.FC = () => {
             </div>
           </div>
 
+          {/* Render the global error here, right above the button */}
+          {globalError && (
+            <div className={styles.globalErrorText}>
+              {globalError}
+            </div>
+          )}
+
           <button type="submit" className={styles.submitBtn} disabled={loading}>
             {loading ? "CREATING..." : "CREATE ACCOUNT"}
           </button>
@@ -234,7 +240,7 @@ const SignUpPage: React.FC = () => {
         </div>
 
         <footer className={styles.loginPrompt}>
-          Already have an account? <a href="/loginpage">Sign In</a>
+          Already have an account? <Link to="/loginpage">Sign In</Link>
         </footer>
 
       </main>

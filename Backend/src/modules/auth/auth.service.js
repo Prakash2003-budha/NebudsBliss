@@ -17,8 +17,6 @@ class AuthService{
                 };
                 data.image_id = upload.public_id;
             }
-            
-            // SPEED FIX: Use await bcrypt.hash() instead of hashSync()
             data.password = await bcrypt.hash(data.password, 12);
             data.status = false;
             data.activationToken = randomStringGenerator(100, 'string');
