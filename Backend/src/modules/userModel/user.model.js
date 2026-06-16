@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
     role: {
         type: String,
         enum: Object.values(UserRole),
-        default: UserRole.Employee
+        default: UserRole.Customer
     },
     gender: {
         type: String,

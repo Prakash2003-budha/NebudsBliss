@@ -1,9 +1,11 @@
 import itemSvc from "./item.service.js";
+import cloudianarySvc from "../../services/cloudinary.services.js";
 
 class ItemController {
     createItem = async (req, res, next) => {
+        let itemData;
         try {
-            const itemData = await itemSvc.itemDataTransform(req);
+            itemData = await itemSvc.itemDataTransform(req);
             const savedItem = await itemSvc.itemStore(itemData);
             
             res.json({
@@ -13,6 +15,22 @@ class ItemController {
                 option: null
             });
         } catch (exception) {
+            // ✅ Clean up local files if still on disk (failed before Cloudinary upload)
+            if (req.files && req.files.length > 0) {
+                req.files.forEach(file => {
+                    cloudianarySvc.removeLocalFile(file.path);
+                });
+            }
+
+            // ✅ Roll back any images already uploaded to Cloudinary
+            if (itemData && itemData.images && itemData.images.length > 0) {
+                for (const img of itemData.images) {
+                    if (img.public_id) {
+                        await cloudianarySvc.deleteFile(img.public_id);
+                    }
+                }
+            }
+
             next(exception);
         }
     }
@@ -63,13 +81,20 @@ class ItemController {
     }
 
     updateItem = async (req, res, next) => {
+        let updateData;
         try {
             const existingItem = await itemSvc.getItemById(req.params.id);
             if (!existingItem) {
+                // ✅ Item not found — clean up local files before throwing
+                if (req.files && req.files.length > 0) {
+                    req.files.forEach(file => {
+                        cloudianarySvc.removeLocalFile(file.path);
+                    });
+                }
                 throw { code: 404, message: "Item not found", status: "ITEM_NOT_FOUND" };
             }
 
-            const updateData = await itemSvc.itemDataTransform(req);
+            updateData = await itemSvc.itemDataTransform(req);
             const updatedItem = await itemSvc.updateItemById(req.params.id, updateData);
 
             res.json({
@@ -79,6 +104,22 @@ class ItemController {
                 option: null
             });
         } catch (exception) {
+            // ✅ Clean up local files if still on disk
+            if (req.files && req.files.length > 0) {
+                req.files.forEach(file => {
+                    cloudianarySvc.removeLocalFile(file.path);
+                });
+            }
+
+            // ✅ Roll back any images already uploaded to Cloudinary
+            if (updateData && updateData.images && updateData.images.length > 0) {
+                for (const img of updateData.images) {
+                    if (img.public_id) {
+                        await cloudianarySvc.deleteFile(img.public_id);
+                    }
+                }
+            }
+
             next(exception);
         }
     }
@@ -88,6 +129,15 @@ class ItemController {
             const existingItem = await itemSvc.getItemById(req.params.id);
             if (!existingItem) {
                 throw { code: 404, message: "Item not found", status: "ITEM_NOT_FOUND" };
+            }
+
+            // ✅ Delete all associated Cloudinary images before removing from DB
+            if (existingItem.images && existingItem.images.length > 0) {
+                for (const img of existingItem.images) {
+                    if (img.public_id) {
+                        await cloudianarySvc.deleteFile(img.public_id);
+                    }
+                }
             }
 
             await itemSvc.deleteItemById(req.params.id);
