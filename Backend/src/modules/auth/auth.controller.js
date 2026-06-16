@@ -7,30 +7,51 @@ import { randomStringGenerator } from "../../utils/helper.js";
 import mongoose from "mongoose";
 
 class AuthController {
+    
     registerUser = async (req, res, next) => {
         let userData;
         try {
-            userData = await autSvc.userRegisterDataTrans(req)
-            const userObj = await autSvc.userStore(userData)
-            await autSvc.notifyActivationEmail({
-                name: userObj.name,
+            // 1. NEW: Check if the email already exists in the DB
+            const existingUser = await autSvc.getSingleUserByFilter({ email: req.body.email });
+            
+            if (existingUser) {
+                // If the user exists, throw an error immediately before uploading images
+                throw {
+                    code: 400,
+                    message: "A user with this email address already exists.",
+                    status: "EMAIL_ALREADY_EXISTS"
+                };
+            }
+
+            userData = await autSvc.userRegisterDataTrans(req);
+            const userObj = await autSvc.userStore(userData);
+            
+            // 2. SPEED FIX: Remove 'await' so the email sends in the background (Fire-and-Forget)
+            // Note: I changed 'name' to 'fullName' to match your notifyActivationEmail parameters
+            autSvc.notifyActivationEmail({
+                fullName: userObj.fullName, 
                 email: userObj.email,
                 activationToken: userObj.activationToken
-            })
+            }).catch((err) => {
+                // Catch any email errors so they don't crash the server in the background
+                console.error("Failed to send activation email:", err);
+            });
+
+            // Immediately send the response back to the user while the email sends
             res.json({
                 data: {
                     user: autSvc.publicUserProfile(userObj),
                 },
-                message: "User register sucessifully",
-                status: "Register_Sucess",
+                message: "User registered successfully",
+                status: "Register_Success",
                 option: null
             });
         } catch (exception) {
-            // FIX: was 'data.image_id' (undefined variable), now correctly 'userData.image_id'
+            // Rollback Cloudinary upload if something fails
             if (userData && userData.image_id) {
                 await cloudianarySvc.deleteFile(userData.image_id);
             }
-            next(exception)
+            next(exception);
         }
     }
 
