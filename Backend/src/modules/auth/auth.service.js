@@ -5,9 +5,10 @@ import {AppConfig, SMTPConfig} from "../../config/constants.js"
 import UserModel from "../userModel/user.model.js";
 import emailSvc from "../../services/email.service.js";
 class AuthService{
-    userRegisterDataTrans= async (req, res) => {
-        try{
-            let data = {...req.body};
+    userRegisterDataTrans = async (req, res) => {
+        try {
+            let data = { ...req.body };
+            
             if (req.file) {
                 const upload = await cloudianarySvc.fileUpload(req.file.path, 'user/');
                 data.image = {
@@ -16,12 +17,15 @@ class AuthService{
                 };
                 data.image_id = upload.public_id;
             }
-            data.password = bcrypt.hashSync(data.password, 12);
-            data.status= false
-            data.activationToken = randomStringGenerator(100,'string')
+            
+            // SPEED FIX: Use await bcrypt.hash() instead of hashSync()
+            data.password = await bcrypt.hash(data.password, 12);
+            data.status = false;
+            data.activationToken = randomStringGenerator(100, 'string');
+            
             return data;
-            }catch(exception){
-                throw(exception);
+        } catch (exception) {
+            throw exception;
         }
     }
     userStore = async(data)=>{
