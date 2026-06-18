@@ -202,3 +202,92 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   font-family: $font-primary; 
   &:hover { opacity: 0.9; }
 }
+
+
+
+
+// ... keep everything at the top exactly the same until you reach .imageUploadArea ...
+
+// NEW: Container that holds all preview boxes and the upload button side-by-side
+.imageGallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+// NEW: Styles the individual thumbnail boxes
+.previewBox {
+  width: 75px;
+  height: 75px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+  .previewImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  // The small "X" button to delete an image
+  .removeImgBtn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 59, 48, 0.9); // Red on hover
+    }
+  }
+}
+
+// UPDATED: Now smaller to act as an "Add Box" next to the previews
+.imageUploadArea {
+  width: 75px;
+  height: 75px;
+  border: 2px dashed #cccccc;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family: $font-primary;
+
+  &:hover { 
+    border-color: $primary-color; 
+    background-color: rgba(8, 95, 246, 0.05); // Slight primary color tint
+  }
+}
+
+.uploadPlaceholder {
+  color: #777777;
+  font-size: 11px;
+  font-family: $font-primary;
+  text-align: center;
+  font-weight: 600;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+// ... keep everything below this (.submitButton etc.) exactly the same ...

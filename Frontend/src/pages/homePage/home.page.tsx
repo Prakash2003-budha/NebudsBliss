@@ -89,7 +89,6 @@ const Homepage: React.FC = () => {
             </div>
           )}
 
-          {/* Error State */}
           {!loading && error && (
             <div className={styles.errorWrapper}>
               <p>{error}</p>

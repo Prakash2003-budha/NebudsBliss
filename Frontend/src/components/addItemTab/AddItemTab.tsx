@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styles from './addItem.Tab.module.scss';
 import PasswordConfirmModal from '../passwordAsking/PasswordConfirmModal'; 
 import axios from 'axios';
-import { API_ENDPOINTS } from '../../constants/constants'; // Adjust this import path to match your project structure
+import { API_ENDPOINTS } from '../../constants/constants';
 
 interface AddItemTabProps {
   isOpen: boolean;
@@ -21,10 +21,12 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     stockQuantity: '0',
   });
 
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  // UPDATED: Changed from single file to arrays
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // Tracks active loading state
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -35,12 +37,35 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // UPDATED: Handles multiple image selections and limits to 5
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files);
+      
+      if (images.length + selectedFiles.length > 5) {
+        alert("You can only upload up to 5 images per product.");
+        return;
+      }
+
+      const newFiles = [...images, ...selectedFiles].slice(0, 5);
+      setImages(newFiles);
+
+      const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+      setImagePreviews(prev => [...prev, ...newPreviews].slice(0, 5));
+      
+      // Reset input value so the same files can be selected again if removed
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
+  };
+
+  // NEW: Allows removing an image from the preview list
+  const removeImage = (indexToRemove: number) => {
+    setImages(prev => prev.filter((_, index) => index !== indexToRemove));
+    setImagePreviews(prev => {
+      // Free up memory by revoking the object URL
+      URL.revokeObjectURL(prev[indexToRemove]);
+      return prev.filter((_, index) => index !== indexToRemove);
+    });
   };
 
   const resetForm = () => {
@@ -54,8 +79,8 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       brand: '',
       stockQuantity: '0',
     });
-    setImage(null);
-    setImagePreview(null);
+    setImages([]);
+    setImagePreviews([]);
     setShowPasswordModal(false);
     setIsSubmitting(false);
     onClose();
@@ -72,13 +97,10 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     setShowPasswordModal(true);
   };
 
-  // Step 2: Hits your backend route using the constant values
-  // 👈 FIXED: Removed '(adminPassword: string)' since it is no longer used inside the function body
   const handleFinalDatabaseSave = async () => {
     setShowPasswordModal(false); 
     setIsSubmitting(true);
 
-    // 1. Prepare FormData because your backend uses a file upload middleware
     const dataPayload = new FormData();
     dataPayload.append('name', formData.name);
     dataPayload.append('description', formData.description);
@@ -90,21 +112,20 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     if (formData.discountPrice) dataPayload.append('discountPrice', formData.discountPrice);
     if (formData.brand) dataPayload.append('brand', formData.brand);
 
-    // 2. Attach file binary matching the 'images' key required by your backend: uploader().array('images', 5)
-    if (image) {
+    // UPDATED: Loop through the array and append all images
+    images.forEach(image => {
       dataPayload.append('images', image);
-    }
+    });
 
     try {
       const accessToken = localStorage.getItem('accessToken');
 
-      // 3. Make the API post request hitting: itemRouter.post('/items')
       const response = await axios.post(API_ENDPOINTS.CREATE_ITEM, dataPayload, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': accessToken ? `Bearer ${accessToken}` : ''
         },
-        withCredentials: true // Includes cookies/sessions if your backend uses them for verification
+        withCredentials: true 
       });
 
       console.log("Database update successful:", response.data);
@@ -114,11 +135,9 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       console.error("API error details:", error);
       
       if (axios.isAxiosError(error)) {
-        // Grabs error message from backend body validation or general failure safely
         const errorMessage = error?.response?.data?.message || "Failed to communicate with catalog database server.";
         alert(errorMessage);
 
-        // If user is actually unauthenticated or session has expired, boot them to login
         const status = error.response?.data?.status;
         if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
           localStorage.removeItem('accessToken'); 
@@ -145,16 +164,38 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
             <div className={styles.scrollableFormFields}>
               
               <div className={styles.inputGroup}>
-                <label>Item Image</label>
-                <div className={styles.imageUploadArea} onClick={() => !isSubmitting && fileInputRef.current?.click()}>
-                  {imagePreview ? (
-                    <img src={imagePreview} alt="Preview" className={styles.previewImg} />
-                  ) : (
-                    <div className={styles.uploadPlaceholder}><span>+ Upload Image</span></div>
+                <label>Item Images (Max 5)</label>
+                
+                {/* UPDATED: Image Gallery Container */}
+                <div className={styles.imageGallery}>
+                  {/* Map through and show selected images */}
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className={styles.previewBox}>
+                      <img src={preview} alt={`Preview ${index}`} className={styles.previewImg} />
+                      <button 
+                        type="button" 
+                        className={styles.removeImgBtn} 
+                        onClick={() => removeImage(index)}
+                        disabled={isSubmitting}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Show the upload button only if we have less than 5 images */}
+                  {images.length < 5 && (
+                    <div className={styles.imageUploadArea} onClick={() => !isSubmitting && fileInputRef.current?.click()}>
+                      <div className={styles.uploadPlaceholder}>
+                        <span>+ Add ({images.length}/5)</span>
+                      </div>
+                    </div>
                   )}
                 </div>
+
+                {/* Added 'multiple' attribute here */}
                 <input 
-                  type="file" accept="image/*" ref={fileInputRef} disabled={isSubmitting}
+                  type="file" accept="image/*" multiple ref={fileInputRef} disabled={isSubmitting}
                   className={styles.hiddenFileInput} onChange={handleImageChange} 
                 />
               </div>
