@@ -108,12 +108,9 @@ const Homepage: React.FC = () => {
               {featuredItems.map((item) => (
                 <div key={item._id} className={styles.productCard}>
                   
-                  {/* Category Tab (Folder style) */}
                   <div className={styles.categoryTabContainer}>
                     <span className={styles.categoryTab}>{item.category}</span>
                   </div>
-
-                  {/* Image */}
                   <div className={styles.imageWrapper}>
                     <img
                       src={

@@ -21,7 +21,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     stockQuantity: '0',
   });
 
-  // UPDATED: Changed from single file to arrays
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   
@@ -112,7 +111,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     if (formData.discountPrice) dataPayload.append('discountPrice', formData.discountPrice);
     if (formData.brand) dataPayload.append('brand', formData.brand);
 
-    // UPDATED: Loop through the array and append all images
     images.forEach(image => {
       dataPayload.append('images', image);
     });
@@ -166,9 +164,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               <div className={styles.inputGroup}>
                 <label>Item Images (Max 5)</label>
                 
-                {/* UPDATED: Image Gallery Container */}
                 <div className={styles.imageGallery}>
-                  {/* Map through and show selected images */}
                   {imagePreviews.map((preview, index) => (
                     <div key={index} className={styles.previewBox}>
                       <img src={preview} alt={`Preview ${index}`} className={styles.previewImg} />
@@ -183,7 +179,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                     </div>
                   ))}
 
-                  {/* Show the upload button only if we have less than 5 images */}
                   {images.length < 5 && (
                     <div className={styles.imageUploadArea} onClick={() => !isSubmitting && fileInputRef.current?.click()}>
                       <div className={styles.uploadPlaceholder}>
@@ -193,7 +188,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   )}
                 </div>
 
-                {/* Added 'multiple' attribute here */}
                 <input 
                   type="file" accept="image/*" multiple ref={fileInputRef} disabled={isSubmitting}
                   className={styles.hiddenFileInput} onChange={handleImageChange} 
@@ -227,7 +221,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   <option value="Fan">Fan</option>
                 </select>
               </div>
-
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
                   <label>Price *</label>
@@ -244,7 +237,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
                   <label>Brand Name</label>
@@ -261,7 +253,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-
               <div className={styles.inputGroup}>
                 <label>Description * (Min. 10 Chars)</label>
                 <textarea 
@@ -269,16 +260,13 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   value={formData.description} onChange={handleChange}
                 />
               </div>
-
             </div>
-
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
               {isSubmitting ? "Uploading to Server..." : "Save Product Item"}
             </button>
           </form>
         </div>
       </div>
-
       <PasswordConfirmModal 
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}

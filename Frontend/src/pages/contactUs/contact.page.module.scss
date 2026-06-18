@@ -44,7 +44,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   animation: fadeSlideUp 0.6s $ease forwards;
 
   @media (max-width: 768px) {
-    padding: 2rem 1rem; // Tighter padding for mobile
+    padding: 2rem 1rem; 
   }
 }
 
@@ -245,7 +245,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .submitBtn {
-    background: $dark-text; // Elegant black button
+    background: $dark-text; 
     color: #fff;
     border: none;
     padding: 14px 28px;
@@ -257,7 +257,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 0.5rem;
 
     @media (max-width: 560px) {
-      width: 100%; // Full width on mobile
+      width: 100%; 
     }
 
     &:hover:not(:disabled) {
@@ -273,10 +273,9 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
-// ===== Right column / Map =====
 .rightColumn {
   position: sticky;
-  top: 6rem; // Accounts for a potential sticky nav bar
+  top: 6rem; 
   height: fit-content;
 
   @media (max-width: 960px) {
@@ -306,14 +305,14 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
 
     .mapContainer {
       width: 100%;
-      aspect-ratio: 4 / 3; // PERFECT SCALING: Ensures it looks great on any phone size
+      aspect-ratio: 4 / 3; 
       border-radius: $radius-md;
       overflow: hidden;
       background-color: $soft-bg;
       border: 1px solid $border-color;
 
       @media (max-width: 500px) {
-        aspect-ratio: 1 / 1; // Makes it a nice square on very small phones
+        aspect-ratio: 1 / 1; 
       }
 
       iframe {
@@ -342,13 +341,12 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 }
-// NEW: Social Links Row
   .socialRow {
-    grid-column: 1 / -1; // Forces the row to span across both columns
+    grid-column: 1 / -1; 
     display: flex;
     gap: 1rem;
     padding-top: 0.5rem;
-    flex-wrap: wrap; // Allows them to stack on very small phones
+    flex-wrap: wrap; 
 
     .socialPill {
       display: inline-flex;
@@ -357,7 +355,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
       padding: 10px 20px;
       background: $bg-color;
       border: 1px solid $border-color;
-      border-radius: 999px; // Makes it a perfect pill shape
+      border-radius: 999px; 
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 500;
@@ -374,7 +372,6 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
         box-shadow: $shadow-sm;
       }
 
-      // Specific brand colors on hover
       &.whatsapp:hover {
         border-color: #25D366;
         color: #25D366;
