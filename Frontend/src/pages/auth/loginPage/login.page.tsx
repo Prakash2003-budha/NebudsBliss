@@ -5,9 +5,14 @@ import logo from "../../../img/logo/logo.transparent.png";
 import gmail from "../../../img/icons/gmailIcon.png";
 import passwordIcon from "../../../img/icons/password.png";
 import { API_ENDPOINTS } from "../../../constants/constants";
-// import { API_ENDPOINTS } from "../../../constants/constants";
 
-const LoginPage: React.FC = () => {
+// 1. ADD THE INTERFACE TO EXPECT 'onClose'
+interface LoginPageProps {
+  onClose: () => void;
+}
+
+// 2. PASS 'onClose' INTO THE COMPONENT
+const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
@@ -34,11 +39,14 @@ const LoginPage: React.FC = () => {
       const data = await response.json().catch(() => null);
 
       if (response.ok && data) {
-        // Success! Save tokens and redirect
+        // Success! Save tokens
         localStorage.setItem("accessToken", data.data.accessToken);
         localStorage.setItem("refreshToken", data.data.refreshToken);
         localStorage.setItem("user", JSON.stringify(data.data.user));
-        navigate("/"); 
+        
+        // 3. CLOSE THE MODAL ON SUCCESS AND REFRESH THE PAGE
+        onClose(); 
+        window.location.reload(); 
 
       } else {
         // Handle backend errors
@@ -60,12 +68,19 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className={styles.loginWrapper}>
-      <main className={styles.loginCard}>
+      <main className={styles.loginCard} style={{ position: 'relative' }}>
         
+        {/* OPTIONAL: A top right 'X' button to close the modal */}
+        <button 
+          onClick={onClose} 
+          style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#888' }}
+          aria-label="Close"
+        >
+          &times;
+        </button>
+
         <header className={styles.headerSection}>
-          <Link to="/">
-            <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
-          </Link>
+          <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
           <h1 className={styles.title}>Welcome Back</h1>
           <p className={styles.subtitle}>Sign in to your account</p>
         </header>
@@ -103,12 +118,12 @@ const LoginPage: React.FC = () => {
               />
             </div>
             
-            {/* MOVED: Error message is now directly under the password input */}
+            {/* Error message directly under the password input */}
             {errorMessage && (
               <div style={{ 
                 color: "#f87171", 
                 fontSize: "0.85rem", 
-                marginTop: "0.25rem", // Small margin to space it slightly from the input
+                marginTop: "0.25rem", 
                 lineHeight: "1.4"
               }}>
                 {errorMessage}
@@ -116,7 +131,8 @@ const LoginPage: React.FC = () => {
             )}
           </div>
 
-          <Link to="/Forgot-Password" className={styles.forgotPassword}>
+          {/* Clicking links should also close the modal so it doesn't stay open on the next page */}
+          <Link to="/Forgot-Password" className={styles.forgotPassword} onClick={onClose}>
             Forgot Password?
           </Link>
 
@@ -130,8 +146,15 @@ const LoginPage: React.FC = () => {
         </div>
 
         <footer className={styles.signupPrompt}>
-          Don't have an account? <Link to="/SignUp">Sign Up</Link>
+          Don't have an account? <Link to="/SignUp" onClick={onClose}>Sign Up</Link>
         </footer>
+
+        {/* 4. EXPLICIT CLOSE WINDOW BUTTON AT THE BOTTOM */}
+        <div style={{ textAlign: 'center', marginTop: '15px' }}>
+            <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#085ff6', fontWeight: 'bold', fontSize: '1rem', textDecoration: 'underline' }}>
+              Close Window
+            </button>
+        </div>
 
       </main>
     </div>

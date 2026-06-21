@@ -4,6 +4,9 @@ import styles from "./home.page.module.scss";
 import axios from "axios";
 import { API_ENDPOINTS, CATEGORY } from "../../constants/constants";
 
+// IMPORT YOUR LOGIN COMPONENT HERE
+import LoginPage from "../auth/loginPage/login.page"; 
+
 interface Item {
   _id: string;
   name: string;
@@ -21,6 +24,9 @@ const Homepage: React.FC = () => {
   const [featuredItems, setFeaturedItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // STATE TO CONTROL THE MODAL
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -48,11 +54,15 @@ const Homepage: React.FC = () => {
         <section className={styles.PosterSection}>
           <div className={styles.heroContent}>
             <h1>Poster Will be displayed here</h1>
-            <button className={styles.heroBtn}>Shop Now</button>
+            
+            {/* BUTTON TO OPEN THE MODAL */}
+            <button className={styles.heroBtn} onClick={() => setIsLoginModalOpen(true)}>
+              Login / Shop Now
+            </button>
           </div>
         </section>
 
-        {/* Categories Section */}
+        {/* Categories Section (Fixes the unused variable warning!) */}
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>
             <h2>Shop by Category</h2>
@@ -102,7 +112,7 @@ const Homepage: React.FC = () => {
             </div>
           )}
 
-          {/* Product Cards */}
+          {/* Product Cards (Using the new clean design without tags) */}
           {!loading && !error && featuredItems.length > 0 && (
             <div className={styles.productGrid}>
               {featuredItems.map((item) => (
@@ -128,7 +138,6 @@ const Homepage: React.FC = () => {
 
                   {/* Card Body */}
                   <div className={styles.cardBody}>
-                    {/* Name + Price Row */}
                     <div className={styles.nameRow}>
                       <h3>{item.name}</h3>
                       <span className={styles.priceBadge}>
@@ -137,9 +146,7 @@ const Homepage: React.FC = () => {
                     </div>
 
                     <p className={styles.description}>
-                      {item.description.length > 80
-                        ? item.description.substring(0, 80) + "..."
-                        : item.description}
+                      {item.description}
                     </p>
 
                     <button className={styles.addToCartBtn}>
@@ -159,6 +166,11 @@ const Homepage: React.FC = () => {
             </div>
           )}
         </section>
+
+        {/* RENDER THE MODAL CONDITIONALLY AT THE BOTTOM */}
+        {isLoginModalOpen && (
+          <LoginPage onClose={() => setIsLoginModalOpen(false)} />
+        )}
 
       </div>
     </Layout>
