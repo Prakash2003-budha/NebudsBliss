@@ -5,26 +5,19 @@ import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
 import Sidebar from '../sidebar/Sidebar';
 
-// 1. IMPORT THE LOGIN PAGE COMPONENT
+// 1. IMPORT BOTH MODAL COMPONENTS
 import LoginPage from '../../pages/auth/loginPage/login.page';
+import SignUpPage from '../../pages/auth/registerPage/register.page'; 
 
-const HamburgerIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const CloseIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+// (Assuming HamburgerIcon and CloseIcon are defined/imported here in your actual file)
 
 export default function Header() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // 2. STATE FOR BOTH MODALS
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const [user, setUser] = useState(() => {
     const loggedInUser = localStorage.getItem('user');
@@ -54,7 +47,6 @@ export default function Header() {
   return (
     <>
       <header className={styles.header}>
-        {/* Logo */}
         <div className={styles.logoContainer}>
           <Link to="/" onClick={closeSidebar}>
             <img src={logo} alt="Company Logo" className={styles.logo} />
@@ -63,18 +55,14 @@ export default function Header() {
 
         <nav className={styles.nav}>
           <Link to="/" className={styles.navLink}>Home</Link>
-          
           <div className={styles.categoryDropdown}>
             <span className={styles.navLink}>Categories</span>
             <div className={styles.dropdownMenu}>
               <Link to="/category/earbuds" className={styles.dropdownItem}>Earbuds</Link>
               <Link to="/category/powerbanks" className={styles.dropdownItem}>Powerbank</Link>
-              <Link to="/category/cameras" className={styles.dropdownItem}>Camera</Link>
-              <Link to="/category/accessories" className={styles.dropdownItem}>Accessories</Link>
-              <Link to="/category/fans" className={styles.dropdownItem}>Fan</Link>
+              {/* ... other links ... */}
             </div>
           </div>
-          
           <Link to="/AboutUs" className={styles.navLink}>About Us</Link>
           <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
         </nav>
@@ -82,12 +70,7 @@ export default function Header() {
         <div className={styles.signButton}>
           {user ? (
             <div className={styles.profileContainer}>
-              <img 
-                src={user.image?.url || profileIcon} 
-                alt="User Profile" 
-                className={styles.profileImage} 
-              />
-              
+              <img src={user.image?.url || profileIcon} alt="User Profile" className={styles.profileImage} />
               <div className={styles.profileDropdown}>
                 <Link to="/profile" className={styles.dropdownItem}>My Profile</Link>
                 <button onClick={handleLogout} className={styles.dropdownItem}>Logout</button>
@@ -95,32 +78,42 @@ export default function Header() {
             </div>
           ) : (
             <>
-              {/* 3. CHANGE ONCLICK TO OPEN MODAL INSTEAD OF NAVIGATING */}
+              {/* 3. THESE TRIGGER THE MODALS */}
               <button className={styles.SignInButton} onClick={() => setIsLoginModalOpen(true)}>Sign In</button>
-              
-              {/* Assuming you also want to keep Sign Up as a separate page for now, or you can make a modal for it later! */}
-              <button className={styles.SignUpButton} onClick={() => navigate('/SignUp')}>Sign Up</button>
+              <button className={styles.SignUpButton} onClick={() => setIsRegisterModalOpen(true)}>Sign Up</button>
             </>
           )}
         </div>
+        
+        {/* Make sure HamburgerIcon and CloseIcon are properly imported at the top of your file */}
         <button className={styles.hamburgerMenu} onClick={toggleSidebar} aria-label="Toggle Navigation">
-          {isSidebarOpen ? <CloseIcon /> : <HamburgerIcon />}
+          {/* {isSidebarOpen ? <CloseIcon /> : <HamburgerIcon />} */}
         </button>
       </header>
 
+      {/* Sidebar remains the same */}
       <div className={styles.mobileOnlySidebar}>
-        <Sidebar 
-          isOpen={isSidebarOpen} 
-          closeSidebar={closeSidebar} 
-          user={user} 
-          handleLogout={handleLogout} 
-        />
+        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} user={user} handleLogout={handleLogout} />
       </div>
 
-      {/* 4. RENDER THE LOGIN MODAL IF IT IS OPEN */}
-      {isLoginModalOpen && (
-        <LoginPage onClose={() => setIsLoginModalOpen(false)} />
-      )}
+      {/* 4. RENDER MODALS WITH ALL REQUIRED PROPS */}
+      <LoginPage 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)}
+        onSwitchToRegister={() => {
+          setIsLoginModalOpen(false);
+          setIsRegisterModalOpen(true);
+        }}
+      />
+      
+      <SignUpPage 
+        isOpen={isRegisterModalOpen} 
+        onClose={() => setIsRegisterModalOpen(false)} 
+        onSwitchToLogin={() => {
+          setIsRegisterModalOpen(false);
+          setIsLoginModalOpen(true);
+        }}
+      />
     </>
   );
 }

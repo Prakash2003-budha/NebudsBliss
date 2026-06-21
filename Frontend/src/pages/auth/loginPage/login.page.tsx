@@ -6,18 +6,23 @@ import gmail from "../../../img/icons/gmailIcon.png";
 import passwordIcon from "../../../img/icons/password.png";
 import { API_ENDPOINTS } from "../../../constants/constants";
 
-// 1. ADD THE INTERFACE TO EXPECT 'onClose'
+// 1. UPDATE THE INTERFACE TO EXPECT ALL MODAL PROPS
 interface LoginPageProps {
+  isOpen: boolean;
   onClose: () => void;
+  onSwitchToRegister: () => void;
 }
 
-// 2. PASS 'onClose' INTO THE COMPONENT
-const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
+// 2. PASS PROPS INTO THE COMPONENT
+const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // 3. ADD THE GUARD: If the modal is not open, do not render anything
+  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,7 +46,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
         localStorage.setItem("refreshToken", data.data.refreshToken);
         localStorage.setItem("user", JSON.stringify(data.data.user));
         
-        // 3. CLOSE THE MODAL ON SUCCESS AND REFRESH THE PAGE
+        // Close the modal on success and refresh the page to update header state
         onClose(); 
         window.location.reload(); 
 
@@ -63,8 +68,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
   };
 
   return (
-    <div className={styles.loginWrapper}>
-      <main className={styles.loginCard} style={{ position: 'relative' }}>
+    // 4. ADD MODAL OVERLAY: Clicking the background closes it
+    <div className={styles.modalOverlay} onClick={onClose}>
+      
+      {/* 5. STOP PROPAGATION: Clicking inside the card won't close it */}
+      <main className={styles.loginCard} onClick={(e) => e.stopPropagation()} style={{ position: 'relative' }}>
         
         <button 
           onClick={onClose} 
@@ -134,10 +142,14 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
         </div>
 
         <footer className={styles.signupPrompt}>
-          Don't have an account? <Link to="/SignUp" onClick={onClose}>Sign Up</Link>
+          {/* 6. SWITCHED FROM <Link> TO A BUTTON FOR MODAL SWITCHING */}
+          Don't have an account?{" "}
+          <button type="button" onClick={onSwitchToRegister} className={styles.linkButton}>
+            Sign Up
+          </button>
         </footer>
 
-        {/* 4. EXPLICIT CLOSE WINDOW BUTTON AT THE BOTTOM */}
+        {/* EXPLICIT CLOSE WINDOW BUTTON AT THE BOTTOM */}
         <div style={{ textAlign: 'center', marginTop: '15px' }}>
             <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3ce3ff', fontWeight: 'bold', fontSize: '0.9rem', textDecoration: 'underline' }}>
               Close Window

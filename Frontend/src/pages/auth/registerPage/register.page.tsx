@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import styles from "./register.page.module.scss";
 import logo from "../../../img/logo/logo.transparent.png";
 
@@ -14,11 +16,14 @@ import calendarIcon from "../../../img/icons/calender.png";
 
 import { API_ENDPOINTS } from "../../../constants/constants";
 
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// ✅ Added props to control the modal behavior
+interface SignUpModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSwitchToLogin: () => void;
+}
 
-const SignUpPage: React.FC = () => {
-  const navigate = useNavigate();
+const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false); 
 
   const [formData, setFormData] = useState({
@@ -36,16 +41,15 @@ const SignUpPage: React.FC = () => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [globalError, setGlobalError] = useState<string | null>(null);
 
+  // ✅ If the modal is not open, don't render anything
+  if (!isOpen) return null;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     
-    if (formErrors[name]) {
-      setFormErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-    if (globalError) {
-      setGlobalError(null);
-    }
+    if (formErrors[name]) setFormErrors((prev) => ({ ...prev, [name]: "" }));
+    if (globalError) setGlobalError(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,26 +86,21 @@ const SignUpPage: React.FC = () => {
 
     try {
       const response = await axios.post(API_ENDPOINTS.REGISTER, submitData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       console.log("Registration successful:", response.data);
 
-      // ✅ Spacious multi-line toast message
       toast.success(
         <div>
           <p style={{ fontWeight: "bold", fontSize: "1rem", marginBottom: "8px" }}>
             🎉 Registration Successful!
           </p>
           <p style={{ marginBottom: "8px", lineHeight: "1.5" }}>
-            A verification email has been sent to{" "}
-            <span style={{ fontWeight: "bold" }}>{formData.email}</span>
+            A verification email has been sent to <span style={{ fontWeight: "bold" }}>{formData.email}</span>
           </p>
           <p style={{ fontSize: "0.85rem", opacity: 0.9, lineHeight: "1.5" }}>
-            Please check your inbox and click the activation link to activate
-            your account before logging in.
+            Please check your inbox and click the activation link to activate your account before logging in.
           </p>
         </div>,
         {
@@ -112,7 +111,11 @@ const SignUpPage: React.FC = () => {
           pauseOnHover: true,
           draggable: false,
           style: { width: "420px" },
-          onClose: () => navigate("/loginpage"),
+          // ✅ Switch to login modal instead of navigating pages
+          onClose: () => {
+            onClose();
+            onSwitchToLogin();
+          },
         }
       );
 
@@ -124,27 +127,17 @@ const SignUpPage: React.FC = () => {
         
         if (backendErrors && typeof backendErrors === 'object') {
           setFormErrors(backendErrors as Record<string, string>);
-          toast.error("Please fix the errors in the form and try again.", {
-            position: "top-center",
-            autoClose: 4000,
-          });
+          toast.error("Please fix the errors in the form and try again.", { position: "top-center", autoClose: 4000 });
         } else {
           const message = error.response.data?.message || "Registration failed. Please try again.";
           setGlobalError(message);
-          toast.error(message, {
-            position: "top-center",
-            autoClose: 4000,
-          });
+          toast.error(message, { position: "top-center", autoClose: 4000 });
         }
       } else {
         const message = "An unexpected error occurred. Please check your connection.";
         setGlobalError(message);
-        toast.error(message, {
-          position: "top-center",
-          autoClose: 4000,
-        });
+        toast.error(message, { position: "top-center", autoClose: 4000 });
       }
-      
     } finally {
       setLoading(false);
     }
@@ -153,16 +146,22 @@ const SignUpPage: React.FC = () => {
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className={styles.signupWrapper}>
+    // ✅ Backdrop overlay: Clicking outside the modal closes it
+    <div className={styles.modalOverlay} onClick={onClose}>
+      
+      {/* Toast container must have a high z-index to appear over the modal */}
+      <ToastContainer style={{ zIndex: 9999 }} />
 
-      <ToastContainer />
-
-      <main className={styles.signupCard}>
+      {/* ✅ Modal Card: e.stopPropagation() prevents clicks inside the card from closing the modal */}
+      <main className={styles.signupModalCard} onClick={(e) => e.stopPropagation()}>
         
+        {/* ✅ Close Button */}
+        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+          &times;
+        </button>
+
         <header className={styles.headerSection}>
-          <Link to="/">
-            <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
-          </Link>
+          <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
           <h1 className={styles.title}>Create Account</h1>
           <p className={styles.subtitle}>Join Nebuds Bliss today</p>
         </header>
@@ -279,7 +278,11 @@ const SignUpPage: React.FC = () => {
         </div>
 
         <footer className={styles.loginPrompt}>
-          Already have an account? <Link to="/loginpage">Sign In</Link>
+          {/* ✅ Changed from React Router <Link> to a button that triggers the switch prop */}
+          Already have an account?{" "}
+          <button type="button" onClick={onSwitchToLogin} className={styles.linkButton}>
+            Sign In
+          </button>
         </footer>
 
       </main>
@@ -287,4 +290,4 @@ const SignUpPage: React.FC = () => {
   );
 };
 
-export default SignUpPage;
+export default SignUpModal;
