@@ -136,20 +136,12 @@ const Homepage: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Description */}
                     <p className={styles.description}>
                       {item.description.length > 80
                         ? item.description.substring(0, 80) + "..."
                         : item.description}
                     </p>
 
-                    {/* Mock Tags (Matching your design screenshot) */}
-                    <div className={styles.tagsContainer}>
-                      <span className={styles.tag}>Tag A</span>
-                      <span className={styles.tag}>Tag B</span>
-                    </div>
-
-                    {/* Add To Cart Button */}
                     <button className={styles.addToCartBtn}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
