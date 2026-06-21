@@ -7,12 +7,25 @@ $accent-color: #3ce3ff;
 $input-bg: #262629;
 $border-color: #333333;
 
+/* =========================================================
+   THE FIX: THIS MAKES IT FLOAT DIRECTLY OVER THE HOMEPAGE 
+   ========================================================= */
 .loginWrapper {
-  min-height: 100vh;
+  position: fixed; /* Takes the modal out of the normal page layout */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  
+  /* The '0.8' makes the background 80% dark but still see-through! */
+  background-color: rgba(0, 0, 0, 0.8); 
+  backdrop-filter: blur(4px); /* Blurs the homepage behind it */
+  z-index: 9999; /* Forces it to sit on top of everything */
+  
+  /* Centers the card perfectly in the middle of the screen */
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: $bg-color;
+  justify-content: center; 
   padding: 1.5rem;
   font-family: system-ui, -apple-system, sans-serif;
 }
@@ -20,16 +33,36 @@ $border-color: #333333;
 .loginCard {
   width: 100%;
   max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
   background-color: $card-bg;
   border: 1px solid $border-color;
   border-radius: 12px;
   padding: 2.5rem 2rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8); // Deep shadow
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  
+  /* A smooth "pop in" animation */
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
+@keyframes popIn {
+  from { 
+    transform: scale(0.9); 
+    opacity: 0; 
+  }
+  to { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* =========================================================
+   THE REST OF YOUR EXISTING FORM STYLES
+   ========================================================= */
 .headerSection {
   text-align: center;
   margin-bottom: 2rem;
@@ -97,6 +130,7 @@ $border-color: #333333;
       color: $title-color;
       font-size: 0.95rem;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
 
       &:focus {
         outline: none;
@@ -166,39 +200,6 @@ $border-color: #333333;
 
   span {
     padding: 0 0.75rem;
-  }
-}
-
-.socialRow {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-  margin-bottom: 1.5rem;
-}
-
-.socialBtn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background-color: transparent;
-  border: 1px solid $border-color;
-  border-radius: 6px;
-  color: $title-color;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-
-  img {
-    height: 18px;
-    width: auto;
-  }
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.03);
-    border-color: #444444;
   }
 }
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import styles from "./login.page.module.scss";
 import logo from "../../../img/logo/logo.transparent.png";
@@ -18,8 +18,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
   
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,7 +33,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      // Safely parse JSON (in case the server returns a blank page or HTML error)
       const data = await response.json().catch(() => null);
 
       if (response.ok && data) {
@@ -49,18 +46,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
         window.location.reload(); 
 
       } else {
-        // Handle backend errors
         if (data && data.status === "ACCOUNT_NOT_ACTIVATED") {
-          setErrorMessage("Your account is not activated. Please check your email inbox for the activation link.");
+          setErrorMessage("Your account is not activated. Please check your email.");
         } else if (data && data.message) {
-          setErrorMessage(data.message); // Show whatever specific message the backend sent
+          setErrorMessage(data.message);
         } else {
           setErrorMessage("Invalid credentials. Please try again.");
         }
       }
     } catch (error) {
       console.error("Login Error:", error);
-      setErrorMessage("Cannot connect to the server right now. Please check your console.");
+      setErrorMessage("Cannot connect to the server right now.");
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +66,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
     <div className={styles.loginWrapper}>
       <main className={styles.loginCard} style={{ position: 'relative' }}>
         
-        {/* OPTIONAL: A top right 'X' button to close the modal */}
         <button 
           onClick={onClose} 
           style={{ position: 'absolute', top: '15px', right: '15px', background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#888' }}
@@ -118,20 +113,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
               />
             </div>
             
-            {/* Error message directly under the password input */}
             {errorMessage && (
-              <div style={{ 
-                color: "#f87171", 
-                fontSize: "0.85rem", 
-                marginTop: "0.25rem", 
-                lineHeight: "1.4"
-              }}>
+              <div style={{ color: "#f87171", fontSize: "0.85rem", marginTop: "0.25rem", lineHeight: "1.4" }}>
                 {errorMessage}
               </div>
             )}
           </div>
 
-          {/* Clicking links should also close the modal so it doesn't stay open on the next page */}
           <Link to="/Forgot-Password" className={styles.forgotPassword} onClick={onClose}>
             Forgot Password?
           </Link>
@@ -151,7 +139,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onClose }) => {
 
         {/* 4. EXPLICIT CLOSE WINDOW BUTTON AT THE BOTTOM */}
         <div style={{ textAlign: 'center', marginTop: '15px' }}>
-            <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#085ff6', fontWeight: 'bold', fontSize: '1rem', textDecoration: 'underline' }}>
+            <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3ce3ff', fontWeight: 'bold', fontSize: '0.9rem', textDecoration: 'underline' }}>
               Close Window
             </button>
         </div>

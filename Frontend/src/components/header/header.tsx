@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../img/logo/logoFull.jpg';
 import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
 import Sidebar from '../sidebar/Sidebar';
+
+// 1. IMPORT THE LOGIN PAGE COMPONENT
+import LoginPage from '../../pages/auth/loginPage/login.page';
 
 const HamburgerIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,6 +23,8 @@ const CloseIcon = () => (
 export default function Header() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const [user, setUser] = useState(() => {
     const loggedInUser = localStorage.getItem('user');
@@ -90,7 +95,10 @@ export default function Header() {
             </div>
           ) : (
             <>
-              <button className={styles.SignInButton} onClick={() => navigate('/LoginPage')}>Sign In</button>
+              {/* 3. CHANGE ONCLICK TO OPEN MODAL INSTEAD OF NAVIGATING */}
+              <button className={styles.SignInButton} onClick={() => setIsLoginModalOpen(true)}>Sign In</button>
+              
+              {/* Assuming you also want to keep Sign Up as a separate page for now, or you can make a modal for it later! */}
               <button className={styles.SignUpButton} onClick={() => navigate('/SignUp')}>Sign Up</button>
             </>
           )}
@@ -108,6 +116,11 @@ export default function Header() {
           handleLogout={handleLogout} 
         />
       </div>
+
+      {/* 4. RENDER THE LOGIN MODAL IF IT IS OPEN */}
+      {isLoginModalOpen && (
+        <LoginPage onClose={() => setIsLoginModalOpen(false)} />
+      )}
     </>
   );
 }

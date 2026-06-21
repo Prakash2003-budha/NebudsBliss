@@ -167,7 +167,6 @@ const Homepage: React.FC = () => {
           )}
         </section>
 
-        {/* RENDER THE MODAL CONDITIONALLY AT THE BOTTOM */}
         {isLoginModalOpen && (
           <LoginPage onClose={() => setIsLoginModalOpen(false)} />
         )}
