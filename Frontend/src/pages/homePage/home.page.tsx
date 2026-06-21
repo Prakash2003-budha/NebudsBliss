@@ -4,8 +4,9 @@ import styles from "./home.page.module.scss";
 import axios from "axios";
 import { API_ENDPOINTS, CATEGORY } from "../../constants/constants";
 
-// IMPORT YOUR LOGIN COMPONENT HERE
-import LoginPage from "../auth/loginPage/login.page"; 
+// Import both modal components
+import LoginPage from "../auth/loginPage/login.page";
+import SignUpModal from "../auth/registerPage/register.page";
 
 interface Item {
   _id: string;
@@ -25,8 +26,9 @@ const Homepage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // STATE TO CONTROL THE MODAL
+  // State to control which modal is open
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -37,7 +39,7 @@ const Homepage: React.FC = () => {
         const activeItems = allItems.filter((item) => item.isActive);
         const shuffled = activeItems.sort(() => Math.random() - 0.5);
         setFeaturedItems(shuffled.slice(0, 4));
-      } catch  {
+      } catch {
         setError("Failed to load featured products. Please try again later.");
       } finally {
         setLoading(false);
@@ -54,15 +56,18 @@ const Homepage: React.FC = () => {
         <section className={styles.PosterSection}>
           <div className={styles.heroContent}>
             <h1>Poster Will be displayed here</h1>
-            
-            {/* BUTTON TO OPEN THE MODAL */}
+
+            {/* Buttons to open the modals */}
             <button className={styles.heroBtn} onClick={() => setIsLoginModalOpen(true)}>
               Login / Shop Now
+            </button>
+            <button className={styles.heroBtn} onClick={() => setIsRegisterModalOpen(true)}>
+              Register
             </button>
           </div>
         </section>
 
-        {/* Categories Section (Fixes the unused variable warning!) */}
+        {/* Categories Section */}
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>
             <h2>Shop by Category</h2>
@@ -112,12 +117,12 @@ const Homepage: React.FC = () => {
             </div>
           )}
 
-          {/* Product Cards (Using the new clean design without tags) */}
+          {/* Product Cards */}
           {!loading && !error && featuredItems.length > 0 && (
             <div className={styles.productGrid}>
               {featuredItems.map((item) => (
                 <div key={item._id} className={styles.productCard}>
-                  
+
                   <div className={styles.categoryTabContainer}>
                     <span className={styles.categoryTab}>{item.category}</span>
                   </div>
@@ -167,9 +172,25 @@ const Homepage: React.FC = () => {
           )}
         </section>
 
-        {isLoginModalOpen && (
-          <LoginPage onClose={() => setIsLoginModalOpen(false)} />
-        )}
+        {/* Login Modal */}
+        <LoginPage
+          isOpen={isLoginModalOpen}
+          onClose={() => setIsLoginModalOpen(false)}
+          onSwitchToRegister={() => {
+            setIsLoginModalOpen(false);
+            setIsRegisterModalOpen(true);
+          }}
+        />
+
+        {/* Register Modal */}
+        <SignUpModal
+          isOpen={isRegisterModalOpen}
+          onClose={() => setIsRegisterModalOpen(false)}
+          onSwitchToLogin={() => {
+            setIsRegisterModalOpen(false);
+            setIsLoginModalOpen(true);
+          }}
+        />
 
       </div>
     </Layout>
