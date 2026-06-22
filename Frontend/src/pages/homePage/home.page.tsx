@@ -45,7 +45,7 @@ const Homepage: React.FC = () => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "Admin";
 
   // State to control which modal is open
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -70,7 +70,6 @@ const Homepage: React.FC = () => {
     fetchItems();
   }, []);
 
-  // Step 1: Admin clicks Delete — store the item and open the password modal
   const handleDeleteClick = (item: Item) => {
     setItemPendingDelete(item);
     setIsPasswordModalOpen(true);
