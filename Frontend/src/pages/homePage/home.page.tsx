@@ -70,6 +70,7 @@ const Homepage: React.FC = () => {
     fetchItems();
   }, []);
 
+  // Step 1: Admin clicks Delete — store the item and open the password modal
   const handleDeleteClick = (item: Item) => {
     setItemPendingDelete(item);
     setIsPasswordModalOpen(true);
@@ -83,10 +84,13 @@ const Homepage: React.FC = () => {
       setDeletingId(itemPendingDelete._id);
       setIsPasswordModalOpen(false);
 
+      const accessToken = localStorage.getItem('accessToken');
+
       await axios.delete(API_ENDPOINTS.DELETE_ITEM(itemPendingDelete._id), {
         headers: {
-          Authorization: `Bearer ${user?.token}`,
+          Authorization: accessToken ? `Bearer ${accessToken}` : '',
         },
+        withCredentials: true,
       });
 
       toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
