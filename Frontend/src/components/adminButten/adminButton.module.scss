@@ -1,0 +1,43 @@
+$primary-color:      #085ff6;
+$breakpoint-mobile:  768px;
+
+.addButton {
+  position: fixed;
+  bottom: 100px;    
+  right: 24px;      
+  z-index: 999;
+  width: 60px;    
+  height: 60px;       
+  background-color: $primary-color;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px -5px rgba(8, 95, 246, 0.25); 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    opacity: 0.95;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    bottom: 80px;    
+    right: 16px;     
+    width: 52px;      
+    height: 52px;   
+  }
+}
+
+.btnIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
