@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 // Import both modal components
 import LoginPage from "../auth/loginPage/login.page";
 import SignUpModal from "../auth/registerPage/register.page";
+import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
 
 interface Item {
   _id: string;
@@ -34,6 +35,10 @@ const Homepage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
+  // Password confirm modal state
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [itemPendingDelete, setItemPendingDelete] = useState<Item | null>(null);
+
   // Read logged-in user from localStorage (same pattern as Header)
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
@@ -46,45 +51,54 @@ const Homepage: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
-  const fetchItems = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(API_ENDPOINTS.GET_ALL_ITEMS);
-      const allItems: Item[] = response.data.data;
-      const activeItems = allItems.filter((item) => item.isActive);
-      const shuffled = activeItems.sort(() => Math.random() - 0.5);
-      setFeaturedItems(shuffled.slice(0, 4));
-    } catch {
-      setError("Failed to load featured products. Please try again later.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(API_ENDPOINTS.GET_ALL_ITEMS);
+        const allItems: Item[] = response.data.data;
+        const activeItems = allItems.filter((item) => item.isActive);
+        const shuffled = activeItems.sort(() => Math.random() - 0.5);
+        setFeaturedItems(shuffled.slice(0, 4));
+      } catch {
+        setError("Failed to load featured products. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchItems();
   }, []);
 
-  const handleDelete = async (itemId: string, itemName: string) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${itemName}"? This action cannot be undone.`
-    );
-    if (!confirmed) return;
+  // Step 1: Admin clicks Delete — store the item and open the password modal
+  const handleDeleteClick = (item: Item) => {
+    setItemPendingDelete(item);
+    setIsPasswordModalOpen(true);
+  };
+
+  // Step 2: Password confirmed by backend inside PasswordConfirmModal — now do the actual delete
+  const handleDeleteConfirmed = async () => {
+    if (!itemPendingDelete) return;
 
     try {
-      setDeletingId(itemId);
-      await axios.delete(API_ENDPOINTS.DELETE_ITEM(itemId), {
+      setDeletingId(itemPendingDelete._id);
+      setIsPasswordModalOpen(false);
+
+      await axios.delete(API_ENDPOINTS.DELETE_ITEM(itemPendingDelete._id), {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
       });
-      toast.success(`"${itemName}" deleted successfully.`);
-      // Remove the deleted item from state without refetching
-      setFeaturedItems((prev) => prev.filter((item) => item._id !== itemId));
+
+      toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
+      setFeaturedItems((prev) =>
+        prev.filter((item) => item._id !== itemPendingDelete._id)
+      );
     } catch {
-      toast.error(`Failed to delete "${itemName}". Please try again.`);
+      toast.error(`Failed to delete "${itemPendingDelete.name}". Please try again.`);
     } finally {
       setDeletingId(null);
+      setItemPendingDelete(null);
     }
   };
 
@@ -211,7 +225,7 @@ const Homepage: React.FC = () => {
                       {isAdmin && (
                         <button
                           className={styles.deleteBtn}
-                          onClick={() => handleDelete(item._id, item.name)}
+                          onClick={() => handleDeleteClick(item)}
                           disabled={deletingId === item._id}
                         >
                           {deletingId === item._id ? (
@@ -260,6 +274,16 @@ const Homepage: React.FC = () => {
             setIsRegisterModalOpen(false);
             setIsLoginModalOpen(true);
           }}
+        />
+
+        {/* Password Confirmation Modal — only renders when admin tries to delete */}
+        <PasswordConfirmModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => {
+            setIsPasswordModalOpen(false);
+            setItemPendingDelete(null);
+          }}
+          onConfirm={handleDeleteConfirmed}
         />
 
       </div>
