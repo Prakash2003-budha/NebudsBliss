@@ -57,7 +57,6 @@ const Homepage: React.FC = () => {
           <div className={styles.heroContent}>
             <h1>Poster Will be displayed here</h1>
 
-            {/* Buttons to open the modals */}
             <button className={styles.heroBtn} onClick={() => setIsLoginModalOpen(true)}>
               Login / Shop Now
             </button>
@@ -182,7 +181,6 @@ const Homepage: React.FC = () => {
           }}
         />
 
-        {/* Register Modal */}
         <SignUpModal
           isOpen={isRegisterModalOpen}
           onClose={() => setIsRegisterModalOpen(false)}
