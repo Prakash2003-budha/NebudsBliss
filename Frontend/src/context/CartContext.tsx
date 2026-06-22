@@ -1,17 +1,9 @@
-import { useState, useEffect } from "react";
-
-export interface CartItem {
-  _id: string;
-  name: string;
-  price: number;
-  discountPrice?: number;
-  image: string;
-  quantity: number;
-}
+import React, { useState, useEffect } from "react";
+import { CartContext } from "./Carttypes";
+import type { CartItem } from "./Carttypes";
 
 const CART_KEY = "cart";
 
-// Helper: read cart from localStorage
 const loadCart = (): CartItem[] => {
   try {
     const stored = localStorage.getItem(CART_KEY);
@@ -21,17 +13,11 @@ const loadCart = (): CartItem[] => {
   }
 };
 
-// Helper: save cart to localStorage
-const saveCart = (items: CartItem[]) => {
-  localStorage.setItem(CART_KEY, JSON.stringify(items));
-};
-
-export const useCartStore = () => {
+const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(loadCart);
 
-  // Keep localStorage in sync whenever cartItems changes
   useEffect(() => {
-    saveCart(cartItems);
+    localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
@@ -50,11 +36,15 @@ export const useCartStore = () => {
     setCartItems((prev) => prev.filter((i) => i._id !== id));
   };
 
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const clearCart = () => setCartItems([]);
 
   const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
-  return { cartItems, addToCart, removeFromCart, clearCart, totalCount };
+  return (
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, totalCount }}>
+      {children}
+    </CartContext.Provider>
+  );
 };
+
+export default CartProvider;
