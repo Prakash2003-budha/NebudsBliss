@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import LoginPage from "../auth/loginPage/login.page";
 import SignUpModal from "../auth/registerPage/register.page";
 import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../context/userCart";
 
 interface Item {
   _id: string;

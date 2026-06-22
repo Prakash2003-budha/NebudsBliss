@@ -5,7 +5,7 @@ import styles from "./layout.module.scss";
 import FloatingCart from "../floatingCart/floatingCart";
 import AdminButton from "../adminButten/AdminButton";
 import AddItemTab from "../addItemTab/AddItemTab";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../context/userCart";
 
 interface LayoutProps {
   children: React.ReactNode;
