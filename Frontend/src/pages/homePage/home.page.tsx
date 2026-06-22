@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import LoginPage from "../auth/loginPage/login.page";
 import SignUpModal from "../auth/registerPage/register.page";
 import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
+import { useCart } from "../../context/CartContext";
 
 interface Item {
   _id: string;
@@ -45,7 +46,8 @@ const Homepage: React.FC = () => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const isAdmin = user?.role === "Admin";
+  const isAdmin = user?.role === "admin";
+  const { addToCart } = useCart();
 
   // State to control which modal is open
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -212,7 +214,21 @@ const Homepage: React.FC = () => {
 
                     {/* Buttons Row */}
                     <div className={styles.cardActions}>
-                      <button className={styles.addToCartBtn}>
+                      <button
+                        className={styles.addToCartBtn}
+                        onClick={() =>
+                          addToCart({
+                            _id: item._id,
+                            name: item.name,
+                            price: item.price,
+                            discountPrice: item.discountPrice,
+                            image:
+                              item.images && item.images.length > 0
+                                ? item.images[0].optimizeUrl || item.images[0].url
+                                : "https://via.placeholder.com/300x400",
+                          })
+                        }
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
