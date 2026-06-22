@@ -67,7 +67,6 @@ class CloudianaryService {
             try {
                 this.removeLocalFile(filepath);
             } catch (deleteError) {
-                // Throw combined error if both upload AND delete fail
                 throw {
                     code: 500,
                     status: "UPLOAD_AND_DELETE_FAILED",
