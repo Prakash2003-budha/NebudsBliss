@@ -55,7 +55,10 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
         const status = error.response?.data?.status;
         if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
           localStorage.removeItem('accessToken'); // 👈 FIXED: Clear 'accessToken'
-          window.location.href = '/login';
+          window.location.href = '/';
+        }
+        else{
+          alert(errorMessage)
         }
       } else {
         alert("An error occurred during verification. Please try again.");
