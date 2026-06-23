@@ -46,7 +46,7 @@ const Homepage: React.FC = () => {
     return stored ? JSON.parse(stored) : null;
   });
 
-  const isAdmin = user?.role === "admin";
+  const isAdmin = user?.role === "Admin";
   const { addToCart } = useCart();
 
   // State to control which modal is open
@@ -138,14 +138,11 @@ const Homepage: React.FC = () => {
             ))}
           </div>
         </section>
-
-        {/* Featured Products Section */}
         <section className={styles.productSection}>
           <div className={styles.sectionHeader}>
             <h2>Featured Products</h2>
           </div>
 
-          {/* Loading Skeleton */}
           {loading && (
             <div className={styles.productGrid}>
               {[1, 2, 3, 4].map((n) => (
