@@ -18,7 +18,7 @@ export const API_ENDPOINTS = {
 };
 
 export const CATEGORY = {
-  POWERBANK: 'Powerbank',
+  POWERBANK: 'PowerBank',
   CAMERA: 'Camera',
   EARBUDS: 'Earbuds',
   CHARGER: 'Charger',

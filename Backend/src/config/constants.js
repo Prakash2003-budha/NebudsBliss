@@ -28,7 +28,7 @@ export const Gender = {
 export const ItemCategory = {
     FAN: 'Fan',
     EARBUDS: 'Earbuds', 
-    POWERBANK: 'Powerbank',
+    POWERBANK: 'PowerBank',
     ACCESSORIES: 'Accessories',
     ELECTRONICS: 'Electronics',
     CAMERA:'Camera'
