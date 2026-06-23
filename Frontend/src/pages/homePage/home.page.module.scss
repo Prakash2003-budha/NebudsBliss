@@ -105,12 +105,21 @@ $card-bg: #ffffff;
         color: $light-text;
         cursor: pointer;
         white-space: nowrap;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         box-shadow: 0 2px 8px rgba(0,0,0,0.02);
 
         &:hover {
           border-color: $dark-text;
           color: $dark-text;
+        }
+
+        // --- NEW ACTIVE PILL STYLES ---
+        &.activePill {
+          background-color: $dark-text; 
+          color: #ffffff;
+          border-color: $dark-text;
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
         }
       }
     }
@@ -346,17 +355,5 @@ $card-bg: #ffffff;
       border-radius: 16px;
       background-color: $card-bg;
     }
-  }
-}
-
-.categoryPill {
-  // Your existing pill styles...
-  transition: all 0.3s ease;
-
-  &.activePill {
-    background-color: #333; /* Dark background to highlight */
-    color: #fff;            /* White text */
-    transform: scale(1.05); /* Optional: slight pop effect */
-    border: 1px solid #333;
   }
 }
