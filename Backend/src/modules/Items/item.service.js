@@ -63,6 +63,20 @@ class ItemService {
             throw exception;
         }
     }
+        // Add this method to your item service
+itemStoreAndRollback = async (itemData, reqFiles) => {
+    try {
+        return await this.itemStore(itemData);
+    } catch (error) {
+        // Rollback Cloudinary images if database save fails
+        if (itemData.images) {
+            for (const img of itemData.images) {
+                if (img.public_id) await cloudianarySvc.deleteFile(img.public_id);
+            }
+        }
+        throw error; // Re-throw to controller
+    }
+};
 }
 
 const itemSvc = new ItemService();

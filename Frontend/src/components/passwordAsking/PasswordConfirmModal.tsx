@@ -22,16 +22,13 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
     setIsValidating(true);
 
     try {
-      // 👈 FIXED: Look for 'accessToken' instead of 'token'
       const accessToken = localStorage.getItem('accessToken');
 
-      // Hit your backend authentication controller to confirm the password
       const response = await axios.post(
         API_ENDPOINTS.VERIFY_PASSWORD, 
         { password }, 
         {
           headers: {
-            // 👈 FIXED: Safely check if accessToken exists to prevent sending a malformed string ("Bearer null")
             'Authorization': accessToken ? `Bearer ${accessToken}` : ''
           },
           withCredentials: true
