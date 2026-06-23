@@ -348,3 +348,15 @@ $card-bg: #ffffff;
     }
   }
 }
+
+.categoryPill {
+  // Your existing pill styles...
+  transition: all 0.3s ease;
+
+  &.activePill {
+    background-color: #333; /* Dark background to highlight */
+    color: #fff;            /* White text */
+    transform: scale(1.05); /* Optional: slight pop effect */
+    border: 1px solid #333;
+  }
+}
