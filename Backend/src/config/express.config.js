@@ -55,17 +55,23 @@ app.use((error, req, res, next) => {
     status = "DATABASE_ERROR";
 
     if (error.code === 11000) {
-      const key = Object.keys(error.keyPattern)[0]; 
-      statusCode = 422; 
-      errorDetail = {
-        [key]: `${key} has already been used`
-      };
-      message = "Unique Validation failed";
-      status = "VALIDATION_ERROR";
-    }
+    const key = Object.keys(error.keyPattern)[0];
+    const value = error.keyValue[key];
+    const fieldLabels = {
+        sku: "SKU",
+    };
+
+    const label = fieldLabels[key] || key.charAt(0).toUpperCase() + key.slice(1);
+
+    statusCode = 422;
+    status = "VALIDATION_ERROR";
+    message = `${label} "${value}" is already in use. Please choose a different one.`;
+    errorDetail = {
+        [key]: `${label} "${value}" already exists`
+    };
+}
   }
 
-  // Multer errors (This works safely now because multer is imported at the top!)
   if (error instanceof multer.MulterError) {
     statusCode = 400;
 
