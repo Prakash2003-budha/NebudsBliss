@@ -4,20 +4,32 @@ import cloudianarySvc from "../../services/cloudinary.services.js";
 class ItemController {
     createItem = async (req, res, next) => {
     let itemData;
-    try {
-        itemData = await itemSvc.itemDataTransform(req);
-        // Use the new service method
-        const savedItem = await itemSvc.itemStoreAndRollback(itemData, req.files);
-        
-        res.json({ data: savedItem, message: "Item created successfully", status: "CREATE_SUCCESS" });
-    } catch (exception) {
-        // Only clean up local files here (the service handled Cloudinary)
-        if (req.files) {
-            req.files.forEach(file => cloudianarySvc.removeLocalFile(file.path));
+        try {
+            itemData = await itemSvc.itemDataTransform(req);
+            const savedItem = await itemSvc.itemStore(itemData);
+
+            res.json({
+                data: savedItem,
+                message: "Item created successfully",
+                status: "CREATE_SUCCESS"
+            });
+        } catch (exception) {
+            if (itemData?.images?.length > 0) {
+                for (const img of itemData.images) {
+                    if (img.public_id) {
+                        await cloudianarySvc.deleteFile(img.public_id);
+                    }
+                }
+            }
+
+            // Clean up any local files that weren't processed
+            if (req.files) {
+                req.files.forEach(file => cloudianarySvc.removeLocalFile(file.path));
+            }
+
+            next(exception);
         }
-        next(exception);
     }
-}
 
     getAllItems = async (req, res, next) => {
         try {
