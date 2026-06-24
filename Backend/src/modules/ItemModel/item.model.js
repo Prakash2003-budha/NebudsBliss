@@ -47,7 +47,8 @@ const ItemSchema = new mongoose.Schema({
     },
     images: [{
         url: String,
-        optimizeUrl: String
+        optimizeUrl: String,
+        public_id: String
     }],
     isActive: {
         type: Boolean,

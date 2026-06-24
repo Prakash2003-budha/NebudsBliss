@@ -7,6 +7,7 @@ import AdminButton from "../adminButten/AdminButton";
 import AddItemTab from "../addItemTab/AddItemTab";
 import CartDrawer from "../cartDrawer/CartDrawer";
 import { useCart } from "../../context/userCart";
+import ToastContainer from "../toastContainer/ToastContainer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -38,6 +39,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       />
       
       <AddItemTab isOpen={isTabOpen} onClose={() => setIsTabOpen(false)} />
+      
+      <ToastContainer /> {/* ✅ add this — lives outside main so it's always on top */}
       
       <Footer />
     </div>
