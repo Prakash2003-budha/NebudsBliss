@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './main.scss';
+import './utils/toast.scss'
 import HomePage from './pages/homePage/home.page.tsx';
 import ForgotPassword from './pages/auth/forgotPasswordPage/forgotPasswordPage.tsx';
 import ResetPassword from './pages/auth/resetPasswordPage/resetPassword.page.tsx';

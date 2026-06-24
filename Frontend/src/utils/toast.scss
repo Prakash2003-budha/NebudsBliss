@@ -1,0 +1,123 @@
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+  width: 320px;
+}
+
+.nb-toast {
+  font-family: 'Outfit', sans-serif;
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  animation: slideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  position: relative;
+  overflow: hidden;
+
+  &.removing {
+    animation: slideOut 0.25s ease-in forwards;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    border-radius: 14px 0 0 14px;
+  }
+
+  &.success::before { background: #4a8b96; }
+  &.error::before   { background: #e53935; }
+  &.warning::before { background: #f59e0b; }
+  &.info::before    { background: #222222; }
+}
+
+.toast-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+
+  .nb-toast.success & { background: #e8f4f6; color: #4a8b96; }
+  .nb-toast.error &   { background: #fdecea; color: #e53935; }
+  .nb-toast.warning & { background: #fffbeb; color: #d97706; }
+  .nb-toast.info &    { background: #f0f0f0; color: #222222; }
+}
+
+.toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #222222;
+  margin: 0 0 2px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.toast-message {
+  font-size: 0.8rem;
+  color: #888888;
+  margin: 0;
+  line-height: 1.4;
+  font-family: 'Outfit', sans-serif;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  color: #aaaaaa;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+
+  &:hover { color: #222222; }
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  border-radius: 0 0 14px 14px;
+  animation: progress linear forwards;
+
+  .nb-toast.success & { background: #4a8b96; }
+  .nb-toast.error &   { background: #e53935; }
+  .nb-toast.warning & { background: #f59e0b; }
+  .nb-toast.info &    { background: #222222; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(110%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(110%); }
+}
+
+@keyframes progress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}

@@ -20,7 +20,9 @@ export function showToast(
   duration: number = 4000
 ): void {
   const container = document.getElementById('toast-container');
-  if (!container) return;
+  if (!container){
+    console.error('Toast container not found'); 
+    return;}
 
   const toast = document.createElement('div');
   toast.className = `nb-toast ${type}`;

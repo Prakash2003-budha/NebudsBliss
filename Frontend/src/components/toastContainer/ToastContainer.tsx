@@ -1,5 +1,10 @@
+import { createPortal } from 'react-dom';
+
 const ToastContainer = () => {
-  return <div id="toast-container"></div>;
+  return createPortal(
+    <div id="toast-container"></div>,
+    document.body
+  );
 };
 
 export default ToastContainer;
