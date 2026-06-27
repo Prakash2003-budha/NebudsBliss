@@ -3,7 +3,7 @@ import Layout from "../../components/layout/layout";
 import styles from "./home.page.module.scss";
 import axios from "axios";
 import { API_ENDPOINTS, CATEGORY } from "../../constants/constants";
-import { toast } from "react-toastify";
+import { showToast } from "../../utils/toast";
 
 // Import both modal components
 import LoginPage from "../auth/loginPage/login.page";
@@ -99,14 +99,14 @@ const Homepage: React.FC = () => {
         withCredentials: true,
       });
 
-      toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
+      showToast('success', 'Item deleted', `"${itemPendingDelete.name}" deleted successfully.`);
       
       // Remove from both states
       setFeaturedItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setActiveItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       
     } catch {
-      toast.error(`Failed to delete "${itemPendingDelete.name}". Please try again.`);
+      showToast('error', 'Delete failed', `Failed to delete "${itemPendingDelete.name}". Please try again.`);
     } finally {
       setDeletingId(null);
       setItemPendingDelete(null);
