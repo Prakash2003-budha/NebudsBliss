@@ -19,32 +19,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { totalCount } = useCart();
 
   return (
-    <div className={styles.layoutContainer}>
-      <Header />
-      
-      <main className={styles.mainContent}>
-        {children}
-      </main>
-      
-      <AdminButton onClick={() => setIsTabOpen(true)} />      
-      
-      <FloatingCart
-        itemCount={totalCount}
-        onClick={() => setIsCartOpen(true)}
-      />
+  <div className={styles.layoutContainer}>
+    <ToastContainer /> 
+    
+    <Header />
+    
+    <main className={styles.mainContent}>
+      {children}
+    </main>
+    
+    <AdminButton onClick={() => setIsTabOpen(true)} />      
+    
+    <FloatingCart
+      itemCount={totalCount}
+      onClick={() => setIsCartOpen(true)}
+    />
 
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-      />
-      
-      <AddItemTab isOpen={isTabOpen} onClose={() => setIsTabOpen(false)} />
-      
-      <ToastContainer /> {/* ✅ add this — lives outside main so it's always on top */}
-      
-      <Footer />
-    </div>
-  );
+    <CartDrawer
+      isOpen={isCartOpen}
+      onClose={() => setIsCartOpen(false)}
+    />
+    
+    <AddItemTab isOpen={isTabOpen} onClose={() => setIsTabOpen(false)} />
+    
+    <Footer />
+  </div>
+);
 };
 
 export default Layout;

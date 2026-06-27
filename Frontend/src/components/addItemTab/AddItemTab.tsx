@@ -24,13 +24,22 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
 
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  
   const [showPasswordModal, setShowPasswordModal] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!isOpen) return null;
+
+  // ✅ Form is valid when all required fields pass — drives button state
+  const isFormValid =
+    formData.name.length >= 2 &&
+    formData.description.length >= 10 &&
+    formData.sku.trim().length > 0 &&
+    formData.price !== '' &&
+    !isNaN(parseFloat(formData.price)) &&
+    parseFloat(formData.price) >= 0 &&
+    formData.category !== '';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -84,32 +93,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
 
   const handlePreSubmitCheck = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (formData.name.length < 2) {
-      showToast('warning', 'Invalid name', 'Name must be at least 2 characters.');
-      return;
-    }
-    if (formData.description.length < 10) {
-      showToast('warning', 'Invalid description', 'Description must be at least 10 characters.');
-      return;
-    }
-    if (!formData.sku.trim()) {
-      showToast('warning', 'SKU required', 'Please enter a SKU code.');
-      return;
-    }
-    if (!formData.price || isNaN(parseFloat(formData.price))) {
-      showToast('warning', 'Price required', 'Please enter a valid price.');
-      return;
-    }
-    if (parseFloat(formData.price) < 0) {
-      showToast('warning', 'Invalid price', 'Price cannot be negative.');
-      return;
-    }
-    if (!formData.category) {
-      showToast('warning', 'Category required', 'Please select a product category.');
-      return;
-    }
-
+    if (!isFormValid) return;
     setShowPasswordModal(true);
   };
 
@@ -210,7 +194,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               </div>
 
               <div className={styles.inputGroup}>
-                <label>Item Name *</label>
+                <label>Item Name * (min. 2 chars)</label>
                 <input 
                   type="text" name="name" placeholder="e.g. Earbuds" disabled={isSubmitting}
                   value={formData.name} onChange={handleChange}
@@ -272,7 +256,18 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               </div>
 
               <div className={styles.inputGroup}>
-                <label>Description * (Min. 10 Chars)</label>
+                <label>
+                  Description * (Min. 10 Chars)
+                  {/* Live character counter */}
+                  <span style={{
+                    fontWeight: 400,
+                    marginLeft: 8,
+                    color: formData.description.length >= 10 ? '#10b981' : '#e53935',
+                    fontSize: '12px'
+                  }}>
+                    {formData.description.length}/10
+                  </span>
+                </label>
                 <textarea 
                   name="description" rows={3} placeholder="Provide descriptive item details here..." disabled={isSubmitting}
                   value={formData.description} onChange={handleChange}
@@ -280,7 +275,12 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={isSubmitting || !isFormValid}
+              style={{ opacity: isFormValid && !isSubmitting ? 1 : 0.45, cursor: isFormValid && !isSubmitting ? 'pointer' : 'not-allowed' }}
+            >
               {isSubmitting ? "Uploading to Server..." : "Save Product Item"}
             </button>
           </form>
