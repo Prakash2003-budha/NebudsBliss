@@ -7,7 +7,6 @@ import AdminButton from "../adminButten/AdminButton";
 import AddItemTab from "../addItemTab/AddItemTab";
 import CartDrawer from "../cartDrawer/CartDrawer";
 import { useCart } from "../../context/userCart";
-import ToastContainer from "../toastContainer/ToastContainer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,7 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
   <div className={styles.layoutContainer}>
-    <ToastContainer /> 
+
     
     <Header />
     

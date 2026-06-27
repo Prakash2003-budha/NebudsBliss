@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './passwordConfirmModal.module.scss';
 import axios from 'axios';
-import { API_ENDPOINTS } from '../../constants/constants'; // Adjusted to match your directory tree
+import { API_ENDPOINTS } from '../../constants/constants';
+import { showToast } from '../../utils/toast';
 
 interface PasswordConfirmModalProps {
   isOpen: boolean;
@@ -11,13 +12,16 @@ interface PasswordConfirmModalProps {
 
 const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onClose, onConfirm }) => {
   const [password, setPassword] = useState('');
-  const [isValidATING, setIsValidating] = useState(false); // Tracks backend request status
+  const [isValidATING, setIsValidating] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password) return alert("Please enter your password to authorize this action.");
+    if (!password) {
+      showToast('warning', 'Password required', 'Please enter your password to authorize this action.');
+      return;
+    }
     
     setIsValidating(true);
 
@@ -35,30 +39,26 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
         }
       );
 
-      // If backend confirms the user password checks out successfully:
       if (response.data.success || response.status === 200) {
-        onConfirm(); // Callback triggers handleFinalDatabaseSave inside AddItemTab
+        onConfirm();
         setPassword(''); 
       }
-    } catch (error: unknown) { // 👈 FIXED: Changed 'any' to 'unknown' to fix the TypeScript ESLint error
+    } catch (error: unknown) {
       console.error("Password verification failed:", error);
       
       if (axios.isAxiosError(error)) {
-        // Grab the precise message sent by our backend global error handler
         const errorMessage = error.response?.data?.message || "Incorrect password. Access denied.";
-        alert(errorMessage);
         
-        // If the backend threw a session expiry error, clear out local storage and redirect
         const status = error.response?.data?.status;
         if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
-          localStorage.removeItem('accessToken'); // 👈 FIXED: Clear 'accessToken'
-          window.location.href = '/';
-        }
-        else{
-          alert(errorMessage)
+          showToast('error', 'Session expired', 'Please log in again.');
+          localStorage.removeItem('accessToken');
+          setTimeout(() => { window.location.href = '/'; }, 1500);
+        } else {
+          showToast('error', 'Access denied', errorMessage);
         }
       } else {
-        alert("An error occurred during verification. Please try again.");
+        showToast('error', 'Unexpected error', 'An error occurred during verification. Please try again.');
       }
     } finally {
       setIsValidating(false);
@@ -87,7 +87,6 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
               disabled={isValidATING}
-              required
             />
           </div>
 

@@ -130,11 +130,10 @@ $card-bg: #ffffff;
     margin: 4rem auto;
     max-width: 1200px;
     padding: 0 2rem;
-  } // <-- CLOSED PRODUCT SECTION HERE
+  }
 
   // =========================================
   // SHARED ELEMENTS (Grid, Cards, Skeletons)
-  // Now sitting globally inside .container
   // =========================================
 
   // --- Product Grid ---
@@ -147,10 +146,10 @@ $card-bg: #ffffff;
   // --- CLEAN NEW PRODUCT CARD ---
   .productCard {
     background: #ffffff;
-    border-radius: 16px; // Softer, more modern radius
+    border-radius: 16px;
     border: 1px solid #f0f0f0;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03); // Softer shadow
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
@@ -158,10 +157,10 @@ $card-bg: #ffffff;
 
     &:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.08); // Lifts up smoothly
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
       
       .imageWrapper img {
-        transform: scale(1.05); // Smooth zoom on image
+        transform: scale(1.05);
       }
     }
 
