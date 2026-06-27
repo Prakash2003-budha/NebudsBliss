@@ -19,13 +19,13 @@ export function showToast(
   message: string,
   duration: number = 4000
 ): void {
-  const render = () => {
-    const container = document.getElementById('toast-container');
-    if (!container) {
-      setTimeout(render, 50);
-      return;
-    }
-
+ const render = () => {
+  const container = document.getElementById('toast-container');
+  console.log('Toast container found?', container); // ADD THIS
+  if (!container) {
+    setTimeout(render, 50);
+    return;
+  }
     const toast = document.createElement('div');
     toast.className = `nb-toast ${type}`;
     toast.innerHTML = `

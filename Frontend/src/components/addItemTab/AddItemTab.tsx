@@ -37,7 +37,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // UPDATED: Handles multiple image selections and limits to 5
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
@@ -53,16 +52,13 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
       setImagePreviews(prev => [...prev, ...newPreviews].slice(0, 5));
       
-      // Reset input value so the same files can be selected again if removed
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
-  // NEW: Allows removing an image from the preview list
   const removeImage = (indexToRemove: number) => {
     setImages(prev => prev.filter((_, index) => index !== indexToRemove));
     setImagePreviews(prev => {
-      // Free up memory by revoking the object URL
       URL.revokeObjectURL(prev[indexToRemove]);
       return prev.filter((_, index) => index !== indexToRemove);
     });
@@ -86,36 +82,37 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-   const handlePreSubmitCheck = (e: React.FormEvent) => {
-  e.preventDefault();
+  const handlePreSubmitCheck = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  if (formData.name.length < 2) {
-    showToast('warning', 'Invalid name', 'Name must be at least 2 characters.');
-    return;
-  }
-  if (formData.description.length < 10) {
-    showToast('warning', 'Invalid description', 'Description must be at least 10 characters.');
-    return;
-  }
-  if (!formData.sku.trim()) {                             
-    showToast('warning', 'SKU required', 'Please enter a SKU code.');
-    return;
-  }
-  if (!formData.price || isNaN(parseFloat(formData.price))) {  
-    showToast('warning', 'Price required', 'Please enter a valid price.');
-    return;
-  }
-  if (parseFloat(formData.price) < 0) {
-    showToast('warning', 'Invalid price', 'Price cannot be negative.');
-    return;
-  }
-  if (!formData.category) {
-    showToast('warning', 'Category required', 'Please select a product category.');
-    return;
-  }
+    if (formData.name.length < 2) {
+      showToast('warning', 'Invalid name', 'Name must be at least 2 characters.');
+      return;
+    }
+    if (formData.description.length < 10) {
+      showToast('warning', 'Invalid description', 'Description must be at least 10 characters.');
+      return;
+    }
+    if (!formData.sku.trim()) {
+      showToast('warning', 'SKU required', 'Please enter a SKU code.');
+      return;
+    }
+    if (!formData.price || isNaN(parseFloat(formData.price))) {
+      showToast('warning', 'Price required', 'Please enter a valid price.');
+      return;
+    }
+    if (parseFloat(formData.price) < 0) {
+      showToast('warning', 'Invalid price', 'Price cannot be negative.');
+      return;
+    }
+    if (!formData.category) {
+      showToast('warning', 'Category required', 'Please select a product category.');
+      return;
+    }
 
-  setShowPasswordModal(true);
-};
+    setShowPasswordModal(true);
+  };
+
   const handleFinalDatabaseSave = async () => {
     setShowPasswordModal(false); 
     setIsSubmitting(true);
@@ -163,7 +160,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
           setTimeout(() => { window.location.href = '/login'; }, 1500); 
         }
       } else {
-        showToast('error', 'Unexpected error', 'An unexpected error occurred while adding the product.'); // ✅
+        showToast('error', 'Unexpected error', 'An unexpected error occurred while adding the product.');
       }
     } finally {
       setIsSubmitting(false);
@@ -179,12 +176,11 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
             <button className={styles.closeButton} disabled={isSubmitting} onClick={resetForm}>&times;</button>
           </div>
           
-          <form className={styles.tabContent} onSubmit={handlePreSubmitCheck}noValidate>
+          <form className={styles.tabContent} onSubmit={handlePreSubmitCheck} noValidate>
             <div className={styles.scrollableFormFields}>
               
               <div className={styles.inputGroup}>
                 <label>Item Images (Max 5)</label>
-                
                 <div className={styles.imageGallery}>
                   {imagePreviews.map((preview, index) => (
                     <div key={index} className={styles.previewBox}>
@@ -199,7 +195,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                       </button>
                     </div>
                   ))}
-
                   {images.length < 5 && (
                     <div className={styles.imageUploadArea} onClick={() => !isSubmitting && fileInputRef.current?.click()}>
                       <div className={styles.uploadPlaceholder}>
@@ -208,7 +203,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                     </div>
                   )}
                 </div>
-
                 <input 
                   type="file" accept="image/*" multiple ref={fileInputRef} disabled={isSubmitting}
                   className={styles.hiddenFileInput} onChange={handleImageChange} 
@@ -218,7 +212,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               <div className={styles.inputGroup}>
                 <label>Item Name *</label>
                 <input 
-                  type="text" name="name" required placeholder="e.g. Earbuds" disabled={isSubmitting}
+                  type="text" name="name" placeholder="e.g. Earbuds" disabled={isSubmitting}
                   value={formData.name} onChange={handleChange}
                 />
               </div>
@@ -226,14 +220,14 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               <div className={styles.inputGroup}>
                 <label>SKU Code *</label>
                 <input 
-                  type="text" name="sku" required placeholder="e.g. EAR-BLIS-01" disabled={isSubmitting}
+                  type="text" name="sku" placeholder="e.g. EAR-BLIS-01" disabled={isSubmitting}
                   value={formData.sku} onChange={handleChange}
                 />
               </div>
 
               <div className={styles.inputGroup}>
                 <label>Category *</label>
-                <select name="category" required value={formData.category} onChange={handleChange} disabled={isSubmitting}>
+                <select name="category" value={formData.category} onChange={handleChange} disabled={isSubmitting}>
                   <option value="">Choose Category</option>
                   <option value="Earbuds">Earbuds</option>
                   <option value="PowerBank">Powerbank</option>
@@ -242,11 +236,12 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   <option value="Fan">Fan</option>
                 </select>
               </div>
+
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
                   <label>Price *</label>
                   <input 
-                    type="number" name="price" required step="0.01" min="0" placeholder="0.00" disabled={isSubmitting}
+                    type="number" name="price" step="0.01" min="0" placeholder="0.00" disabled={isSubmitting}
                     value={formData.price} onChange={handleChange}
                   />
                 </div>
@@ -258,6 +253,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
+
               <div className={styles.formRow}>
                 <div className={styles.inputGroup}>
                   <label>Brand Name</label>
@@ -269,25 +265,28 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                 <div className={styles.inputGroup}>
                   <label>Stock Quantity *</label>
                   <input 
-                    type="number" name="stockQuantity" required min="0" placeholder="0" disabled={isSubmitting}
+                    type="number" name="stockQuantity" min="0" placeholder="0" disabled={isSubmitting}
                     value={formData.stockQuantity} onChange={handleChange}
                   />
                 </div>
               </div>
+
               <div className={styles.inputGroup}>
                 <label>Description * (Min. 10 Chars)</label>
                 <textarea 
-                  name="description" required rows={3} placeholder="Provide descriptive item details here..." disabled={isSubmitting}
+                  name="description" rows={3} placeholder="Provide descriptive item details here..." disabled={isSubmitting}
                   value={formData.description} onChange={handleChange}
                 />
               </div>
             </div>
+
             <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
               {isSubmitting ? "Uploading to Server..." : "Save Product Item"}
             </button>
           </form>
         </div>
       </div>
+
       <PasswordConfirmModal 
         isOpen={showPasswordModal}
         onClose={() => setShowPasswordModal(false)}
