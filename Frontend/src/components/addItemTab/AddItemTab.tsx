@@ -279,7 +279,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               type="submit"
               className={styles.submitButton}
               disabled={isSubmitting || !isFormValid}
-              style={{ opacity: isFormValid && !isSubmitting ? 1 : 0.45, cursor: isFormValid && !isSubmitting ? 'pointer' : 'not-allowed' }}
             >
               {isSubmitting ? "Uploading to Server..." : "Save Product Item"}
             </button>
