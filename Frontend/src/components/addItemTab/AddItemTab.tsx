@@ -3,6 +3,7 @@ import styles from './addItem.Tab.module.scss';
 import PasswordConfirmModal from '../passwordAsking/PasswordConfirmModal'; 
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../constants/constants';
+import { showToast } from '../../utils/toast';
 
 interface AddItemTabProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       const selectedFiles = Array.from(e.target.files);
       
       if (images.length + selectedFiles.length > 5) {
-        alert("You can only upload up to 5 images per product.");
+        showToast('warning', 'Too many images', 'You can only upload up to 5 images per product.');
         return;
       }
 
@@ -85,13 +86,25 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  const handlePreSubmitCheck = (e: React.FormEvent) => {
+   const handlePreSubmitCheck = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.name.length < 2) return alert("Name must be at least 2 characters.");
-    if (formData.description.length < 10) return alert("Description must be at least 10 characters.");
-    if (parseFloat(formData.price) < 0) return alert("Price cannot be negative.");
-    if (!formData.category) return alert("Please select a product category.");
+    if (formData.name.length < 2) {
+      showToast('warning', 'Invalid name', 'Name must be at least 2 characters.'); 
+      return;
+    }
+    if (formData.description.length < 10) {
+      showToast('warning', 'Invalid description', 'Description must be at least 10 characters.');
+      return;
+    }
+    if (parseFloat(formData.price) < 0) {
+      showToast('warning', 'Invalid price', 'Price cannot be negative.'); 
+      return;
+    }
+    if (!formData.category) {
+      showToast('warning', 'Category required', 'Please select a product category.'); 
+      return;
+    }
 
     setShowPasswordModal(true);
   };
@@ -127,22 +140,23 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       });
 
       console.log("Database update successful:", response.data);
-      alert("Product saved successfully to database catalog!");
+      showToast('success', 'Product saved!', 'Item was added to the catalog successfully.');
       resetForm();
     } catch (error: unknown) { 
       console.error("API error details:", error);
       
       if (axios.isAxiosError(error)) {
         const errorMessage = error?.response?.data?.message || "Failed to communicate with catalog database server.";
-        alert(errorMessage);
+        showToast('error', 'Failed to save', errorMessage); 
 
         const status = error.response?.data?.status;
         if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
+          showToast('error', 'Session expired', 'Please log in again.');
           localStorage.removeItem('accessToken'); 
-          window.location.href = '/login';
+          setTimeout(() => { window.location.href = '/login'; }, 1500); 
         }
       } else {
-        alert("An unexpected error occurred while processing your catalog addition.");
+        showToast('error', 'Unexpected error', 'An unexpected error occurred while adding the product.'); // ✅
       }
     } finally {
       setIsSubmitting(false);

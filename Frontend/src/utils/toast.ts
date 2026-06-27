@@ -19,25 +19,33 @@ export function showToast(
   message: string,
   duration: number = 4000
 ): void {
-  const container = document.getElementById('toast-container');
-  if (!container) return;
+  const render = () => {
+    const container = document.getElementById('toast-container');
+    if (!container) {
+      // Retry on next tick — portal may not have mounted yet
+      setTimeout(render, 50);
+      return;
+    }
 
-  const toast = document.createElement('div');
-  toast.className = `nb-toast ${type}`;
-  toast.innerHTML = `
-    <div class="toast-icon"><i class="ti ${icons[type]}"></i></div>
-    <div class="toast-body">
-      <p class="toast-title">${title}</p>
-      <p class="toast-message">${message}</p>
-    </div>
-    <button class="toast-close">✕</button>
-    <div class="toast-progress" style="animation-duration:${duration}ms"></div>
-  `;
+    const toast = document.createElement('div');
+    toast.className = `nb-toast ${type}`;
+    toast.innerHTML = `
+      <div class="toast-icon"><i class="ti ${icons[type]}"></i></div>
+      <div class="toast-body">
+        <p class="toast-title">${title}</p>
+        <p class="toast-message">${message}</p>
+      </div>
+      <button class="toast-close">✕</button>
+      <div class="toast-progress" style="animation-duration:${duration}ms"></div>
+    `;
 
-  // ✅ Attach event properly in TS (no inline onclick needed)
-  toast.querySelector<HTMLButtonElement>('.toast-close')
-    ?.addEventListener('click', () => removeToast(toast));
+    toast.querySelector<HTMLButtonElement>('.toast-close')
+      ?.addEventListener('click', () => removeToast(toast));
 
-  container.prepend(toast);
-  setTimeout(() => removeToast(toast), duration);
+    container.prepend(toast);
+    setTimeout(() => removeToast(toast), duration);
+  };
+
+  render();
+
 }
