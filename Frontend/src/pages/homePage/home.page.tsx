@@ -30,6 +30,23 @@ interface User {
 
 const CATEGORIES = Object.values(CATEGORY);
 
+// ✅ Defined OUTSIDE the Homepage component to avoid "component created during render" error
+const SkeletonGrid: React.FC = () => (
+  <div className={styles.productGrid}>
+    {[1, 2, 3, 4].map((n) => (
+      <div key={n} className={styles.skeletonCard}>
+        <div className={styles.skeletonImage} />
+        <div className={styles.skeletonBody}>
+          <div className={styles.skeletonText} />
+          <div className={styles.skeletonTextShort} />
+          <div className={styles.skeletonTextShort} />
+          <div className={styles.skeletonBtn} />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 const Homepage: React.FC = () => {
   const [activeItems, setActiveItems] = useState<Item[]>([]);
   const [featuredItems, setFeaturedItems] = useState<Item[]>([]);
@@ -122,7 +139,6 @@ const Homepage: React.FC = () => {
     }
   };
 
-  // FIX: use `profile` (imported string) directly — never wrap it in JSX
   const renderProductCard = (item: Item) => (
     <div key={item._id} className={styles.productCard}>
       <div className={styles.categoryTabContainer}>
@@ -133,11 +149,11 @@ const Homepage: React.FC = () => {
           src={
             item.images && item.images.length > 0
               ? item.images[0].optimizeUrl || item.images[0].url
-              : profile // ✅ string URL, not JSX
+              : profile as string
           }
           alt={item.name}
           onError={(e) => {
-            (e.target as HTMLImageElement).src = profile as string; // ✅ string URL, not JSX
+            (e.target as HTMLImageElement).src = profile as string;
           }}
         />
       </div>
@@ -207,22 +223,6 @@ const Homepage: React.FC = () => {
     </div>
   );
 
-  const SkeletonGrid = () => (
-    <div className={styles.productGrid}>
-      {[1, 2, 3, 4].map((n) => (
-        <div key={n} className={styles.skeletonCard}>
-          <div className={styles.skeletonImage} />
-          <div className={styles.skeletonBody}>
-            <div className={styles.skeletonText} />
-            <div className={styles.skeletonTextShort} />
-            <div className={styles.skeletonTextShort} />
-            <div className={styles.skeletonBtn} />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
   return (
     <Layout>
       <div className={styles.container}>
@@ -230,7 +230,6 @@ const Homepage: React.FC = () => {
         <section className={styles.PosterSection}>
           <div className={styles.heroContent}>
             <h1>Poster Will be displayed here</h1>
-            {/* FIX: wrap buttons in a flex container so they don't stack without spacing */}
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginTop: "1rem" }}>
               <button
                 className={styles.heroBtn}
@@ -267,27 +266,24 @@ const Homepage: React.FC = () => {
             ))}
           </div>
 
-          {/* FIX: show skeleton/error states in category section too */}
-          {loading && (
-            <div style={{ marginTop: "2rem" }}>
-              <SkeletonGrid />
-            </div>
-          )}
+          <div style={{ marginTop: "2rem" }}>
+            {loading && <SkeletonGrid />}
 
-          {!loading && error && (
-            <div className={styles.errorWrapper} style={{ marginTop: "2rem" }}>
-              <p>{error}</p>
-            </div>
-          )}
+            {!loading && error && (
+              <div className={styles.errorWrapper}>
+                <p>{error}</p>
+              </div>
+            )}
 
-          {!loading && !error && selectedCategory && (
-            <div className={styles.productGrid} style={{ marginTop: "2rem" }}>
-              {activeItems
-                .filter((item) => item.category === selectedCategory)
-                .slice(0, 8)
-                .map((item) => renderProductCard(item))}
-            </div>
-          )}
+            {!loading && !error && selectedCategory && (
+              <div className={styles.productGrid}>
+                {activeItems
+                  .filter((item) => item.category === selectedCategory)
+                  .slice(0, 8)
+                  .map((item) => renderProductCard(item))}
+              </div>
+            )}
+          </div>
         </section>
 
         {/* Featured Products Section */}
