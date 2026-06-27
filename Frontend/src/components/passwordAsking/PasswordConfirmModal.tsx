@@ -6,7 +6,7 @@ import { API_ENDPOINTS } from '../../constants/constants'; // Adjusted to match 
 interface PasswordConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (password: string) => void;
+  onConfirm: () => void;
 }
 
 const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onClose, onConfirm }) => {
@@ -37,7 +37,7 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
 
       // If backend confirms the user password checks out successfully:
       if (response.data.success || response.status === 200) {
-        onConfirm(password); // Callback triggers handleFinalDatabaseSave inside AddItemTab
+        onConfirm(); // Callback triggers handleFinalDatabaseSave inside AddItemTab
         setPassword(''); 
       }
     } catch (error: unknown) { // 👈 FIXED: Changed 'any' to 'unknown' to fix the TypeScript ESLint error
