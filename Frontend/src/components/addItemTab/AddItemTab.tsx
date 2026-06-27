@@ -87,28 +87,35 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
   };
 
    const handlePreSubmitCheck = (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (formData.name.length < 2) {
-      showToast('warning', 'Invalid name', 'Name must be at least 2 characters.'); 
-      return;
-    }
-    if (formData.description.length < 10) {
-      showToast('warning', 'Invalid description', 'Description must be at least 10 characters.');
-      return;
-    }
-    if (parseFloat(formData.price) < 0) {
-      showToast('warning', 'Invalid price', 'Price cannot be negative.'); 
-      return;
-    }
-    if (!formData.category) {
-      showToast('warning', 'Category required', 'Please select a product category.'); 
-      return;
-    }
+  if (formData.name.length < 2) {
+    showToast('warning', 'Invalid name', 'Name must be at least 2 characters.');
+    return;
+  }
+  if (formData.description.length < 10) {
+    showToast('warning', 'Invalid description', 'Description must be at least 10 characters.');
+    return;
+  }
+  if (!formData.sku.trim()) {                             
+    showToast('warning', 'SKU required', 'Please enter a SKU code.');
+    return;
+  }
+  if (!formData.price || isNaN(parseFloat(formData.price))) {  
+    showToast('warning', 'Price required', 'Please enter a valid price.');
+    return;
+  }
+  if (parseFloat(formData.price) < 0) {
+    showToast('warning', 'Invalid price', 'Price cannot be negative.');
+    return;
+  }
+  if (!formData.category) {
+    showToast('warning', 'Category required', 'Please select a product category.');
+    return;
+  }
 
-    setShowPasswordModal(true);
-  };
-
+  setShowPasswordModal(true);
+};
   const handleFinalDatabaseSave = async () => {
     setShowPasswordModal(false); 
     setIsSubmitting(true);
