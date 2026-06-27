@@ -22,7 +22,6 @@ export function showToast(
   const render = () => {
     const container = document.getElementById('toast-container');
     if (!container) {
-      // Retry on next tick — portal may not have mounted yet
       setTimeout(render, 50);
       return;
     }

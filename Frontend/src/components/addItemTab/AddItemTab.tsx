@@ -172,7 +172,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
             <button className={styles.closeButton} disabled={isSubmitting} onClick={resetForm}>&times;</button>
           </div>
           
-          <form className={styles.tabContent} onSubmit={handlePreSubmitCheck}>
+          <form className={styles.tabContent} onSubmit={handlePreSubmitCheck}noValidate>
             <div className={styles.scrollableFormFields}>
               
               <div className={styles.inputGroup}>
