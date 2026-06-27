@@ -279,3 +279,26 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   display: none;
 }
 
+.submitButton {
+  padding: 14px;
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  flex-shrink: 0; 
+  transition: opacity 0.2s, background-color 0.2s;
+  font-family: $font-primary; 
+
+  &:hover:not(:disabled) { 
+    opacity: 0.9; 
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+}
