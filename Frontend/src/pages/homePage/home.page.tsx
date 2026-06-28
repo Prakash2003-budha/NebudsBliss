@@ -53,13 +53,13 @@ const Homepage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     CATEGORIES[0] || null
   );
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
-
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [itemPendingDelete, setItemPendingDelete] = useState<Item | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
@@ -69,13 +69,9 @@ const Homepage: React.FC = () => {
   const isAdmin = user?.role === "Admin";
   const { addToCart } = useCart();
 
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-
   useEffect(() => {
     const fetchItems = async () => {
       try {
-        setLoading(true);
         const response = await axios.get(API_ENDPOINTS.GET_ALL_ITEMS);
         const allItems: Item[] = response.data.data;
 
@@ -83,7 +79,8 @@ const Homepage: React.FC = () => {
         setActiveItems(active);
 
         const shuffled = [...active].sort(() => Math.random() - 0.5);
-        setFeaturedItems(shuffled.slice(0, 4));
+        setFeaturedItems(shuffled.slice(0, 8));
+        setError(null);
       } catch {
         setError("Failed to load products. Please try again later.");
       } finally {
@@ -92,6 +89,10 @@ const Homepage: React.FC = () => {
     };
 
     fetchItems();
+
+    const interval = setInterval(fetchItems, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleDeleteClick = (item: Item) => {
