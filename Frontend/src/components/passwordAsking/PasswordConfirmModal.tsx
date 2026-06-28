@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './passwordConfirmModal.module.scss';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../constants/constants';
-import { showToast } from '../../utils/toast';
+import { toast } from 'react-toastify';
 
 interface PasswordConfirmModalProps {
   isOpen: boolean;
@@ -19,18 +19,18 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!password) {
-      showToast('warning', 'Password required', 'Please enter your password to authorize this action.');
+      toast.warning('Please enter your password to authorize this action.');
       return;
     }
-    
+
     setIsValidating(true);
 
     try {
       const accessToken = localStorage.getItem('accessToken');
 
       const response = await axios.post(
-        API_ENDPOINTS.VERIFY_PASSWORD, 
-        { password }, 
+        API_ENDPOINTS.VERIFY_PASSWORD,
+        { password },
         {
           headers: {
             'Authorization': accessToken ? `Bearer ${accessToken}` : ''
@@ -41,24 +41,24 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
 
       if (response.data.success || response.status === 200) {
         onConfirm();
-        setPassword(''); 
+        setPassword('');
       }
     } catch (error: unknown) {
       console.error("Password verification failed:", error);
-      
+
       if (axios.isAxiosError(error)) {
         const errorMessage = error.response?.data?.message || "Incorrect password. Access denied.";
-        
         const status = error.response?.data?.status;
+
         if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
-          showToast('error', 'Session expired', 'Please log in again.');
+          toast.error('Session expired. Please log in again.');
           localStorage.removeItem('accessToken');
           setTimeout(() => { window.location.href = '/'; }, 1500);
         } else {
-          showToast('error', 'Access denied', errorMessage);
+          toast.error(errorMessage);
         }
       } else {
-        showToast('error', 'Unexpected error', 'An error occurred during verification. Please try again.');
+        toast.error('An error occurred during verification. Please try again.');
       }
     } finally {
       setIsValidating(false);
@@ -72,7 +72,7 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
           <h3>Confirm Admin Action</h3>
           <button className={styles.closeButton} disabled={isValidATING} onClick={onClose}>&times;</button>
         </div>
-        
+
         <p className={styles.warningText}>
           Please type your password to confirm.
         </p>
@@ -80,9 +80,9 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
         <form onSubmit={handleSubmit} className={styles.modalForm}>
           <div className={styles.inputGroup}>
             <label>Password</label>
-            <input 
-              type="password" 
-              placeholder="Enter your security password..." 
+            <input
+              type="password"
+              placeholder="Enter your security password..."
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
@@ -91,17 +91,17 @@ const PasswordConfirmModal: React.FC<PasswordConfirmModalProps> = ({ isOpen, onC
           </div>
 
           <div className={styles.actionButtonGroup}>
-            <button 
-              type="button" 
-              className={styles.cancelButton} 
-              disabled={isValidATING} 
+            <button
+              type="button"
+              className={styles.cancelButton}
+              disabled={isValidATING}
               onClick={onClose}
             >
               Cancel
             </button>
-            <button 
-              type="submit" 
-              className={styles.confirmButton} 
+            <button
+              type="submit"
+              className={styles.confirmButton}
               disabled={isValidATING}
             >
               {isValidATING ? "Verifying..." : "Verify & Save"}
