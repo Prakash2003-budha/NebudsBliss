@@ -3,7 +3,7 @@ import styles from './addItem.Tab.module.scss';
 import PasswordConfirmModal from '../passwordAsking/PasswordConfirmModal'; 
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../constants/constants';
-import { showToast } from '../../utils/toast';
+import { toast } from 'react-toastify';
 
 interface AddItemTabProps {
   isOpen: boolean;
@@ -31,7 +31,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  // ✅ Form is valid when all required fields pass — drives button state
   const isFormValid =
     formData.name.length >= 2 &&
     formData.description.length >= 10 &&
@@ -51,7 +50,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       const selectedFiles = Array.from(e.target.files);
       
       if (images.length + selectedFiles.length > 5) {
-        showToast('warning', 'Too many images', 'You can only upload up to 5 images per product.');
+        toast.warning('You can only upload up to 5 images per product.');
         return;
       }
 
@@ -128,23 +127,24 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       });
 
       console.log("Database update successful:", response.data);
-      showToast('success', 'Product saved!', 'Item was added to the catalog successfully.');
+      toast.success('Item was added to the catalog successfully.');
       resetForm();
     } catch (error: unknown) { 
       console.error("API error details:", error);
       
       if (axios.isAxiosError(error)) {
         const errorMessage = error?.response?.data?.message || "Failed to communicate with catalog database server.";
-        showToast('error', 'Failed to save', errorMessage); 
-
         const status = error.response?.data?.status;
+
         if (status === "JWT_EXPIRED" || status === "JWT_MALFORMED" || error.response?.status === 401) {
-          showToast('error', 'Session expired', 'Please log in again.');
+          toast.error('Session expired. Please log in again.');
           localStorage.removeItem('accessToken'); 
           setTimeout(() => { window.location.href = '/login'; }, 1500); 
+        } else {
+          toast.error(errorMessage);
         }
       } else {
-        showToast('error', 'Unexpected error', 'An unexpected error occurred while adding the product.');
+        toast.error('An unexpected error occurred while adding the product.');
       }
     } finally {
       setIsSubmitting(false);
@@ -258,7 +258,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
               <div className={styles.inputGroup}>
                 <label>
                   Description * (Min. 10 Chars)
-                  {/* Live character counter */}
                   <span style={{
                     fontWeight: 400,
                     marginLeft: 8,
