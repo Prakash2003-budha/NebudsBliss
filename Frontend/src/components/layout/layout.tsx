@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import Header from "../header/header";
 import Footer from "../footer/footer";
-import styles from "./layout.module.scss"; 
+import styles from "./layout.module.scss";
 import FloatingCart from "../floatingCart/floatingCart";
 import AdminButton from "../adminButten/AdminButton";
 import AddItemTab from "../addItemTab/AddItemTab";
 import CartDrawer from "../cartDrawer/CartDrawer";
 import { useCart } from "../../context/userCart";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,32 +20,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { totalCount } = useCart();
 
   return (
-  <div className={styles.layoutContainer}>
+    <div className={styles.layoutContainer}>
+      <Header />
 
-    
-    <Header />
-    
-    <main className={styles.mainContent}>
-      {children}
-    </main>
-    
-    <AdminButton onClick={() => setIsTabOpen(true)} />      
-    
-    <FloatingCart
-      itemCount={totalCount}
-      onClick={() => setIsCartOpen(true)}
-    />
+      <main className={styles.mainContent}>
+        {children}
+      </main>
 
-    <CartDrawer
-      isOpen={isCartOpen}
-      onClose={() => setIsCartOpen(false)}
-    />
-    
-    <AddItemTab isOpen={isTabOpen} onClose={() => setIsTabOpen(false)} />
-    
-    <Footer />
-  </div>
-);
+      <AdminButton onClick={() => setIsTabOpen(true)} />
+
+      <FloatingCart
+        itemCount={totalCount}
+        onClick={() => setIsCartOpen(true)}
+      />
+
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+      />
+
+      <AddItemTab isOpen={isTabOpen} onClose={() => setIsTabOpen(false)} />
+
+      <Footer />
+
+      <ToastContainer position="top-right" autoClose={3000} />
+    </div>
+  );
 };
 
 export default Layout;
