@@ -19,13 +19,16 @@ export function showToast(
   message: string,
   duration: number = 4000
 ): void {
+    console.log('showToast called:', type, title); // ADD THIS
+
  const render = () => {
   const container = document.getElementById('toast-container');
-  console.log('Toast container found?', container); // ADD THIS
+  console.log('Toast container found?', container); 
   if (!container) {
     setTimeout(render, 50);
     return;
   }
+   console.log('creating toast element'); // ADD THIS
     const toast = document.createElement('div');
     toast.className = `nb-toast ${type}`;
     toast.innerHTML = `
