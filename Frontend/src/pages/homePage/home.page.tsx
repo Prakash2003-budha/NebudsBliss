@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Layout from "../../components/layout/layout";
 import styles from "./home.page.module.scss";
 import axios from "axios";
@@ -61,6 +61,9 @@ const Homepage: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
+  const [posterUrl, setPosterUrl] = useState<string | null>(null);
+  const posterInputRef = useRef<HTMLInputElement>(null);
+
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -69,31 +72,99 @@ const Homepage: React.FC = () => {
   const isAdmin = user?.role === "Admin";
   const { addToCart } = useCart();
 
+  // Used for manual refetch (poster upload/delete) outside the effect
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const refetchPoster = async () => {
+    try {
+      const res = await axios.get(API_ENDPOINTS.GET_POSTER);
+      setPosterUrl(res.data.data?.imageUrl || null);
+    } catch {
+      setPosterUrl(null);
+    }
+  };
+
   useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+    abortControllerRef.current = controller;
+
     const fetchItems = async () => {
       try {
-        const response = await axios.get(API_ENDPOINTS.GET_ALL_ITEMS);
+        const response = await axios.get(API_ENDPOINTS.GET_ALL_ITEMS, { signal });
         const allItems: Item[] = response.data.data;
-
         const active = allItems.filter((item) => item.isActive);
-        setActiveItems(active);
-
         const shuffled = [...active].sort(() => Math.random() - 0.5);
+        setActiveItems(active);
         setFeaturedItems(shuffled.slice(0, 8));
         setError(null);
-      } catch {
+      } catch (err) {
+        if (axios.isCancel(err)) return;
         setError("Failed to load products. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
+    const fetchPoster = async () => {
+      try {
+        const res = await axios.get(API_ENDPOINTS.GET_POSTER, { signal });
+        setPosterUrl(res.data.data?.imageUrl || null);
+      } catch (err) {
+        if (axios.isCancel(err)) return;
+        setPosterUrl(null);
+      }
+    };
+
     fetchItems();
+    fetchPoster();
 
-    const interval = setInterval(fetchItems, 5000);
+    const interval = setInterval(() => {
+      fetchItems();
+      fetchPoster();
+    }, 5000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      controller.abort();
+    };
   }, []);
+
+  const handlePosterUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0]) return;
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      await axios.post(API_ENDPOINTS.UPLOAD_POSTER, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: accessToken ? `Bearer ${accessToken}` : "",
+        },
+        withCredentials: true,
+      });
+      toast.success("Poster updated successfully.");
+      refetchPoster();
+    } catch {
+      toast.error("Failed to upload poster.");
+    }
+  };
+
+  const handlePosterDelete = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      await axios.delete(API_ENDPOINTS.DELETE_POSTER, {
+        headers: {
+          Authorization: accessToken ? `Bearer ${accessToken}` : "",
+        },
+        withCredentials: true,
+      });
+      toast.success("Poster removed.");
+      setPosterUrl(null);
+    } catch {
+      toast.error("Failed to delete poster.");
+    }
+  };
 
   const handleDeleteClick = (item: Item) => {
     setItemPendingDelete(item);
@@ -219,25 +290,56 @@ const Homepage: React.FC = () => {
   return (
     <Layout>
       <div className={styles.container}>
-        {/* Hero Section */}
+
+        {/* Hero / Poster Section */}
         <section className={styles.PosterSection}>
-          <div className={styles.heroContent}>
-            <h1>Poster Will be displayed here</h1>
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginTop: "1rem" }}>
-              <button
-                className={styles.heroBtn}
-                onClick={() => setIsLoginModalOpen(true)}
-              >
-                Login / Shop Now
-              </button>
-              <button
-                className={styles.heroBtn}
-                onClick={() => setIsRegisterModalOpen(true)}
-              >
-                Register
-              </button>
+          {posterUrl ? (
+            <img src={posterUrl} alt="Store Poster" className={styles.posterImage} />
+          ) : (
+            <div className={styles.heroContent}>
+              <h1>Poster Will be displayed here</h1>
+              <div style={{ display: "flex", gap: "1rem", justifyContent: "center", marginTop: "1rem" }}>
+                <button
+                  className={styles.heroBtn}
+                  onClick={() => setIsLoginModalOpen(true)}
+                >
+                  Login / Shop Now
+                </button>
+                <button
+                  className={styles.heroBtn}
+                  onClick={() => setIsRegisterModalOpen(true)}
+                >
+                  Register
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+
+          {isAdmin && (
+            <div className={styles.posterAdminControls}>
+              <input
+                type="file"
+                accept="image/*"
+                ref={posterInputRef}
+                style={{ display: "none" }}
+                onChange={handlePosterUpload}
+              />
+              <button
+                className={styles.posterUploadBtn}
+                onClick={() => posterInputRef.current?.click()}
+              >
+                {posterUrl ? "🔄 Replace Poster" : "📤 Upload Poster"}
+              </button>
+              {posterUrl && (
+                <button
+                  className={styles.posterDeleteBtn}
+                  onClick={handlePosterDelete}
+                >
+                  🗑 Remove Poster
+                </button>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Categories Section */}
@@ -318,7 +420,7 @@ const Homepage: React.FC = () => {
 
         <SignUpModal
           isOpen={isRegisterModalOpen}
-          onClose={() => setIsRegisterModalOpen(false)}
+          onClose={() => setIsRegisterModalOpen(false)}  
           onSwitchToLogin={() => {
             setIsRegisterModalOpen(false);
             setIsLoginModalOpen(true);

@@ -10,11 +10,15 @@ export const API_ENDPOINTS = {
 
     VERIFY_PASSWORD: `${BACKEND_URL}/auth/verify-password`,
 
-    GET_ALL_ITEMS: `${BACKEND_URL}/items`,          
-    CREATE_ITEM: `${BACKEND_URL}/items`,            
-    GET_ITEM_DETAIL: (id: string) => `${BACKEND_URL}/items/${id}`, 
-    UPDATE_ITEM: (id: string) => `${BACKEND_URL}/items/${id}`,    
-    DELETE_ITEM: (id: string) => `${BACKEND_URL}/items/${id}`,   
+    GET_ALL_ITEMS: `${BACKEND_URL}/items`,
+    CREATE_ITEM: `${BACKEND_URL}/items`,
+    GET_ITEM_DETAIL: (id: string) => `${BACKEND_URL}/items/${id}`,
+    UPDATE_ITEM: (id: string) => `${BACKEND_URL}/items/${id}`,
+    DELETE_ITEM: (id: string) => `${BACKEND_URL}/items/${id}`,
+
+    GET_POSTER: `${BACKEND_URL}/poster`,
+    UPLOAD_POSTER: `${BACKEND_URL}/poster`,
+    DELETE_POSTER: `${BACKEND_URL}/poster`,
 };
 
 export const CATEGORY = {

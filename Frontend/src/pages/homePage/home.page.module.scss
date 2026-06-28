@@ -370,3 +370,54 @@ $card-bg: #ffffff;
     background-color: $card-bg;
   }
 }
+
+
+.PosterSection {
+  position: relative; // make sure this is there
+
+  .posterImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .posterAdminControls {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  .posterUploadBtn {
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s ease;
+    &:hover { background: #4a8b96; }
+  }
+
+  .posterDeleteBtn {
+    background: #e53935;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s ease;
+    &:hover { background: #b71c1c; }
+  }
+}
