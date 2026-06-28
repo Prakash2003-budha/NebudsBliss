@@ -131,21 +131,15 @@ $card-bg: #ffffff;
     padding: 0 2rem;
   }
 
+  // =========================================
+  // SHARED ELEMENTS (Grid, Cards, Skeletons)
+  // =========================================
 
   // --- Base Product Grid ---
   .productGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 16px;
-  }
-
-  // --- Featured Grid (2 columns → 2×2 layout) ---
-  .featuredGrid {
-    grid-template-columns: repeat(2, 1fr);
-
-    @media (max-width: 600px) {
-      grid-template-columns: 1fr;
-    }
   }
 
   // --- Category Grid (4 columns → up to 2 rows of 4) ---
@@ -350,7 +344,7 @@ $card-bg: #ffffff;
 
     .skeletonImage {
       width: 100%;
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 1 / 1;
       @include shimmer;
     }
 

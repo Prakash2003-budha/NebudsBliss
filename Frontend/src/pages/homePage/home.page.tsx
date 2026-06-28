@@ -83,7 +83,7 @@ const Homepage: React.FC = () => {
         setActiveItems(active);
 
         const shuffled = [...active].sort(() => Math.random() - 0.5);
-        setFeaturedItems(shuffled.slice(0, 4));
+        setFeaturedItems(shuffled.slice(0, 8));
       } catch {
         setError("Failed to load products. Please try again later.");
       } finally {
@@ -299,7 +299,7 @@ const Homepage: React.FC = () => {
           )}
 
           {!loading && !error && featuredItems.length > 0 && (
-            <div className={`${styles.productGrid} ${styles.featuredGrid}`}>
+            <div className={styles.productGrid}>
               {featuredItems.map((item) => renderProductCard(item))}
             </div>
           )}
