@@ -31,7 +31,6 @@ interface User {
 
 const CATEGORIES = Object.values(CATEGORY);
 
-// ✅ Defined OUTSIDE the Homepage component to avoid "component created during render" error
 const SkeletonGrid: React.FC = () => (
   <div className={styles.productGrid}>
     {[1, 2, 3, 4].map((n) => (
@@ -118,7 +117,6 @@ const Homepage: React.FC = () => {
 
       toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
 
-
       setFeaturedItems((prev) =>
         prev.filter((item) => item._id !== itemPendingDelete._id)
       );
@@ -127,7 +125,6 @@ const Homepage: React.FC = () => {
       );
     } catch {
       toast.error(`Failed to delete "${itemPendingDelete.name}". Please try again.`);
-
     } finally {
       setDeletingId(null);
       setItemPendingDelete(null);
@@ -271,7 +268,7 @@ const Homepage: React.FC = () => {
             )}
 
             {!loading && !error && selectedCategory && (
-              <div className={styles.productGrid}>
+              <div className={`${styles.productGrid} ${styles.categoryGrid}`}>
                 {activeItems
                   .filter((item) => item.category === selectedCategory)
                   .slice(0, 8)
@@ -302,7 +299,7 @@ const Homepage: React.FC = () => {
           )}
 
           {!loading && !error && featuredItems.length > 0 && (
-            <div className={styles.productGrid}>
+            <div className={`${styles.productGrid} ${styles.featuredGrid}`}>
               {featuredItems.map((item) => renderProductCard(item))}
             </div>
           )}

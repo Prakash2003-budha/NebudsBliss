@@ -254,7 +254,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
-
               <div className={styles.inputGroup}>
                 <label>
                   Description * (Min. 10 Chars)
@@ -273,7 +272,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                 />
               </div>
             </div>
-
             <button
               type="submit"
               className={styles.submitButton}
