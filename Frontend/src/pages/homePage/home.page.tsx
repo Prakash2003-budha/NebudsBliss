@@ -3,7 +3,8 @@ import Layout from "../../components/layout/layout";
 import styles from "./home.page.module.scss";
 import axios from "axios";
 import { API_ENDPOINTS, CATEGORY } from "../../constants/constants";
-import { showToast } from "../../utils/toast";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import LoginPage from "../auth/loginPage/login.page";
 import SignUpModal from "../auth/registerPage/register.page";
@@ -30,7 +31,6 @@ interface User {
 
 const CATEGORIES = Object.values(CATEGORY);
 
-// ✅ Defined OUTSIDE the Homepage component to avoid "component created during render" error
 const SkeletonGrid: React.FC = () => (
   <div className={styles.productGrid}>
     {[1, 2, 3, 4].map((n) => (
@@ -115,11 +115,7 @@ const Homepage: React.FC = () => {
         withCredentials: true,
       });
 
-      showToast(
-        "success",
-        "Item deleted",
-        `"${itemPendingDelete.name}" deleted successfully.`
-      );
+      toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
 
       setFeaturedItems((prev) =>
         prev.filter((item) => item._id !== itemPendingDelete._id)
@@ -128,11 +124,7 @@ const Homepage: React.FC = () => {
         prev.filter((item) => item._id !== itemPendingDelete._id)
       );
     } catch {
-      showToast(
-        "error",
-        "Delete failed",
-        `Failed to delete "${itemPendingDelete.name}". Please try again.`
-      );
+      toast.error(`Failed to delete "${itemPendingDelete.name}". Please try again.`);
     } finally {
       setDeletingId(null);
       setItemPendingDelete(null);
@@ -276,7 +268,7 @@ const Homepage: React.FC = () => {
             )}
 
             {!loading && !error && selectedCategory && (
-              <div className={styles.productGrid}>
+              <div className={`${styles.productGrid} ${styles.categoryGrid}`}>
                 {activeItems
                   .filter((item) => item.category === selectedCategory)
                   .slice(0, 8)
@@ -307,7 +299,7 @@ const Homepage: React.FC = () => {
           )}
 
           {!loading && !error && featuredItems.length > 0 && (
-            <div className={styles.productGrid}>
+            <div className={`${styles.productGrid} ${styles.featuredGrid}`}>
               {featuredItems.map((item) => renderProductCard(item))}
             </div>
           )}
