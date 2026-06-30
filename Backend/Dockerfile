@@ -13,7 +13,7 @@ RUN npm install
 # Copy rest of the source
 COPY . .
 
-EXPOSE 5000
+EXPOSE 9005
 
 # Polling is needed for nodemon to detect changes from a host-mounted volume,
 # especially on Windows/WSL or Docker Desktop on Mac

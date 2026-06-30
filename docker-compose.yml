@@ -5,11 +5,12 @@ services:
     image: mongo:7
     container_name: nebudsbliss-mongo
     restart: unless-stopped
+    command: >
+      sh -c "mongod --quiet --logpath /var/log/mongodb.log --logappend"
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-
   backend:
     build:
       context: ./Backend
@@ -21,7 +22,7 @@ services:
     environment:
       - MONGO_URI=mongodb://mongo:27017/nebudsbliss
     ports:
-      - "5000:5000"
+      - "9005:9005"
     volumes:
       - ./Backend:/app
       - /app/node_modules
@@ -35,7 +36,7 @@ services:
     container_name: nebudsbliss-frontend
     restart: unless-stopped
     environment:
-      - VITE_API_URL=http://localhost:5000
+      - VITE_API_URL=http://localhost:9005
     ports:
       - "5173:5173"
     volumes:
