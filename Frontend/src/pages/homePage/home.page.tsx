@@ -118,14 +118,7 @@ const Homepage: React.FC = () => {
 
     fetchItems();
     fetchPoster();
-
-    const interval = setInterval(() => {
-      fetchItems();
-      fetchPoster();
-    }, 5000);
-
     return () => {
-      clearInterval(interval);
       controller.abort();
     };
   }, []);

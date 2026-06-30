@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: nebudsbliss-mongo
+    restart: unless-stopped
+    command: >
+      sh -c "mongod --quiet --logpath /var/log/mongodb.log --logappend"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: nebudsbliss-backend
+    restart: unless-stopped
+    env_file:
+      - ./Backend/.env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/nebudsbliss
+    ports:
+      - "9005:9005"
+    volumes:
+      - ./Backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: nebudsbliss-frontend
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://localhost:9005
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./Frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
