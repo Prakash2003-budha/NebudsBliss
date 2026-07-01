@@ -321,7 +321,7 @@ const Homepage: React.FC = () => {
                 className={styles.posterUploadBtn}
                 onClick={() => posterInputRef.current?.click()}
               >
-                {posterUrl ? "🔄 Replace Poster" : "📤 Upload Poster"}
+                {posterUrl ? "🔄 Replace Poster" : "📤h hhhUpload Poster"}
               </button>
               {posterUrl && (
                 <button
