@@ -6,10 +6,11 @@ import { API_ENDPOINTS } from "../../../constants/constants";
 
 interface ForgotPasswordProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose: () => void; // closes EVERYTHING (whole auth flow)
+  onBack: () => void;  // goes back to the login modal
 }
 
-const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isOpen, onClose }) => {
+const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isOpen, onClose, onBack }) => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error" | null; text: string }>({ type: null, text: "" });
@@ -49,15 +50,26 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isOpen, onClose }) => {
   };
 
   return (
+    // Clicking the background closes EVERYTHING, not just this modal
     <div className={styles.modalOverlay} onClick={onClose}>
       <main
         className={styles.loginCard}
         onClick={(e) => e.stopPropagation()}
         style={{ position: "relative" }}
       >
+        {/* X button closes EVERYTHING */}
         <button
           onClick={onClose}
-          style={{ position: "absolute", top: "15px", right: "15px", background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer", color: "#888" }}
+          style={{
+            position: "absolute",
+            top: "15px",
+            right: "15px",
+            background: "none",
+            border: "none",
+            fontSize: "1.5rem",
+            cursor: "pointer",
+            color: "#888",
+          }}
           aria-label="Close"
         >
           &times;
@@ -109,7 +121,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isOpen, onClose }) => {
 
         <footer className={styles.signupPrompt}>
           Remember your password?{" "}
-          <button type="button" onClick={onClose} className={styles.linkButton}>
+          {/* This one explicitly goes BACK to login, not a full close */}
+          <button type="button" onClick={onBack} className={styles.linkButton}>
             Sign In
           </button>
         </footer>
