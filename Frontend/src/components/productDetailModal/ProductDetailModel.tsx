@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./productDetailModal.module.scss";
+import styles from "./Productdetailmodal.module .scss";
 import { useCart } from "../../context/userCart";
 import profile from "../../img/icons/profile.black.png";
 
@@ -22,41 +22,17 @@ interface ProductDetailModalProps {
 
 type TabKey = "details" | "reviews";
 
-const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
-  item,
-  isOpen,
-  onClose,
-}) => {
+// Holds all "per product" transient UI state (quantity, active image, active tab).
+// Mounted with key={item._id} from the parent, so React resets this state for us
+// whenever the product changes — no setState-in-an-effect needed.
+const ProductDetailContent: React.FC<{
+  item: Item;
+  onClose: () => void;
+}> = ({ item, onClose }) => {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<TabKey>("details");
-
-  // Reset transient state whenever a new item is opened
-  useEffect(() => {
-    if (isOpen) {
-      setQuantity(1);
-      setActiveImageIndex(0);
-      setActiveTab("details");
-    }
-  }, [isOpen, item?._id]);
-
-  // Escape key + body scroll lock while open
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen || !item) return null;
 
   const images = item.images && item.images.length > 0 ? item.images : null;
   const activeImage = images ? images[activeImageIndex] : null;
@@ -90,19 +66,18 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     .filter(Boolean);
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div
-        className={styles.modal}
-        onClick={(e) => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-label={item.name}
-      >
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
-          &times;
-        </button>
+    <div
+      className={styles.modal}
+      onClick={(e) => e.stopPropagation()}
+      role="dialog"
+      aria-modal="true"
+      aria-label={item.name}
+    >
+      <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+        &times;
+      </button>
 
-        <div className={styles.content}>
+      <div className={styles.content}>
           {/* Gallery */}
           <div className={styles.gallery}>
             <div className={styles.mainImageWrapper}>
@@ -228,8 +203,39 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               )}
             </div>
           </div>
-        </div>
       </div>
+    </div>
+  );
+};
+
+const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
+  item,
+  isOpen,
+  onClose,
+}) => {
+  // Escape key + body scroll lock while open. This effect only touches the
+  // DOM/document (an external system), not component state, so it's fine here.
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !item) return null;
+
+  return (
+    <div className={styles.overlay} onClick={onClose}>
+      {/* key={item._id} makes React remount this on product change, so
+          quantity/activeImageIndex/activeTab reset for free — no effect needed. */}
+      <ProductDetailContent key={item._id} item={item} onClose={onClose} />
     </div>
   );
 };
