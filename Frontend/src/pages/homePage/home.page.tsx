@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoginPage from "../auth/loginPage/login.page";
 import SignUpModal from "../auth/registerPage/register.page";
 import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
+import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
 import { useCart } from "../../context/userCart";
 import profile from "../../img/icons/profile.black.png";
 
@@ -60,6 +61,10 @@ const Homepage: React.FC = () => {
   const [itemPendingDelete, setItemPendingDelete] = useState<Item | null>(null);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+
+  // NEW: product detail modal state
+  const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
   const posterInputRef = useRef<HTMLInputElement>(null);
@@ -196,8 +201,23 @@ const Homepage: React.FC = () => {
     }
   };
 
+  // NEW: open the product detail modal for a given item
+  const handleOpenProduct = (item: Item) => {
+    setSelectedProduct(item);
+    setIsProductModalOpen(true);
+  };
+
   const renderProductCard = (item: Item) => (
-    <div key={item._id} className={styles.productCard}>
+    <div
+      key={item._id}
+      className={styles.productCard}
+      onClick={() => handleOpenProduct(item)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") handleOpenProduct(item);
+      }}
+    >
       <div className={styles.categoryTabContainer}>
         <span className={styles.categoryTab}>{item.category}</span>
       </div>
@@ -225,7 +245,8 @@ const Homepage: React.FC = () => {
         <div className={styles.cardActions}>
           <button
             className={styles.addToCartBtn}
-            onClick={() =>
+            onClick={(e) => {
+              e.stopPropagation();
               addToCart({
                 _id: item._id,
                 name: item.name,
@@ -235,8 +256,8 @@ const Homepage: React.FC = () => {
                   item.images && item.images.length > 0
                     ? item.images[0].optimizeUrl || item.images[0].url
                     : "https://via.placeholder.com/300x400",
-              })
-            }
+              });
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -251,7 +272,10 @@ const Homepage: React.FC = () => {
           {isAdmin && (
             <button
               className={styles.deleteBtn}
-              onClick={() => handleDeleteClick(item)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteClick(item);
+              }}
               disabled={deletingId === item._id}
             >
               {deletingId === item._id ? (
@@ -321,7 +345,7 @@ const Homepage: React.FC = () => {
                 className={styles.posterUploadBtn}
                 onClick={() => posterInputRef.current?.click()}
               >
-                {posterUrl ? "🔄 Replace Poster" : "📤h hhhUpload Poster"}
+                {posterUrl ? "🔄 Replace Poster" : "📤 Upload Poster"}
               </button>
               {posterUrl && (
                 <button
@@ -426,6 +450,12 @@ const Homepage: React.FC = () => {
             setItemPendingDelete(null);
           }}
           onConfirm={handleDeleteConfirmed}
+        />
+
+        <ProductDetailModal
+          item={selectedProduct}
+          isOpen={isProductModalOpen}
+          onClose={() => setIsProductModalOpen(false)}
         />
       </div>
     </Layout>
