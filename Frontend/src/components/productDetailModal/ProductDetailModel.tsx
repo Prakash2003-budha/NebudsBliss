@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "./Productdetailmodal.module .scss";
+import styles from "./Productdetailmodal.module.scss";
 import { useCart } from "../../context/userCart";
 import profile from "../../img/icons/profile.black.png";
 
