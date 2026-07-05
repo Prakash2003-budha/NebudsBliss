@@ -335,7 +335,6 @@ const Homepage: React.FC = () => {
           )}
         </section>
 
-        {/* Categories Section */}
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>
             <h2>Shop by Category</h2>
