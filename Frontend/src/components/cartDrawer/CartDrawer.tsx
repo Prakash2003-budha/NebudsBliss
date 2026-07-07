@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
 import styles from "./CartDrawer.module.scss";
 import { useCart } from "../../context/userCart";
 
@@ -9,11 +10,18 @@ interface CartDrawerProps {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { cartItems, removeFromCart, clearCart, totalCount } = useCart();
+  const navigate = useNavigate(); // 2. Initialize the navigate function
 
   const subtotal = cartItems.reduce((sum, item) => {
     const price = item.discountPrice ?? item.price;
     return sum + price * item.quantity;
   }, 0);
+
+  // 3. Create a handler function for the checkout button
+  const handleCheckout = () => {
+    onClose(); // Close the drawer first
+    navigate("/Checkout"); // Redirect to your checkout page route
+  };
 
   return (
     <>
@@ -99,7 +107,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 <span className={styles.subtotalAmount}>Rs. {subtotal.toLocaleString()}</span>
               </div>
 
-              <button className={styles.checkoutBtn}>
+              {/* 4. Attach the onClick handler to the button */}
+              <button className={styles.checkoutBtn} onClick={handleCheckout}>
                 Proceed to Checkout
               </button>
 
