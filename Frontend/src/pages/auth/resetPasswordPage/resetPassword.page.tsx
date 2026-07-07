@@ -14,6 +14,10 @@ const ResetPassword: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   
+  // NEW: States for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const [message, setMessage] = useState<{ type: "success" | "error" | null; text: string }>({ type: null, text: "" });
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
@@ -63,7 +67,7 @@ const ResetPassword: React.FC = () => {
       } else {
         setMessage({ type: "error", text: data?.message || "Failed to reset password. The link may have expired." });
       }
-    } catch  {
+    } catch {
       setMessage({ type: "error", text: "Cannot connect to the server right now." });
     } finally {
       setLoading(false);
@@ -90,7 +94,7 @@ const ResetPassword: React.FC = () => {
             <div className={styles.inputFieldWrapper}>
               <img src={passwordIcon} className={styles.icon} alt="Password icon" />
               <input 
-                type="password" 
+                type={showPassword ? "text" : "password"} 
                 id="password" 
                 name="password" 
                 placeholder="••••••••••••" 
@@ -102,6 +106,14 @@ const ResetPassword: React.FC = () => {
                 required 
                 disabled={loading || message.type === "success"}
               />
+              <button
+                type="button"
+                className={styles.togglePasswordBtn}
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? "Hide" : "Show"}
+              </button>
             </div>
             {formErrors.password && <span className={styles.errorText}>{formErrors.password}</span>}
           </div>
@@ -112,7 +124,7 @@ const ResetPassword: React.FC = () => {
             <div className={styles.inputFieldWrapper}>
               <img src={passwordIcon} className={styles.icon} alt="Password icon" />
               <input 
-                type="password" 
+                type={showConfirmPassword ? "text" : "password"} 
                 id="confirmPassword" 
                 name="confirmPassword" 
                 placeholder="••••••••••••" 
@@ -124,6 +136,14 @@ const ResetPassword: React.FC = () => {
                 required 
                 disabled={loading || message.type === "success"}
               />
+              <button
+                type="button"
+                className={styles.togglePasswordBtn}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? "Hide" : "Show"}
+              </button>
             </div>
             {formErrors.confirmPassword && <span className={styles.errorText}>{formErrors.confirmPassword}</span>}
           </div>
