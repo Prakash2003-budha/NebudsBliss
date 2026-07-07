@@ -15,12 +15,13 @@ interface LoginPageProps {
 const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegister }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // NEW: State to toggle password visibility
+  const [showPassword, setShowPassword] = useState(false);
   const [isForgotOpen, setIsForgotOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Guard: If the modal is not open, do not render anything
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,12 +41,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
       const data = await response.json().catch(() => null);
 
       if (response.ok && data) {
-        // Success! Save tokens
         localStorage.setItem("accessToken", data.data.accessToken);
         localStorage.setItem("refreshToken", data.data.refreshToken);
         localStorage.setItem("user", JSON.stringify(data.data.user));
 
-        // Close the modal on success and refresh the page to update header state
         onClose();
         window.location.reload();
       } else {
@@ -67,7 +66,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
 
   return (
     <>
-      {/* Only render the login modal when forgot-password isn't open */}
       {!isForgotOpen && (
         <div className={styles.modalOverlay} onClick={onClose}>
           <main
@@ -120,7 +118,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
                 <div className={styles.inputFieldWrapper}>
                   <img src={passwordIcon} className={styles.icon} alt="Password icon" />
                   <input
-                    type="password"
+                    // NEW: Dynamically change input type based on state
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     placeholder="••••••••••••"
                     value={password}
@@ -128,6 +127,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
                     required
                     disabled={isLoading}
                   />
+                  {/* NEW: Toggle Button */}
+                  <button
+                    type="button"
+                    className={styles.togglePasswordBtn}
+                    onClick={() => setShowPassword(!showPassword)}
+                    tabIndex={-1} // Prevents messing up the normal tab flow
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
                 </div>
 
                 {errorMessage && (
@@ -166,9 +174,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
                 Sign Up
               </button>
             </footer>
-
-            {/* EXPLICIT CLOSE WINDOW BUTTON AT THE BOTTOM */}
-
           </main>
         </div>
       )}

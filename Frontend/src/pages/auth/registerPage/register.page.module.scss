@@ -290,3 +290,44 @@ $border-color: #333333;
 
   &:hover { text-decoration: underline; opacity: 0.85; }
 }
+
+// Shared input + select styles
+.inputFieldWrapper input,
+.selectField {
+  width: 100%;
+  /* CHANGED: Increased the right padding from 1rem to 3.5rem to make room for the toggle button */
+  padding: 0.78rem 3.5rem 0.78rem 2.5rem;
+  background-color: $input-bg;
+  border: 1px solid $border-color;
+  border-radius: 7px;
+  color: $title-color;
+  font-size: 0.93rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: $accent-color;
+    box-shadow: 0 0 0 3px rgba($accent-color, 0.12);
+  }
+
+  &::placeholder { color: #505050; }
+}
+
+/* NEW: Styles for the Show/Hide Password button */
+.togglePasswordBtn {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: $text-color;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $accent-color;
+  }
+}
