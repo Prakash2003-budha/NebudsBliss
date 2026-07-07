@@ -265,15 +265,33 @@ select:focus {
   }
 }
 
-.removeBtn {
-  border: none;
-  background: #fef2f2;
-  color: #b91c1c;
+.qtyControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid #e5e7eb;
   border-radius: 999px;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  padding: 0.2rem;
+  background: #faf5ff;
+}
+
+.qtyBtn {
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #6d28d9;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
+}
+
+.qtyValue {
+  min-width: 1.2rem;
+  text-align: center;
+  font-weight: 700;
+  color: #111827;
 }
 
 .totalBox {

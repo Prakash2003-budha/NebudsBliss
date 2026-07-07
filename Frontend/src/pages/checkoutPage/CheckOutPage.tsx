@@ -38,7 +38,7 @@ const initialFormState: CheckoutFormState = {
 };
 
 const CheckOutPage: React.FC = () => {
-  const { cartItems, removeFromCart, clearCart } = useCart();
+  const { cartItems, changeQuantity, clearCart } = useCart();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<CheckoutFormState>(initialFormState);
   const [submitted, setSubmitted] = useState(false);
@@ -230,14 +230,25 @@ const CheckOutPage: React.FC = () => {
                         <span>
                           Rs. {((item.discountPrice ?? item.price) * item.quantity).toLocaleString()}
                         </span>
-                        <button
-                          type="button"
-                          className={styles.removeBtn}
-                          onClick={() => removeFromCart(item._id)}
-                          aria-label={`Remove ${item.name}`}
-                        >
-                          Remove
-                        </button>
+                        <div className={styles.qtyControl}>
+                          <button
+                            type="button"
+                            className={styles.qtyBtn}
+                            onClick={() => changeQuantity(item._id, -1)}
+                            aria-label={`Decrease quantity of ${item.name}`}
+                          >
+                            −
+                          </button>
+                          <span className={styles.qtyValue}>{item.quantity}</span>
+                          <button
+                            type="button"
+                            className={styles.qtyBtn}
+                            onClick={() => changeQuantity(item._id, 1)}
+                            aria-label={`Increase quantity of ${item.name}`}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}

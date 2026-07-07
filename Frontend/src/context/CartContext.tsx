@@ -36,12 +36,25 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     setCartItems((prev) => prev.filter((i) => i._id !== id));
   };
 
+  const changeQuantity = (id: string, delta: number) => {
+    setCartItems((prev) =>
+      prev.flatMap((item) => {
+        if (item._id !== id) return [item];
+
+        const nextQuantity = item.quantity + delta;
+        if (nextQuantity <= 0) return [];
+
+        return [{ ...item, quantity: nextQuantity }];
+      })
+    );
+  };
+
   const clearCart = () => setCartItems([]);
 
   const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, totalCount }}>
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, changeQuantity, clearCart, totalCount }}>
       {children}
     </CartContext.Provider>
   );
