@@ -16,7 +16,6 @@ import calendarIcon from "../../../img/icons/calender.png";
 
 import { API_ENDPOINTS } from "../../../constants/constants";
 
-// ✅ Added props to control the modal behavior
 interface SignUpModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -25,6 +24,10 @@ interface SignUpModalProps {
 
 const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false); 
+
+  // NEW: States for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -41,7 +44,6 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [globalError, setGlobalError] = useState<string | null>(null);
 
-  // ✅ If the modal is not open, don't render anything
   if (!isOpen) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -111,7 +113,6 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
           pauseOnHover: true,
           draggable: false,
           style: { width: "420px" },
-          // ✅ Switch to login modal instead of navigating pages
           onClose: () => {
             onClose();
             onSwitchToLogin();
@@ -146,16 +147,10 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    // ✅ Backdrop overlay: Clicking outside the modal closes it
     <div className={styles.modalOverlay} onClick={onClose}>
-      
-      {/* Toast container must have a high z-index to appear over the modal */}
       <ToastContainer style={{ zIndex: 9999 }} />
 
-      {/* ✅ Modal Card: e.stopPropagation() prevents clicks inside the card from closing the modal */}
       <main className={styles.signupModalCard} onClick={(e) => e.stopPropagation()}>
-        
-        {/* ✅ Close Button */}
         <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
           &times;
         </button>
@@ -238,7 +233,23 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="password">Password</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={passwordIcon} className={styles.icon} alt="" />
-                <input type="password" id="password" name="password" placeholder="••••••••••••" value={formData.password} onChange={handleChange} required />
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  id="password" 
+                  name="password" 
+                  placeholder="••••••••••••" 
+                  value={formData.password} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <button
+                  type="button"
+                  className={styles.togglePasswordBtn}
+                  onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
               </div>
               {formErrors.password && <span className={styles.errorText}>{formErrors.password}</span>}
             </div>
@@ -248,7 +259,23 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="confirmPassword">Confirm Password</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={passwordIcon} className={styles.icon} alt="" />
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••••••" value={formData.confirmPassword} onChange={handleChange} required />
+                <input 
+                  type={showConfirmPassword ? "text" : "password"} 
+                  id="confirmPassword" 
+                  name="confirmPassword" 
+                  placeholder="••••••••••••" 
+                  value={formData.confirmPassword} 
+                  onChange={handleChange} 
+                  required 
+                />
+                <button
+                  type="button"
+                  className={styles.togglePasswordBtn}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
               </div>
               {formErrors.confirmPassword && <span className={styles.errorText}>{formErrors.confirmPassword}</span>}
             </div>
@@ -278,7 +305,6 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
         </div>
 
         <footer className={styles.loginPrompt}>
-          {/* ✅ Changed from React Router <Link> to a button that triggers the switch prop */}
           Already have an account?{" "}
           <button type="button" onClick={onSwitchToLogin} className={styles.linkButton}>
             Sign In
