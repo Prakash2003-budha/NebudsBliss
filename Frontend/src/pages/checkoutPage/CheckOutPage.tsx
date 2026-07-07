@@ -38,7 +38,7 @@ const initialFormState: CheckoutFormState = {
 };
 
 const CheckOutPage: React.FC = () => {
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, removeFromCart, clearCart } = useCart();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<CheckoutFormState>(initialFormState);
   const [submitted, setSubmitted] = useState(false);
@@ -210,15 +210,35 @@ const CheckOutPage: React.FC = () => {
                 <div className={styles.itemList}>
                   {cartItems.map((item) => (
                     <div key={item._id} className={styles.itemRow}>
-                      <div>
-                        <strong>{item.name}</strong>
-                        <p>
-                          {item.quantity} × Rs. {item.discountPrice ?? item.price}
-                        </p>
+                      <div className={styles.itemMain}>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className={styles.itemImage}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = "https://via.placeholder.com/70x70";
+                          }}
+                        />
+                        <div className={styles.itemContent}>
+                          <strong>{item.name}</strong>
+                          <p>
+                            {item.quantity} × Rs. {item.discountPrice ?? item.price}
+                          </p>
+                        </div>
                       </div>
-                      <span>
-                        Rs. {((item.discountPrice ?? item.price) * item.quantity).toLocaleString()}
-                      </span>
+                      <div className={styles.itemActions}>
+                        <span>
+                          Rs. {((item.discountPrice ?? item.price) * item.quantity).toLocaleString()}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.removeBtn}
+                          onClick={() => removeFromCart(item._id)}
+                          aria-label={`Remove ${item.name}`}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
