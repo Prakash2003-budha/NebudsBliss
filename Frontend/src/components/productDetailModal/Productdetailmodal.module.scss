@@ -1,12 +1,16 @@
-// Same tokens as home.page.module.scss — keep in sync if the palette changes
+// Variables mapped to your new theme
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-$primary-color: #4a8b96;
-$dark-text: #222222;
-$light-text: #888888;
-$bg-color: #f7f8f9;
-$border-color: #eaeaea;
-$card-bg: #ffffff;
+$primary-color: #085ff6;
+$secoundary-color: #3ce3ff;
+$hover-color: #bcf5ff;
+$bg-color: #1a1a1a;
+$card-bg: #242424; // A slightly lighter gray than the background to make the modal pop
+$title-color: #ffffff;
+$text-color: #aaaaaa;
+$border-color: #333333;
+$accent-color: #3ce3ff;
 $discount-color: #e53935;
+$breakpoint-mobile: 768px;
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -21,8 +25,8 @@ $discount-color: #e53935;
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.75); // Darker backdrop for dark theme
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +34,7 @@ $discount-color: #e53935;
   padding: 1.5rem;
   animation: fadeIn 0.2s ease;
 
-  @media (max-width: 600px) {
+  @media (max-width: $breakpoint-mobile) {
     padding: 0;
     align-items: flex-end;
   }
@@ -46,10 +50,12 @@ $discount-color: #e53935;
   overflow-y: auto;
   position: relative;
   animation: slideUp 0.25s ease;
+  border: 1px solid $border-color; // Subtle border for dark mode depth
 
-  @media (max-width: 600px) {
+  @media (max-width: $breakpoint-mobile) {
     border-radius: 20px 20px 0 0;
     max-height: 92vh;
+    border-bottom: none;
   }
 }
 
@@ -60,21 +66,23 @@ $discount-color: #e53935;
   z-index: 5;
   width: 36px;
   height: 36px;
-  border: none;
+  border: 1px solid $border-color;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: $bg-color;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   font-size: 1.4rem;
   line-height: 1;
-  color: $dark-text;
+  color: $title-color;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: $bg-color;
+    background: $primary-color;
+    border-color: $primary-color;
+    color: #ffffff;
   }
 }
 
@@ -84,7 +92,7 @@ $discount-color: #e53935;
   gap: 2.5rem;
   padding: 2.5rem;
 
-  @media (max-width: 760px) {
+  @media (max-width: $breakpoint-mobile) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
     padding: 1.5rem;
@@ -116,15 +124,13 @@ $discount-color: #e53935;
   }
 }
 
-// Shown instead of mainImageWrapper when the product has more than one image —
-// displays every image at once rather than a single image with thumbnails.
 .imageGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
   max-height: 640px;
   overflow-y: auto;
-  padding-right: 2px;
+  padding-right: 4px;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -153,7 +159,11 @@ $discount-color: #e53935;
   }
 
   &.activeGridImage {
-    border-color: $primary-color;
+    border-color: $accent-color; // Cyan pop for active selection
+  }
+
+  &:hover {
+    border-color: $hover-color;
   }
 }
 
@@ -166,7 +176,8 @@ $discount-color: #e53935;
 .categoryTab {
   align-self: flex-start;
   background: $bg-color;
-  color: $light-text;
+  color: $text-color;
+  border: 1px solid $border-color;
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -179,12 +190,12 @@ $discount-color: #e53935;
 .title {
   font-size: 1.5rem;
   font-weight: 800;
-  color: $dark-text;
+  color: $title-color;
   letter-spacing: -0.3px;
   line-height: 1.3;
   margin: 0 0 0.75rem 0;
 
-  @media (max-width: 600px) {
+  @media (max-width: $breakpoint-mobile) {
     font-size: 1.25rem;
   }
 }
@@ -198,20 +209,21 @@ $discount-color: #e53935;
 }
 
 .oldPrice {
-  color: $light-text;
+  color: $text-color;
   text-decoration: line-through;
   font-size: 0.95rem;
 }
 
 .currentPrice {
-  color: $dark-text;
+  color: $accent-color; // High contrast cyan for the price
   font-size: 1.4rem;
   font-weight: 800;
 }
 
 .discountBadge {
-  background: $discount-color;
-  color: #fff;
+  background: rgba($discount-color, 0.15); // Transparent red background
+  color: #ff5252; // Bright red text
+  border: 1px solid rgba($discount-color, 0.5);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 3px 10px;
@@ -219,7 +231,7 @@ $discount-color: #e53935;
 }
 
 .shippingNote {
-  color: $light-text;
+  color: $text-color;
   font-size: 0.8rem;
   margin: 0 0 1.5rem 0;
 }
@@ -238,6 +250,7 @@ $discount-color: #e53935;
   display: flex;
   align-items: center;
   border: 1px solid $border-color;
+  background: $bg-color; // Dark inset background
   border-radius: 10px;
   overflow: hidden;
 
@@ -245,14 +258,15 @@ $discount-color: #e53935;
     width: 38px;
     height: 42px;
     border: none;
-    background: $bg-color;
-    color: $dark-text;
+    background: transparent;
+    color: $title-color;
     font-size: 1.1rem;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease;
 
     &:hover {
-      background: #6b6b6b;
+      background: $border-color;
+      color: $accent-color;
     }
   }
 
@@ -260,7 +274,7 @@ $discount-color: #e53935;
     width: 40px;
     text-align: center;
     font-weight: 700;
-    color: $dark-text;
+    color: $title-color;
     font-size: 0.95rem;
   }
 }
@@ -268,17 +282,20 @@ $discount-color: #e53935;
 .addToCartBtn {
   flex: 1;
   background: $primary-color;
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 10px;
   font-weight: 700;
   font-size: 0.95rem;
   padding: 0 1.5rem;
+  min-height: 44px; // Ensures it matches the height of the quantity selector
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: #37656d;
+    background: $secoundary-color;
+    color: $bg-color; // Flips text to dark when background becomes bright cyan
+    box-shadow: 0 4px 15px rgba($secoundary-color, 0.3); // Subtle neon glow
   }
 
   &:active {
@@ -299,20 +316,24 @@ $discount-color: #e53935;
   padding: 0 0 0.75rem 0;
   font-size: 0.9rem;
   font-weight: 600;
-  color: $light-text;
+  color: $text-color;
   cursor: pointer;
   position: relative;
   border-bottom: 2px solid transparent;
   transition: color 0.2s ease, border-color 0.2s ease;
 
+  &:hover {
+    color: $title-color;
+  }
+
   &.activeTab {
-    color: $dark-text;
-    border-bottom-color: $primary-color;
+    color: $accent-color;
+    border-bottom-color: $accent-color;
   }
 }
 
 .tabContent {
-  color: $light-text;
+  color: $text-color;
   font-size: 0.9rem;
   line-height: 1.7;
 
@@ -327,4 +348,6 @@ $discount-color: #e53935;
 
 .noReviews {
   font-style: italic;
+  color: $text-color;
+  opacity: 0.7;
 }
