@@ -23,5 +23,5 @@ createRoot(document.getElementById('root')!).render(
         </Routes>
       </BrowserRouter>
     </CartProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

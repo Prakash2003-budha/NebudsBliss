@@ -35,6 +35,7 @@ const ProductDetailContent: React.FC<{
   const [activeTab, setActiveTab] = useState<TabKey>("details");
 
   const images = item.images && item.images.length > 0 ? item.images : null;
+  const hasMultipleImages = !!images && images.length > 1;
   const activeImage = images ? images[activeImageIndex] : null;
   const hasDiscount = !!item.discountPrice && item.discountPrice < item.price;
   const discountPercent = hasDiscount
@@ -80,41 +81,43 @@ const ProductDetailContent: React.FC<{
       <div className={styles.content}>
           {/* Gallery */}
           <div className={styles.gallery}>
-            <div className={styles.mainImageWrapper}>
-              <img
-                src={
-                  activeImage
-                    ? activeImage.optimizeUrl || activeImage.url
-                    : (profile as string)
-                }
-                alt={item.name}
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = profile as string;
-                }}
-              />
-            </div>
-
-            {images && images.length > 1 && (
-              <div className={styles.thumbnailRow}>
-                {images.map((img, idx) => (
+            {hasMultipleImages ? (
+              // More than one image: show every image together in a grid.
+              // Clicking an image marks it "active" (used as the image added to cart).
+              <div className={styles.imageGrid}>
+                {images!.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
-                    className={`${styles.thumbnail} ${
-                      idx === activeImageIndex ? styles.activeThumbnail : ""
+                    className={`${styles.gridImageWrapper} ${
+                      idx === activeImageIndex ? styles.activeGridImage : ""
                     }`}
                     onClick={() => setActiveImageIndex(idx)}
-                    aria-label={`View image ${idx + 1}`}
+                    aria-label={`Select image ${idx + 1}`}
                   >
                     <img
                       src={img.optimizeUrl || img.url}
-                      alt={`${item.name} thumbnail ${idx + 1}`}
+                      alt={`${item.name} ${idx + 1}`}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = profile as string;
                       }}
                     />
                   </button>
                 ))}
+              </div>
+            ) : (
+              <div className={styles.mainImageWrapper}>
+                <img
+                  src={
+                    activeImage
+                      ? activeImage.optimizeUrl || activeImage.url
+                      : (profile as string)
+                  }
+                  alt={item.name}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = profile as string;
+                  }}
+                />
               </div>
             )}
           </div>

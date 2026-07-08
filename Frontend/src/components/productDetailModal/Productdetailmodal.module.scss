@@ -116,23 +116,32 @@ $discount-color: #e53935;
   }
 }
 
-.thumbnailRow {
-  display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.25rem;
-  &::-webkit-scrollbar { display: none; }
-  scrollbar-width: none;
+// Shown instead of mainImageWrapper when the product has more than one image —
+// displays every image at once rather than a single image with thumbnails.
+.imageGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  max-height: 640px;
+  overflow-y: auto;
+  padding-right: 2px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $border-color;
+    border-radius: 4px;
+  }
 }
 
-.thumbnail {
-  flex: 0 0 auto;
-  width: 56px;
-  height: 56px;
-  border-radius: 10px;
+.gridImageWrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
   overflow: hidden;
+  background: $bg-color;
   border: 2px solid $border-color;
-  background: none;
   padding: 0;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -143,7 +152,7 @@ $discount-color: #e53935;
     object-fit: cover;
   }
 
-  &.activeThumbnail {
+  &.activeGridImage {
     border-color: $primary-color;
   }
 }
