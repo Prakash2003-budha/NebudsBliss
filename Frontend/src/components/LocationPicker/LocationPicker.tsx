@@ -21,7 +21,8 @@ L.Icon.Default.mergeOptions({
 interface LocationPickerProps {
   initialLat?: number;
   initialLng?: number;
-  onLocationSelect: (lat: number, lng: number) => void;
+  // UPDATE 1: Add mapUrl as the third parameter here
+  onLocationSelect: (lat: number, lng: number, mapUrl: string) => void; 
 }
 
 // Helper component to listen to click events on the map
@@ -51,10 +52,15 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   const [position, setPosition] = useState<L.LatLngExpression>([initialLat, initialLng]);
   const markerRef = useRef<L.Marker>(null);
 
-  // Wrap in useCallback to safely include in useMemo dependencies
+  // UPDATE 2: Generate the URL and pass it up!
   const updatePosition = useCallback((lat: number, lng: number) => {
     setPosition([lat, lng]);
-    onLocationSelect(lat, lng);
+    
+    // Generate the standard clickable Google Maps link
+    const generatedUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+    
+    // Pass the lat, lng, AND the new URL back to the parent component
+    onLocationSelect(lat, lng, generatedUrl);
   }, [onLocationSelect]);
 
   // Handler for when user finishes dragging the pin
@@ -68,7 +74,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
         }
       },
     }),
-    [updatePosition] // Now safely included!
+    [updatePosition] 
   );
 
   // Trigger GPS geolocation
@@ -98,7 +104,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
           className={styles.mapContainer}
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
+            attribution='© <a href="https://maps.google.com/">Google Maps</a>'
             url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" 
           />
           <MapClickHandler onSelect={updatePosition} />

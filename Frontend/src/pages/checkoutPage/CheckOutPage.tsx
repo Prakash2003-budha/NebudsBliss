@@ -15,6 +15,7 @@ interface CheckoutFormState {
   payment: string;
   lat: number;
   lng: number;
+  mapLink: string; // Added to satisfy TypeScript
 }
 
 const paymentOptions = [
@@ -38,8 +39,9 @@ const initialFormState: CheckoutFormState = {
   city: "",
   note: "",
   payment: "cash",
-  lat: 27.7172, // Defaulting to Kathmandu coordinates as set in your LocationPicker
+  lat: 27.7172, 
   lng: 85.324,
+  mapLink: "", // Initialized as empty string
 };
 
 const CheckOutPage: React.FC = () => {
@@ -70,8 +72,15 @@ const CheckOutPage: React.FC = () => {
   };
 
   // Handler to catch updates from the Leaflet map
-  const handleLocationSelect = (lat: number, lng: number) => {
-    setFormData((prev) => ({ ...prev, lat, lng }));
+  const handleLocationSelect = (lat: number, lng: number, mapUrl: string) => {
+    console.log("Here is the clickable link for the driver:", mapUrl);
+    
+    setFormData((prev) => ({ 
+      ...prev, 
+      lat, 
+      lng,
+      mapLink: mapUrl 
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -88,8 +97,6 @@ const CheckOutPage: React.FC = () => {
     if (!isComplete) {
       return;
     }
-
-    // formData now includes formData.lat and formData.lng ready to be sent to your backend
     console.log("Order Submitted with Payload:", formData); 
 
     setSubmitted(true);
