@@ -157,12 +157,12 @@ const CheckOutPage: React.FC = () => {
             </label>
 
             <label>
-              City
+              Location
               <input
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                placeholder="Your city"
+                placeholder="Your Location"
                 required
               />
             </label>
