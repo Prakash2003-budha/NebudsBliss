@@ -1,17 +1,23 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Import the newly created SCSS file
-import "./LocationPicker.module.scss"; 
+// Correctly import CSS module styles
+import styles from "./LocationPicker.module.scss"; 
 
 // Fix Leaflet's default marker icon path issue in React/Webpack/Vite
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+// Define a temporary type that includes the missing property
+interface DefaultIcon extends L.Icon.Default {
+  _getIconUrl?: string;
+}
+
+// Cast to our new type instead of 'any'
+delete (L.Icon.Default.prototype as DefaultIcon)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
@@ -58,7 +64,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
         }
       },
     }),
-    [] // Removed updatePosition from dependencies as it's not memoized and causes re-renders if passed directly
+    []
   );
 
   // Trigger GPS geolocation
@@ -77,13 +83,13 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   };
 
   return (
-    <div className="location-picker-container">
-      <div className="map-wrapper">
+    <div className={styles.locationPickerContainer}>
+      <div className={styles.mapWrapper}>
         <MapContainer
           center={position}
           zoom={13}
           scrollWheelZoom={false}
-          className="map-container"
+          className={styles.mapContainer}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -102,7 +108,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
       <button
         type="button"
         onClick={handleLocateMe}
-        className="locate-btn"
+        className={styles.locateBtn}
       >
         📍 Use Current Location
       </button>

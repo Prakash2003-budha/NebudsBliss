@@ -1,21 +1,21 @@
-.location-picker-container {
+.locationPickerContainer {
   position: relative;
   width: 100%;
   margin-bottom: 1.25rem;
 
-  .map-wrapper {
+  .mapWrapper {
     height: 300px;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid #eaeaea;
 
-    .map-container {
+    .mapContainer {
       height: 100%;
       width: 100%;
     }
   }
 
-  .locate-btn {
+  .locateBtn {
     position: absolute;
     top: 12px;
     right: 12px;

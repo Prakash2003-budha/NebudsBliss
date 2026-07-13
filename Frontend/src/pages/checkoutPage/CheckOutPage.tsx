@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/layout/layout";
 import { useCart } from "../../context/userCart";
+import { LocationPicker } from "../../components/LocationPicker/LocationPicker";
 import styles from "./CheckOutPage.module.scss";
 
 interface CheckoutFormState {
@@ -12,6 +13,8 @@ interface CheckoutFormState {
   city: string;
   note: string;
   payment: string;
+  lat: number;
+  lng: number;
 }
 
 const paymentOptions = [
@@ -35,6 +38,8 @@ const initialFormState: CheckoutFormState = {
   city: "",
   note: "",
   payment: "cash",
+  lat: 27.7172, // Defaulting to Kathmandu coordinates as set in your LocationPicker
+  lng: 85.324,
 };
 
 const CheckOutPage: React.FC = () => {
@@ -64,6 +69,11 @@ const CheckOutPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, payment: value }));
   };
 
+  // Handler to catch updates from the Leaflet map
+  const handleLocationSelect = (lat: number, lng: number) => {
+    setFormData((prev) => ({ ...prev, lat, lng }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -78,6 +88,9 @@ const CheckOutPage: React.FC = () => {
     if (!isComplete) {
       return;
     }
+
+    // formData now includes formData.lat and formData.lng ready to be sent to your backend
+    console.log("Order Submitted with Payload:", formData); 
 
     setSubmitted(true);
     clearCart();
@@ -152,6 +165,18 @@ const CheckOutPage: React.FC = () => {
                 placeholder="Your city"
                 required
               />
+            </label>
+
+            {/* Render the Location Picker map here */}
+            <label style={{ display: "block", marginBottom: "1.5rem" }}>
+              Pinpoint your exact delivery location
+              <div style={{ marginTop: "0.5rem" }}>
+                <LocationPicker 
+                  initialLat={formData.lat} 
+                  initialLng={formData.lng} 
+                  onLocationSelect={handleLocationSelect} 
+                />
+              </div>
             </label>
 
             <div className={styles.paymentSection}>
