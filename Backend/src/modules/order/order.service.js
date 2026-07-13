@@ -1,5 +1,4 @@
-import OrderModel from "../OrderModel/order.model.js";
-
+import OrderModel from "./order.model.js";
 class OrderService {
     orderDataTransform = async (req) => {
         try {
@@ -14,8 +13,11 @@ class OrderService {
             data.totalAmount = subtotal + shippingFee;
             data.paymentStatus = "pending";
             data.orderStatus = "processing";
+            
+            if (data.mapLink) {
+                data.mapUrl = data.mapLink;
+            }
 
-            // Generate dynamic QR string if bank payment is selected
             if (data.paymentMethod === "bank") {
                 const orderIdBuffer = Math.floor(Math.random() * 1000000).toString();
                 data.dynamicQrString = `upi://pay?pa=nebudsbliss@bank&pn=NebudsBliss&am=${data.totalAmount}&cu=NPR&tr=ORD-${orderIdBuffer}`;
