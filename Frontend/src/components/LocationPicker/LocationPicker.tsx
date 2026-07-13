@@ -79,7 +79,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
         (pos) => {
           updatePosition(pos.coords.latitude, pos.coords.longitude);
         },
-        (_err) => {
+        () => {
           alert("Could not retrieve location. Please grant location permissions.");
         }
       );
