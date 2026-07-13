@@ -1,220 +1,301 @@
+// 1. Theme Variables & Tokens (Directly from Home Page)
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #4a8b96;
+$dark-text: #222222;
+$light-text: #888888;
+$bg-color: #f7f8f9;
+$border-color: #eaeaea;
+$card-bg: #ffffff;
+
+// 2. Base Page Structure with Home Page Grid Background
 .page {
-  min-height: 100%;
-  padding: 2rem 1.25rem 3rem;
-  background: linear-gradient(135deg, #fdf7ff 0%, #ffffff 60%, #f9f5ff 100%);
+  font-family: $font-primary;
+  background-color: $bg-color;
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    padding: 2.5rem 1rem;
+  }
 }
 
+// 3. Hero Header Component
 .hero {
-  max-width: 1120px;
-  margin: 0 auto 1.5rem;
-  padding: 1.2rem 1.4rem;
-  border-radius: 1.2rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f7f2ff 100%);
-  border: 1px solid #efe6ff;
-  box-shadow: 0 12px 30px rgba(107, 33, 168, 0.08);
+  max-width: 1300px;
+  margin: 0 auto 3rem;
+  padding: 0 1rem;
+
+  @media (max-width: 880px) {
+    text-align: center;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    background-color: rgba($primary-color, 0.1);
+    color: $primary-color;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
 
   h1 {
-    margin: 0.25rem 0;
-    font-size: clamp(1.8rem, 3vw, 2.6rem);
-    color: #111827;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: $dark-text;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
   }
 
   p {
     margin: 0;
-    color: #6b7280;
+    color: $light-text;
     font-size: 1rem;
+    font-weight: 500;
   }
 }
 
-.eyebrow {
-  display: inline-block;
-  margin-bottom: 0.35rem;
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: #ede9fe;
-  color: #6d28d9;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
+// 4. Split-Screen Grid Layout
 .content {
-  max-width: 1120px;
+  max-width: 1300px;
   margin: 0 auto;
+  padding: 0 1rem;
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
   grid-template-columns: 1.6fr 0.9fr;
+  align-items: start;
+
+  @media (max-width: 880px) {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 }
 
+// 5. Shared Theme Cards (Forms & Order Summary)
 .formCard,
 .summaryCard {
-  background: #ffffff;
-  border: 1px solid #ece7ff;
-  border-radius: 1.25rem;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
-}
+  background: $card-bg;
+  border: 1px solid $border-color;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  padding: 2.5rem;
+  box-sizing: border-box;
 
-.formCard {
-  padding: 1.5rem;
+  @media (max-width: 600px) {
+    padding: 1.5rem 1.25rem;
+  }
 
   h2 {
-    margin: 0 0 1rem;
-    color: #111827;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: $dark-text;
+    letter-spacing: -0.5px;
+    margin: 0 0 1.5rem 0;
   }
 }
 
+// 6. Form Fields & Interactive Inputs
 .grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 }
 
 label {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  margin-bottom: 1rem;
-  color: #374151;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.paymentSection {
-  margin-bottom: 1rem;
-}
-
-.paymentLabel {
-  display: block;
-  margin-bottom: 0.6rem;
-  color: #374151;
-  font-weight: 600;
-  font-size: 0.95rem;
-}
-
-.paymentOptions {
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.paymentOption {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.3rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 1rem;
-  padding: 0.9rem 1rem;
-  background: #fff;
-  color: #374151;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.paymentOptionSelected {
-  border-color: #8b5cf6;
-  background: #f5f3ff;
-  box-shadow: 0 10px 24px rgba(139, 92, 246, 0.16);
-}
-
-.paymentTitle {
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: $dark-text;
   font-weight: 700;
-  color: #111827;
-}
-
-.paymentDesc {
   font-size: 0.9rem;
-  color: #6b7280;
 }
 
 input,
 textarea,
 select {
   width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 0.8rem;
-  padding: 0.8rem 0.9rem;
-  font: inherit;
-  color: #111827;
-  background: #fcfcff;
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: $dark-text;
+  background-color: #fcfcfc;
   box-sizing: border-box;
+  transition: all 0.25s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $dark-text;
+    background-color: $card-bg;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: 2px solid rgba(109, 40, 217, 0.22);
-  border-color: #8b5cf6;
+// 7. Payment Options Section (Styled like Category Pills)
+.paymentSection {
+  margin: 1.5rem 0;
 }
 
-.submitBtn,
-.secondaryBtn,
-.linkBtn {
-  border: none;
-  border-radius: 0.8rem;
-  padding: 0.85rem 1rem;
+.paymentLabel {
+  display: block;
   font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.9rem;
+  color: $dark-text;
+  margin-bottom: 0.75rem;
 }
 
+.paymentOptions {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.paymentOption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  background-color: $card-bg;
+  border: 1px solid $border-color;
+  padding: 14px 20px;
+  border-radius: 14px;
+  color: $light-text;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+
+  &:hover {
+    border-color: $dark-text;
+    color: $dark-text;
+    .paymentTitle { color: $dark-text; }
+  }
+}
+
+.paymentOptionSelected {
+  background-color: $dark-text;
+  border-color: $dark-text;
+  color: #ffffff;
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+
+  .paymentTitle { color: #ffffff; }
+  .paymentDesc { color: rgba(#ffffff, 0.7); }
+
+  &:hover {
+    border-color: $dark-text;
+    color: #ffffff;
+    .paymentTitle { color: #ffffff; }
+  }
+}
+
+.paymentTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $dark-text;
+  transition: color 0.2s ease;
+}
+
+.paymentDesc {
+  font-size: 0.8rem;
+  color: $light-text;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+// 8. Buttons (Primary Dark & Secondary Border Action styles)
 .submitBtn {
   width: 100%;
-  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-  color: white;
-  box-shadow: 0 12px 24px rgba(109, 40, 217, 0.2);
+  background-color: $dark-text;
+  color: #ffffff;
+  border: none;
+  padding: 14px 36px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 0.5rem;
 
   &:hover {
-    transform: translateY(-1px);
+    background-color: $primary-color;
+    box-shadow: 0 6px 18px rgba($primary-color, 0.25);
   }
 }
 
 .secondaryBtn,
 .linkBtn {
-  display: inline-flex;
-  justify-content: center;
+  width: 100%;
+  background-color: transparent;
+  color: $primary-color;
+  border: 2px solid $primary-color;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  display: flex;
   align-items: center;
-  background: #f5f3ff;
-  color: #5b21b6;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 
   &:hover {
-    transform: translateY(-1px);
+    background-color: $primary-color;
+    color: white;
   }
 }
 
+// 9. Alert Box
 .successMessage {
-  margin-top: 1rem;
-  padding: 0.8rem 1rem;
-  border-radius: 0.8rem;
-  background: #ecfdf3;
-  color: #166534;
+  margin-top: 1.25rem;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
   font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid rgba(#2e7d32, 0.15);
 }
 
-.summaryCard {
-  padding: 1.5rem;
-  height: fit-content;
-
-  h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-    color: #111827;
-  }
-}
-
+// 10. Order Summary Items & Layout
 .emptyState {
-  padding: 1rem 0;
-  color: #6b7280;
+  text-align: center;
+  padding: 2rem 0;
+  color: $light-text;
+
+  p { margin-bottom: 1.25rem; }
 }
 
 .itemList {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .itemRow {
@@ -222,8 +303,8 @@ select:focus {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $border-color;
 }
 
 .itemMain {
@@ -237,18 +318,28 @@ select:focus {
   width: 56px;
   height: 56px;
   object-fit: cover;
-  border-radius: 0.8rem;
-  border: 1px solid #ece7ff;
-  background: #f9f5ff;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  background-color: #fcfcfc;
 }
 
 .itemContent {
   min-width: 0;
 
-  p {
-    margin: 0.2rem 0 0;
-    color: #6b7280;
+  strong {
+    display: block;
     font-size: 0.9rem;
+    font-weight: 700;
+    color: $dark-text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    margin: 0.15rem 0 0;
+    color: $light-text;
+    font-size: 0.8rem;
   }
 }
 
@@ -259,76 +350,92 @@ select:focus {
   gap: 0.4rem;
 
   span {
+    font-size: 0.9rem;
     font-weight: 700;
-    color: #111827;
-    white-space: nowrap;
+    color: $dark-text;
   }
 }
 
+// 11. Custom Quantity Pill
 .qtyControl {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  padding: 0.2rem;
-  background: #faf5ff;
+  gap: 0.35rem;
+  border: 1px solid $border-color;
+  border-radius: 30px;
+  padding: 3px;
+  background-color: $bg-color;
 }
 
 .qtyBtn {
   border: none;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: #ffffff;
-  color: #6d28d9;
-  font-size: 1rem;
+  background-color: $card-bg;
+  color: $dark-text;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $dark-text;
+    color: #ffffff;
+  }
 }
 
 .qtyValue {
-  min-width: 1.2rem;
+  min-width: 1rem;
   text-align: center;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: #111827;
+  color: $dark-text;
 }
 
+// 12. Checkout Breakdown Matrix
 .totalBox {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  padding: 1rem 0;
-  border-top: 1px solid #f1f5f9;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
+  padding: 1.25rem 0;
+  border-top: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+  margin-bottom: 1.5rem;
 
   div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #4b5563;
+    color: $light-text;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    strong {
+      color: $dark-text;
+      font-weight: 700;
+    }
   }
 }
 
 .totalRow {
-  font-size: 1.05rem;
-  color: #111827 !important;
-}
+  border-top: 1px dashed $border-color;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
 
-@media (max-width: 880px) {
-  .content {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .page {
-    padding: 1.25rem 0.9rem 2rem;
+  span {
+    font-size: 1rem;
+    font-weight: 800;
+    color: $dark-text;
   }
 
-  .grid,
-  .paymentOptions {
-    grid-template-columns: 1fr;
+  strong {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: $primary-color !important;
   }
 }
