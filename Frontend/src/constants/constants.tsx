@@ -1,5 +1,18 @@
-export const FRONTEND_URL = 'http://localhost:5173';
-export const BACKEND_URL = 'http://localhost:9005';
+
+const getHost = (): string => {
+  if (typeof window !== "undefined" && window.location.hostname) {
+    return window.location.hostname;
+  }
+  return "localhost";
+};
+
+export const IpAddress = `http://${getHost()}`;
+
+// Use backticks (``) for template literals, and match the variable name
+export const FRONTEND_URL = `${IpAddress}:5173`; 
+export const BACKEND_URL = `${IpAddress}:9005`;
+
+// ... rest of your code
 
 export const API_ENDPOINTS = {
     // Auth Endpoints

@@ -21,7 +21,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   position: sticky;
   top: 0; // Added top: 0 to ensure sticky works correctly
-  z-index: 9999;
+  z-index: 1001;
   box-sizing: border-box;
   
   @media (max-width: $breakpoint-mobile) {
