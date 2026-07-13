@@ -38,7 +38,7 @@ const initialFormState: CheckoutFormState = {
   city: "",
   note: "",
   payment: "cash",
-  lat: 27.7172, // Defaulting to Kathmandu coordinates as set in your LocationPicker
+  lat: 27.7172, 
   lng: 85.324,
 };
 
@@ -88,8 +88,6 @@ const CheckOutPage: React.FC = () => {
     if (!isComplete) {
       return;
     }
-
-    // formData now includes formData.lat and formData.lng ready to be sent to your backend
     console.log("Order Submitted with Payload:", formData); 
 
     setSubmitted(true);
