@@ -1,9 +1,8 @@
-import React, { useState, useMemo, useRef } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import React, { useState, useMemo, useRef, useCallback, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Correctly import CSS module styles
 import styles from "./LocationPicker.module.scss"; 
 
 // Fix Leaflet's default marker icon path issue in React/Webpack/Vite
@@ -11,13 +10,8 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-// Define a temporary type that includes the missing property
-interface DefaultIcon extends L.Icon.Default {
-  _getIconUrl?: string;
-}
-
-// Cast to our new type instead of 'any'
-delete (L.Icon.Default.prototype as DefaultIcon)._getIconUrl;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
@@ -30,13 +24,22 @@ interface LocationPickerProps {
   onLocationSelect: (lat: number, lng: number) => void;
 }
 
-// Inner helper component to listen to click events on the map
+// Helper component to listen to click events on the map
 const MapClickHandler: React.FC<{ onSelect: (lat: number, lng: number) => void }> = ({ onSelect }) => {
   useMapEvents({
     click(e) {
       onSelect(e.latlng.lat, e.latlng.lng);
     },
   });
+  return null;
+};
+
+// Helper component to smoothly pan the map when coordinates change via the button
+const MapUpdater: React.FC<{ center: L.LatLngExpression }> = ({ center }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(center, map.getZoom(), { animate: true, duration: 1 });
+  }, [center, map]);
   return null;
 };
 
@@ -48,10 +51,11 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   const [position, setPosition] = useState<L.LatLngExpression>([initialLat, initialLng]);
   const markerRef = useRef<L.Marker>(null);
 
-  const updatePosition = (lat: number, lng: number) => {
+  // Wrap in useCallback to safely include in useMemo dependencies
+  const updatePosition = useCallback((lat: number, lng: number) => {
     setPosition([lat, lng]);
     onLocationSelect(lat, lng);
-  };
+  }, [onLocationSelect]);
 
   // Handler for when user finishes dragging the pin
   const eventHandlers = useMemo(
@@ -64,7 +68,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
         }
       },
     }),
-    []
+    [updatePosition] // Now safely included!
   );
 
   // Trigger GPS geolocation
@@ -75,10 +79,12 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
         (pos) => {
           updatePosition(pos.coords.latitude, pos.coords.longitude);
         },
-        (err) => {
+        (_err) => {
           alert("Could not retrieve location. Please grant location permissions.");
         }
       );
+    } else {
+      alert("Geolocation is not supported by your browser.");
     }
   };
 
@@ -96,6 +102,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <MapClickHandler onSelect={updatePosition} />
+          <MapUpdater center={position} />
           <Marker
             draggable={true}
             eventHandlers={eventHandlers}
