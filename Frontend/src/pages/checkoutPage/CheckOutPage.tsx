@@ -5,6 +5,7 @@ import { useCart } from "../../context/userCart";
 import { LocationPicker } from "../../components/LocationPicker/LocationPicker";
 import { API_ENDPOINTS } from "../../constants/constants"; 
 import styles from "./CheckOutPage.module.scss";
+import qrBank from "../../img/qrbank/bankqr.png"
 
 interface CheckoutFormState {
   fullName: string;
@@ -315,6 +316,12 @@ const CheckOutPage: React.FC = () => {
                       </button>
                     ))}
                   </div>
+                  {formData.payment === "bank" && (
+                    <div className={styles.qrContainer}>
+                      <p className={styles.qrText}>Scan the QR code to complete your transfer:</p>
+                      <img src={qrBank} alt="Bank QR Code" className={styles.qrImage} />
+                    </div>
+                  )}
                 </div>
 
                 <label>

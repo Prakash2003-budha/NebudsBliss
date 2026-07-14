@@ -439,3 +439,44 @@ select {
     color: $primary-color !important;
   }
 }
+
+/* QR Code Container Styles */
+.qrContainer {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa; /* Light gray background */
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.qrText {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.qrImage {
+  width: 200px; /* Adjust this to make it bigger or smaller */
+  height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
