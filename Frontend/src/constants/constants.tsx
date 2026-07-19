@@ -8,11 +8,9 @@ const getHost = (): string => {
 
 export const IpAddress = `http://${getHost()}`;
 
-// Use backticks (``) for template literals, and match the variable name
 export const FRONTEND_URL = `${IpAddress}:5173`; 
 export const BACKEND_URL = `${IpAddress}:9005`;
 
-// ... rest of your code
 
 export const API_ENDPOINTS = {
     // Auth Endpoints
