@@ -3,4 +3,11 @@ html, body {
   padding: 0;
   box-sizing: border-box;
 }
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}

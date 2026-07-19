@@ -9,9 +9,24 @@ import './db.config.js'
 const app = express();
 
 // 1. ADDED: You MUST use cors here so the frontend can talk to the backend!
+// Instead of hardcoding one IP (which breaks the moment you switch networks
+// or open the app from your phone), we allow any origin coming from
+// localhost or a private LAN address on port 5173 (the Vite dev server port).
+const LAN_ORIGIN_REGEX = /^http:\/\/((localhost)|(127\.0\.0\.1)|(192\.168\.\d{1,3}\.\d{1,3})|(10\.\d{1,3}\.\d{1,3}\.\d{1,3})|(172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})):5173$/;
+
 app.use(cors({
-  origin: 'http://localhost:5173', // Your Vite frontend URL
-  credentials: true 
+  origin: (origin, callback) => {
+    // Allow non-browser requests (curl/Postman) which send no origin header
+    if (!origin) return callback(null, true);
+
+    if (LAN_ORIGIN_REGEX.test(origin)) {
+      return callback(null, true);
+    }
+
+    console.warn(`CORS blocked request from origin: ${origin}`);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true
 }));
 
 app.use(express.json());

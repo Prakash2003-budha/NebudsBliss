@@ -44,6 +44,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
         localStorage.setItem("accessToken", data.data.accessToken);
         localStorage.setItem("refreshToken", data.data.refreshToken);
         localStorage.setItem("user", JSON.stringify(data.data.user));
+        localStorage.setItem("token", data.data.accessToken);
 
         onClose();
         window.location.reload();
