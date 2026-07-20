@@ -19,7 +19,6 @@ class OrderController {
     getAllOrders = async (req, res, next) => {
         try {
             let filter = {};
-            // Optional: Filter by user ID if requested, e.g., filter.userId = req.authUser._id;
             
             if (req.query.status) {
                 filter.orderStatus = req.query.status;
@@ -38,6 +37,27 @@ class OrderController {
         }
     }
 
+    // Order history for the currently logged-in user (any role)
+    getMyOrders = async (req, res, next) => {
+        try {
+            const filter = { userId: req.authUser._id };
+            if (req.query.status) {
+                filter.orderStatus = req.query.status;
+            }
+
+            const orders = await orderSvc.getAllOrders(filter);
+
+            res.json({
+                data: orders,
+                message: "Your orders fetched successfully",
+                status: "FETCH_SUCCESS",
+                option: null
+            });
+        } catch (exception) {
+            next(exception);
+        }
+    }
+
     getOrderDetail = async (req, res, next) => {
         try {
             const order = await orderSvc.getOrderById(req.params.id);
@@ -46,6 +66,16 @@ class OrderController {
                     code: 404,
                     message: "Order not found",
                     status: "ORDER_NOT_FOUND"
+                };
+            }
+
+            // Only the order's owner or an Admin can view its details
+            const isOwner = order.userId && order.userId.toString() === req.authUser._id.toString();
+            if (!isOwner && req.authUser.role !== "Admin") {
+                throw {
+                    code: 403,
+                    message: "You do not have permission to view this order.",
+                    status: "UNAUTHORIZED"
                 };
             }
             
