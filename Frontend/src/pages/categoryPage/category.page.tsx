@@ -42,6 +42,13 @@ const CategoryPage: React.FC = () => {
     }
 
     const controller = new AbortController();
+    // These resets are the standard React data-fetching pattern (see
+    // https://react.dev/learn/synchronizing-with-effects#fetching-data): they run once per
+    // categoryName change, and the AbortController cleanup below prevents any race condition
+    // from a stale request overwriting newer state. There's no derived-state or subscription
+    // alternative here short of adopting a data-fetching library, so this is intentionally
+    // exempted from the new compiler lint rule rather than restructured.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError(null);
 
