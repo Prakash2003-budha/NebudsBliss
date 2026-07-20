@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Layout from "../../components/layout/layout";
 import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
-import { API_ENDPOINTS } from "../../constants/constants";
+import { API_ENDPOINTS, PAYMENT_METHOD, PAYMENT_STATUS, ORDER_STATUS } from "../../constants/constants";
 import styles from "./admin.page.module.scss";
 
 interface AdminItem {
@@ -27,6 +27,7 @@ interface AdminOrder {
   paymentMethod: "cash" | "bank";
   paymentStatus: "pending" | "completed" | "failed";
   orderStatus: "processing" | "shipped" | "delivered" | "cancelled";
+  paymentScreenshot?: { url: string; public_id?: string };
   createdAt: string;
 }
 
@@ -57,6 +58,7 @@ const AdminPage: React.FC = () => {
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+  const [viewingOrder, setViewingOrder] = useState<AdminOrder | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -68,7 +70,6 @@ const AdminPage: React.FC = () => {
   }, [navigate]);
 
   const loadItems = () => {
-    setItemsLoading(true);
     axios
       .get(API_ENDPOINTS.GET_ALL_ITEMS)
       .then((res) => {
@@ -85,7 +86,6 @@ const AdminPage: React.FC = () => {
   };
 
   const loadOrders = () => {
-    setOrdersLoading(true);
     axios
       .get(API_ENDPOINTS.GET_ALL_ORDERS, { headers: authHeaders() })
       .then((res) => setOrders(res.data.data || []))
@@ -93,6 +93,8 @@ const AdminPage: React.FC = () => {
       .finally(() => setOrdersLoading(false));
   };
 
+  // loadItems/loadOrders only run once, on mount — itemsLoading/ordersLoading already
+  // default to true, so there's no synchronous setState left in this effect's path.
   useEffect(() => {
     loadItems();
     loadOrders();
@@ -173,6 +175,9 @@ const AdminPage: React.FC = () => {
       );
       setOrders((prev) =>
         prev.map((o) => (o._id === order._id ? { ...o, [field]: value } : o))
+      );
+      setViewingOrder((prev) =>
+        prev && prev._id === order._id ? { ...prev, [field]: value } : prev
       );
       toast.success("Order updated.");
     } catch {
@@ -326,6 +331,7 @@ const AdminPage: React.FC = () => {
                       <th>Customer</th>
                       <th>Total</th>
                       <th>Payment</th>
+                      <th>Payment Proof</th>
                       <th>Payment Status</th>
                       <th>Order Status</th>
                     </tr>
@@ -344,7 +350,28 @@ const AdminPage: React.FC = () => {
                           <div className={styles.orderDateCell}>{order.phone}</div>
                         </td>
                         <td>Rs. {order.totalAmount}</td>
-                        <td>{order.paymentMethod === "cash" ? "Cash" : "Bank"}</td>
+                        <td>{order.paymentMethod === PAYMENT_METHOD.CASH ? "Cash" : "Bank"}</td>
+                        <td>
+                          {order.paymentMethod === PAYMENT_METHOD.BANK ? (
+                            order.paymentScreenshot?.url ? (
+                              <button
+                                type="button"
+                                className={styles.proofThumbBtn}
+                                onClick={() => setViewingOrder(order)}
+                              >
+                                <img
+                                  src={order.paymentScreenshot.url}
+                                  alt={`Payment screenshot for order #${order._id.slice(-8).toUpperCase()}`}
+                                  className={styles.proofThumb}
+                                />
+                              </button>
+                            ) : (
+                              <span className={styles.proofMissing}>No screenshot</span>
+                            )
+                          ) : (
+                            <span className={styles.proofNa}>—</span>
+                          )}
+                        </td>
                         <td>
                           <select
                             className={styles.select}
@@ -354,9 +381,9 @@ const AdminPage: React.FC = () => {
                               handleOrderStatusChange(order, "paymentStatus", e.target.value)
                             }
                           >
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                            <option value="failed">Failed</option>
+                            <option value={PAYMENT_STATUS.PENDING}>Pending</option>
+                            <option value={PAYMENT_STATUS.COMPLETED}>Completed</option>
+                            <option value={PAYMENT_STATUS.FAILED}>Failed</option>
                           </select>
                         </td>
                         <td>
@@ -368,10 +395,10 @@ const AdminPage: React.FC = () => {
                               handleOrderStatusChange(order, "orderStatus", e.target.value)
                             }
                           >
-                            <option value="processing">Processing</option>
-                            <option value="shipped">Shipped</option>
-                            <option value="delivered">Delivered</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value={ORDER_STATUS.PROCESSING}>Processing</option>
+                            <option value={ORDER_STATUS.SHIPPED}>Shipped</option>
+                            <option value={ORDER_STATUS.DELIVERED}>Delivered</option>
+                            <option value={ORDER_STATUS.CANCELLED}>Cancelled</option>
                           </select>
                         </td>
                       </tr>
@@ -391,6 +418,56 @@ const AdminPage: React.FC = () => {
           }}
           onConfirm={handleDeleteConfirmed}
         />
+
+        {viewingOrder && (
+          <div className={styles.lightboxOverlay} onClick={() => setViewingOrder(null)}>
+            <div className={styles.lightboxContent} onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className={styles.lightboxClose}
+                onClick={() => setViewingOrder(null)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+
+              <h3 className={styles.lightboxTitle}>
+                Payment Proof — Order #{viewingOrder._id.slice(-8).toUpperCase()}
+              </h3>
+              <p className={styles.lightboxSubtitle}>
+                {viewingOrder.fullName} · Rs. {viewingOrder.totalAmount} · Currently{" "}
+                <strong>{viewingOrder.paymentStatus}</strong>
+              </p>
+
+              {viewingOrder.paymentScreenshot?.url && (
+                <img
+                  src={viewingOrder.paymentScreenshot.url}
+                  alt="Full size payment screenshot"
+                  className={styles.lightboxImage}
+                />
+              )}
+
+              <div className={styles.lightboxActions}>
+                <button
+                  type="button"
+                  className={styles.verifyBtn}
+                  disabled={updatingOrderId === viewingOrder._id}
+                  onClick={() => handleOrderStatusChange(viewingOrder, "paymentStatus", PAYMENT_STATUS.COMPLETED)}
+                >
+                  ✓ Verify Payment
+                </button>
+                <button
+                  type="button"
+                  className={styles.rejectBtn}
+                  disabled={updatingOrderId === viewingOrder._id}
+                  onClick={() => handleOrderStatusChange(viewingOrder, "paymentStatus", PAYMENT_STATUS.FAILED)}
+                >
+                  ✕ Reject Payment
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
