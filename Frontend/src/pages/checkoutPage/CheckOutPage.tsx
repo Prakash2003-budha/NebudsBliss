@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/layout/layout";
 import { useCart } from "../../context/userCart";
 import { LocationPicker } from "../../components/LocationPicker/LocationPicker";
-import { API_ENDPOINTS } from "../../constants/constants"; 
+import { API_ENDPOINTS, PAYMENT_METHOD } from "../../constants/constants"; 
 import styles from "./CheckOutPage.module.scss";
 import qrBank from "../../img/qrbank/bankqr.png"
 
@@ -22,12 +22,12 @@ interface CheckoutFormState {
 
 const paymentOptions = [
   {
-    value: "cash",
+    value: PAYMENT_METHOD.CASH,
     title: "Cash on Delivery",
     description: "Pay when your order arrives at your doorstep.",
   },
   {
-    value: "bank",
+    value: PAYMENT_METHOD.BANK,
     title: "Bank Transfer",
     description: "Transfer the amount securely to our bank account.",
   },
@@ -40,7 +40,7 @@ const initialFormState: CheckoutFormState = {
   address: "",
   city: "",
   note: "",
-  payment: "cash",
+  payment: PAYMENT_METHOD.CASH,
   lat: 27.7172, 
   lng: 85.324,
   mapLink: "", 
@@ -81,7 +81,7 @@ const CheckOutPage: React.FC = () => {
   const handlePaymentSelect = (value: string) => {
     setFormData((prev) => ({ ...prev, payment: value }));
     // Switching back to cash drops any screenshot that was staged for a bank transfer
-    if (value !== "bank") {
+    if (value !== PAYMENT_METHOD.BANK) {
       clearScreenshot();
     }
   };
@@ -144,7 +144,7 @@ const CheckOutPage: React.FC = () => {
       return;
     }
 
-    if (formData.payment === "bank" && !paymentScreenshot) {
+    if (formData.payment === PAYMENT_METHOD.BANK && !paymentScreenshot) {
       setSubmitError("Please upload a screenshot of your bank transfer before placing the order.");
       return;
     }
@@ -374,7 +374,7 @@ const CheckOutPage: React.FC = () => {
                       </button>
                     ))}
                   </div>
-                  {formData.payment === "bank" && (
+                  {formData.payment === PAYMENT_METHOD.BANK && (
                     <div className={styles.qrContainer}>
                       <p className={styles.qrText}>Scan the QR code to complete your transfer:</p>
                       <img src={qrBank} alt="Bank QR Code" className={styles.qrImage} />

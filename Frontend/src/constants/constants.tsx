@@ -1,3 +1,4 @@
+
 const getHost = (): string => {
   if (typeof window !== "undefined" && window.location.hostname) {
     return window.location.hostname;
@@ -63,20 +64,20 @@ export const CATEGORY = {
 export const PAYMENT_METHOD = {
     CASH: 'cash',
     BANK: 'bank'
-};
+} as const;
 
 export const PAYMENT_STATUS = {
     PENDING: 'pending',
     COMPLETED: 'completed',
     FAILED: 'failed'
-};
+} as const;
 
 export const ORDER_STATUS = {
     PROCESSING: 'processing',
     SHIPPED: 'shipped',
     DELIVERED: 'delivered',
     CANCELLED: 'cancelled'
-};
+} as const;
 
 export const MAPURL = {
     MAP: "https://maps.app.goo.gl/G4nqojV28Hzs28sZ7",
