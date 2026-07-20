@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Layout from "../../components/layout/layout";
 import { useCart } from "../../context/userCart";
@@ -50,6 +50,11 @@ const CheckOutPage: React.FC = () => {
   const { cartItems, changeQuantity, clearCart } = useCart();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<CheckoutFormState>(initialFormState);
+
+  // Payment screenshot (only relevant for bank transfer)
+  const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   
   // API interaction states
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,6 +80,10 @@ const CheckOutPage: React.FC = () => {
 
   const handlePaymentSelect = (value: string) => {
     setFormData((prev) => ({ ...prev, payment: value }));
+    // Switching back to cash drops any screenshot that was staged for a bank transfer
+    if (value !== "bank") {
+      clearScreenshot();
+    }
   };
 
   const handleLocationSelect = (lat: number, lng: number, mapUrl: string) => {
@@ -84,6 +93,37 @@ const CheckOutPage: React.FC = () => {
       lng,
       mapLink: mapUrl 
     }));
+  };
+
+  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setSubmitError("Please upload a JPG, PNG, or WEBP image of your payment screenshot.");
+      return;
+    }
+    if (file.size > 7 * 1024 * 1024) {
+      setSubmitError("Screenshot must be smaller than 7MB.");
+      return;
+    }
+
+    setSubmitError(null);
+    setPaymentScreenshot(file);
+    setScreenshotPreview((prevUrl) => {
+      if (prevUrl) URL.revokeObjectURL(prevUrl);
+      return URL.createObjectURL(file);
+    });
+  };
+
+  const clearScreenshot = () => {
+    setPaymentScreenshot(null);
+    setScreenshotPreview((prevUrl) => {
+      if (prevUrl) URL.revokeObjectURL(prevUrl);
+      return null;
+    });
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,24 +144,41 @@ const CheckOutPage: React.FC = () => {
       return;
     }
 
-    // 2. Prepare Payload
-    const orderPayload = {
-      fullName: formData.fullName,
-      phone: formData.phone,
-      email: formData.email,
-      address: formData.address,
-      city: formData.city,
-      note: formData.note,
-      location: { lat: formData.lat, lng: formData.lng },
-      mapLink: formData.mapLink,
-      paymentMethod: formData.payment,
-      items: cartItems.map((item) => ({
-        productId: item._id, 
-        name: item.name,
-        quantity: item.quantity,
-        price: item.discountPrice ?? item.price
-      }))
-    };
+    if (formData.payment === "bank" && !paymentScreenshot) {
+      setSubmitError("Please upload a screenshot of your bank transfer before placing the order.");
+      return;
+    }
+
+    // 2. Prepare Payload as multipart/form-data so the payment screenshot can travel
+    // alongside the rest of the order fields. Nested values (items, location) are
+    // JSON-stringified since a multipart body can only hold flat string/file fields —
+    // the backend parses them back into objects before validating.
+    const orderForm = new FormData();
+    orderForm.append("fullName", formData.fullName);
+    orderForm.append("phone", formData.phone);
+    orderForm.append("email", formData.email);
+    orderForm.append("address", formData.address);
+    orderForm.append("city", formData.city);
+    orderForm.append("note", formData.note);
+    orderForm.append("location", JSON.stringify({ lat: formData.lat, lng: formData.lng }));
+    if (formData.mapLink) {
+      orderForm.append("mapLink", formData.mapLink);
+    }
+    orderForm.append("paymentMethod", formData.payment);
+    orderForm.append(
+      "items",
+      JSON.stringify(
+        cartItems.map((item) => ({
+          productId: item._id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.discountPrice ?? item.price,
+        }))
+      )
+    );
+    if (paymentScreenshot) {
+      orderForm.append("paymentScreenshot", paymentScreenshot);
+    }
 
     // 3. Execution (Single try-catch block)
     try {
@@ -131,10 +188,10 @@ const CheckOutPage: React.FC = () => {
       const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          // No Content-Type here — the browser sets the multipart boundary for us.
           "Authorization": `Bearer ${token}` 
         },
-        body: JSON.stringify(orderPayload),
+        body: orderForm,
       });
 
       const result = await response.json();
@@ -145,6 +202,7 @@ const CheckOutPage: React.FC = () => {
 
       setSubmitted(true);
       clearCart();
+      clearScreenshot();
     } catch (error) { 
       console.error("Order submission failed:", error);
       if (error instanceof Error) {
@@ -320,6 +378,46 @@ const CheckOutPage: React.FC = () => {
                     <div className={styles.qrContainer}>
                       <p className={styles.qrText}>Scan the QR code to complete your transfer:</p>
                       <img src={qrBank} alt="Bank QR Code" className={styles.qrImage} />
+
+                      <div className={styles.screenshotUpload}>
+                        <p className={styles.qrText}>
+                          Then upload a screenshot of the completed transfer:
+                        </p>
+
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/png,image/jpeg,image/webp"
+                          onChange={handleScreenshotChange}
+                          disabled={isSubmitting}
+                          className={styles.screenshotInput}
+                          id="paymentScreenshot"
+                        />
+
+                        {!screenshotPreview && (
+                          <label htmlFor="paymentScreenshot" className={styles.screenshotLabel}>
+                            Choose screenshot
+                          </label>
+                        )}
+
+                        {screenshotPreview && (
+                          <div className={styles.screenshotPreviewWrap}>
+                            <img
+                              src={screenshotPreview}
+                              alt="Payment screenshot preview"
+                              className={styles.screenshotPreview}
+                            />
+                            <button
+                              type="button"
+                              className={styles.screenshotRemoveBtn}
+                              onClick={clearScreenshot}
+                              disabled={isSubmitting}
+                            >
+                              Remove & choose another
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
