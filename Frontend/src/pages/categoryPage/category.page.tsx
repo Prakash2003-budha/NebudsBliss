@@ -20,7 +20,7 @@ const CategoryPage: React.FC = () => {
   const { addToCart } = useCart();
 
   const [items, setItems] = useState<Item[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => Boolean(slug && CATEGORY_SLUG_MAP[slug.toLowerCase()]));
   const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
@@ -38,7 +38,6 @@ const CategoryPage: React.FC = () => {
 
   useEffect(() => {
     if (!categoryName) {
-      setLoading(false);
       return;
     }
 
