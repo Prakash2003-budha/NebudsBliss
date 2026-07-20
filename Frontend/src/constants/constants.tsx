@@ -1,4 +1,3 @@
-
 const getHost = (): string => {
   if (typeof window !== "undefined" && window.location.hostname) {
     return window.location.hostname;
@@ -19,6 +18,7 @@ export const API_ENDPOINTS = {
     FORGETPASSWORD: `${BACKEND_URL}/auth/forgot_password`,
     RESETPASSWORD: `${BACKEND_URL}/auth/reset-password`,
     VERIFY_PASSWORD: `${BACKEND_URL}/auth/verify-password`,
+    MY_PROFILE: `${BACKEND_URL}/auth/me`,
 
     // Item Endpoints
     GET_ALL_ITEMS: `${BACKEND_URL}/items`,
@@ -32,23 +32,34 @@ export const API_ENDPOINTS = {
     UPLOAD_POSTER: `${BACKEND_URL}/poster`,
     DELETE_POSTER: `${BACKEND_URL}/poster`,
 
-    // Order Endpoints (New)
+    // Order Endpoints
     CREATE_ORDER: `${BACKEND_URL}/orders`,
     GET_ALL_ORDERS: `${BACKEND_URL}/orders`,
+    GET_MY_ORDERS: `${BACKEND_URL}/orders/my`,
     GET_ORDER_DETAIL: (id: string) => `${BACKEND_URL}/orders/${id}`,
     UPDATE_ORDER: (id: string) => `${BACKEND_URL}/orders/${id}`,
     DELETE_ORDER: (id: string) => `${BACKEND_URL}/orders/${id}`,
+};
+
+// Maps the friendly URL slugs used in /category/:slug links (header, sidebar, footer)
+// to the actual category values stored in the database.
+export const CATEGORY_SLUG_MAP: Record<string, string> = {
+    earbuds: "Earbuds",
+    powerbanks: "PowerBank",
+    cameras: "Camera",
+    accessories: "Accessories",
+    fans: "Fan",
 };
 
 export const CATEGORY = {
     POWERBANK: 'PowerBank',
     CAMERA: 'Camera',
     EARBUDS: 'Earbuds',
-    CHARGER: 'Charger',
+    ACCESSORIES: 'Accessories',
     FAN: 'Fan'
 };
 
-// New Constants matching Backend Order Models
+// Constants matching Backend Order Models
 export const PAYMENT_METHOD = {
     CASH: 'cash',
     BANK: 'bank'

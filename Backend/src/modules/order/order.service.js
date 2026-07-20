@@ -1,8 +1,25 @@
 import OrderModel from "./order.model.js";
+import cloudianarySvc from "../../services/cloudinary.services.js";
+
 class OrderService {
     orderDataTransform = async (req) => {
         try {
             let data = { ...req.body };
+
+            // The order route requires a logged-in user, so this should always be set.
+            // Guard anyway in case the middleware chain ever changes.
+            if (req.authUser && req.authUser._id) {
+                data.userId = req.authUser._id;
+            }
+
+            // Upload the payment screenshot (if provided) to Cloudinary, same as item/poster images
+            if (req.file) {
+                const upload = await cloudianarySvc.fileUpload(req.file.path, "orders/payment-screenshots/");
+                data.paymentScreenshot = {
+                    url: upload.url,
+                    public_id: upload.public_id
+                };
+            }
             
             // Backend recalculation of totals for security
             const subtotal = data.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
