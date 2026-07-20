@@ -27,7 +27,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/checkout" element={<CheckOutPage />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/order" element={<OrdersPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
