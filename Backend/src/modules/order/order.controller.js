@@ -1,9 +1,11 @@
 import orderSvc from "./order.service.js";
+import cloudianarySvc from "../../services/cloudinary.services.js";
 
 class OrderController {
     createOrder = async (req, res, next) => {
+        let orderData;
         try {
-            const orderData = await orderSvc.orderDataTransform(req);
+            orderData = await orderSvc.orderDataTransform(req);
             const savedOrder = await orderSvc.orderStore(orderData);
 
             res.json({
@@ -12,6 +14,16 @@ class OrderController {
                 status: "CREATE_SUCCESS"
             });
         } catch (exception) {
+            // Roll back the payment screenshot upload if the order failed to save
+            if (orderData?.paymentScreenshot?.public_id) {
+                await cloudianarySvc.deleteFile(orderData.paymentScreenshot.public_id);
+            }
+
+            // Clean up the local temp file if it wasn't processed (e.g. upload itself failed)
+            if (req.file?.path) {
+                cloudianarySvc.removeLocalFile(req.file.path);
+            }
+
             next(exception);
         }
     }

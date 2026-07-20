@@ -8,6 +8,7 @@ const OrderItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const OrderSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
     fullName: { type: String, required: true, trim: true },
     phone: { type: String, required: true },
     email: { type: String, lowercase: true },
@@ -21,6 +22,12 @@ const OrderSchema = new mongoose.Schema({
     shippingFee: Number,
     totalAmount: Number,
     paymentMethod: { type: String, enum: ["cash", "bank"], required: true },
+    // Optional proof-of-payment screenshot, mainly for bank transfers.
+    // Uploaded through the same Cloudinary flow used for item/poster images.
+    paymentScreenshot: {
+        url: { type: String },
+        public_id: { type: String }
+    },
     paymentStatus: { type: String, enum: ["pending", "completed", "failed"], default: "pending" },
     orderStatus: { type: String, enum: ["processing", "shipped", "delivered", "cancelled"], default: "processing" },
 }, { timestamps: true });
