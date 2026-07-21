@@ -66,7 +66,6 @@ const Homepage: React.FC = () => {
   const { addToCart } = useCart();
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Used for manual refetching after an admin uploads/deletes a poster
   const refetchPoster = async () => {
     try {
       const res = await axios.get(API_ENDPOINTS.GET_POSTER);
@@ -172,7 +171,6 @@ const Homepage: React.FC = () => {
     }
   };
 
-  // Scroll function for Featured Products
   const scrollFeatured = (direction: "left" | "right") => {
     if (featuredScrollRef.current) {
       const { clientWidth } = featuredScrollRef.current;
@@ -204,7 +202,6 @@ const Homepage: React.FC = () => {
     <Layout>
       <div className={styles.container}>
         
-        {/* Modular Hero Carousel */}
         <HeroCarousel 
           posterUrl={posterUrl}
           isAdmin={isAdmin}
@@ -214,11 +211,6 @@ const Homepage: React.FC = () => {
           onRegisterClick={() => setIsRegisterModalOpen(true)}
         />
 
-
-
-        
-
-        {/* Category Products (Using ProductCard) */}
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>
             <h2>Shop by Category</h2>
@@ -246,7 +238,6 @@ const Homepage: React.FC = () => {
             )}
           </div>
         </section>
-        {/* Horizontal Scrolling Featured Products (Using ProductCard) */}
         <section className={styles.productSection}>
           <div className={styles.featuredHeader}>
             <h2 className={styles.italicTitle}>Our Best Sellers</h2>
@@ -272,7 +263,6 @@ const Homepage: React.FC = () => {
           )}
         </section>
 
-        {/* Modals */}
         <LoginPage isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }} />
         <SignUpModal isOpen={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)} onSwitchToLogin={() => { setIsRegisterModalOpen(false); setIsLoginModalOpen(true); }} />
         <PasswordConfirmModal isOpen={isPasswordModalOpen} onClose={() => { setIsPasswordModalOpen(false); setItemPendingDelete(null); }} onConfirm={handleDeleteConfirmed} />
