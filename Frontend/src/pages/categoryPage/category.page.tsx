@@ -31,6 +31,9 @@ const CategoryPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { addToCart } = useCart();
 
+  // Capture the current time once when the component mounts to keep the render pure
+  const [currentTime] = useState(() => Date.now());
+
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(() => Boolean(slug && CATEGORY_SLUG_MAP[slug.toLowerCase()]));
   const [error, setError] = useState<string | null>(null);
@@ -61,12 +64,7 @@ const CategoryPage: React.FC = () => {
     }
 
     const controller = new AbortController();
-    // These resets are the standard React data-fetching pattern (see
-    // https://react.dev/learn/synchronizing-with-effects#fetching-data): they run once per
-    // categoryName change, and the AbortController cleanup below prevents any race condition
-    // from a stale request overwriting newer state. There's no derived-state or subscription
-    // alternative here short of adopting a data-fetching library, so this is intentionally
-    // exempted from the new compiler lint rule rather than restructured.
+    
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError(null);
@@ -102,7 +100,8 @@ const CategoryPage: React.FC = () => {
     }
 
     if (availability.isNew) {
-      const cutoff = Date.now() - NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+      // Use the pure currentTime state instead of Date.now()
+      const cutoff = currentTime - NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
       result = result.filter(
         (item) => item.createdAt && new Date(item.createdAt).getTime() >= cutoff
       );
@@ -127,7 +126,7 @@ const CategoryPage: React.FC = () => {
     });
 
     return result;
-  }, [items, sortBy, stockFilter, availability]);
+  }, [items, sortBy, stockFilter, availability, currentTime]);
 
   const handleOpenProduct = (item: Item) => {
     setSelectedProduct(item);
