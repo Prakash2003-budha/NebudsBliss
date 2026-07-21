@@ -148,6 +148,11 @@ $card-bg: #ffffff;
       &:hover {
         background-color: $primary-color;
         color: white;
+
+        // Invert icon color on hover so it stays visible against primary-color background
+        .cartIcon {
+          filter: brightness(0) invert(1);
+        }
       }
     }
 
@@ -167,9 +172,25 @@ $card-bg: #ffffff;
       cursor: pointer;
       transition: all 0.2s ease;
 
+      img {
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+      }
+
       &:hover {
         background-color: #e53935;
         color: white;
+
+        // Invert delete icon color on hover as well
+        img {
+          filter: brightness(0) invert(1);
+        }
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
       }
     }
   }
