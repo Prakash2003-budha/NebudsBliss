@@ -28,7 +28,10 @@ export default function Header() {
   const closeSidebar = () => setIsSidebarOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem('user'); 
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('token');
     setUser(null); 
     navigate('/'); 
     closeSidebar(); 
@@ -60,7 +63,9 @@ export default function Header() {
             <div className={styles.dropdownMenu}>
               <Link to="/category/earbuds" className={styles.dropdownItem}>Earbuds</Link>
               <Link to="/category/powerbanks" className={styles.dropdownItem}>Powerbank</Link>
-              {/* ... other links ... */}
+              <Link to="/category/cameras" className={styles.dropdownItem}>Camera</Link>
+              <Link to="/category/accessories" className={styles.dropdownItem}>Accessories</Link>
+              <Link to="/category/fans" className={styles.dropdownItem}>Fan</Link>
             </div>
           </div>
           <Link to="/AboutUs" className={styles.navLink}>About Us</Link>
@@ -85,9 +90,10 @@ export default function Header() {
           )}
         </div>
         
-        {/* Make sure HamburgerIcon and CloseIcon are properly imported at the top of your file */}
         <button className={styles.hamburgerMenu} onClick={toggleSidebar} aria-label="Toggle Navigation">
-          {/* {isSidebarOpen ? <CloseIcon /> : <HamburgerIcon />} */}
+          <span className={`${styles.hamburgerBar} ${isSidebarOpen ? styles.barOpenTop : ''}`} />
+          <span className={`${styles.hamburgerBar} ${isSidebarOpen ? styles.barOpenMid : ''}`} />
+          <span className={`${styles.hamburgerBar} ${isSidebarOpen ? styles.barOpenBottom : ''}`} />
         </button>
       </header>
 

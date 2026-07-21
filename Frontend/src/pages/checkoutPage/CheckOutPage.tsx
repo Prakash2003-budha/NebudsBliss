@@ -188,7 +188,6 @@ const CheckOutPage: React.FC = () => {
       const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
         method: "POST",
         headers: {
-          // No Content-Type here — the browser sets the multipart boundary for us.
           "Authorization": `Bearer ${token}` 
         },
         body: orderForm,

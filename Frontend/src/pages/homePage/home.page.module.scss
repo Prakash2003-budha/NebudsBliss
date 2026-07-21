@@ -307,3 +307,96 @@ background-color: $card-bg;
 
 }
 }
+
+/* Add these styles to your existing home.page.module.scss */
+
+/* Features Banner */
+.featuresBanner {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #fff;
+  padding: 20px 0;
+  border-bottom: 1px solid #eaeaea;
+  flex-wrap: wrap;
+
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: #555;
+    
+    strong {
+      color: #e53935; /* Red accent matching your screenshot */
+      font-size: 1.1rem;
+    }
+  }
+
+  .divider {
+    width: 1px;
+    height: 30px;
+    background-color: #ddd;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+/* Horizontal Featured Products Header */
+.featuredHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  .italicTitle {
+    font-size: 2.5rem;
+    font-weight: 900;
+    font-style: italic;
+    color: #111;
+  }
+
+  .headerNav {
+    display: flex;
+    gap: 10px;
+
+    button {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: #333;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #f0f0f0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+    }
+  }
+}
+
+/* Horizontal Scroll Grid Wrapper */
+.horizontalScrollGrid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  scrollbar-width: none; /* Firefox */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+  }
+
+  .scrollItem {
+    flex: 0 0 calc(25% - 15px); /* Show 4 items by default */
+    scroll-snap-align: start;
+    min-width: 250px; /* Prevent items from getting too small */
+  }
+}
