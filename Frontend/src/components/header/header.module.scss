@@ -226,10 +226,37 @@ $breakpoint-mobile: 768px;
   cursor: pointer;
   z-index: 200; 
   padding: 4px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
 
   @media (max-width: $breakpoint-mobile) {
-    display: block; 
+    display: flex; 
   }
+}
+
+.hamburgerBar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #222222;
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+.barOpenTop {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.barOpenMid {
+  opacity: 0;
+}
+
+.barOpenBottom {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 

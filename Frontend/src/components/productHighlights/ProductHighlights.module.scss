@@ -1,0 +1,178 @@
+$font-primary: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #4a8b96;
+$dark-text: #222222;
+$light-text: #888888;
+
+.highlights {
+  font-family: $font-primary;
+  margin: 4rem auto;
+  max-width: 1400px;
+  padding: 0 2rem;
+
+  @media (max-width: 600px) {
+    margin: 2.5rem auto;
+    padding: 0 1rem;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    font-style: italic;
+    color: #111;
+    margin: 0;
+    letter-spacing: -0.5px;
+
+    @media (max-width: 600px) {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+
+  button {
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $dark-text;
+      color: #fff;
+      border-color: $dark-text;
+    }
+  }
+}
+
+.track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+  background: $dark-text;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.14);
+
+    .imagePanel img:first-child {
+      transform: scale(1.06);
+    }
+  }
+
+  @media (max-width: 600px) {
+    flex-basis: 170px;
+  }
+}
+
+.imagePanel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #0d0d0d;
+
+  > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+}
+
+.thumb {
+  position: absolute;
+  left: 16px;
+  bottom: -22px;
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+  background: #fff;
+  padding: 4px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  @media (max-width: 600px) {
+    width: 48px;
+    height: 48px;
+    left: 12px;
+    bottom: -18px;
+  }
+}
+
+.info {
+  background: #fff;
+  padding: 34px 16px 16px;
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $dark-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.oldPrice {
+  color: #aaa;
+  font-size: 0.8rem;
+  text-decoration: line-through;
+}
+
+.newPrice {
+  color: $dark-text;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.offBadge {
+  color: #e5544a;
+  font-size: 0.78rem;
+  font-weight: 700;
+}

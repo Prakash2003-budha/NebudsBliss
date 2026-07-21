@@ -12,6 +12,7 @@ import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfir
 import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
 import ProductCard, { type Item } from "../../components/productCard/ProductCard";
 import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
+import ProductHighlights from "../../components/productHighlights/ProductHighlights";
 import { useCart } from "../../context/userCart";
 
 interface User {
@@ -55,7 +56,6 @@ const Homepage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
 
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
-  const featuredScrollRef = useRef<HTMLDivElement>(null); // <-- NEW REF FOR SCROLLING
 
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
@@ -66,6 +66,7 @@ const Homepage: React.FC = () => {
   const { addToCart } = useCart();
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  // Used for manual refetching after an admin uploads/deletes a poster
   const refetchPoster = async () => {
     try {
       const res = await axios.get(API_ENDPOINTS.GET_POSTER);
@@ -96,8 +97,18 @@ const Homepage: React.FC = () => {
       }
     };
 
+    const fetchPoster = async () => {
+      try {
+        const res = await axios.get(API_ENDPOINTS.GET_POSTER, { signal: controller.signal });
+        setPosterUrl(res.data.data?.imageUrl || null);
+      } catch (err) {
+        if (axios.isCancel(err)) return;
+        setPosterUrl(null);
+      }
+    };
+
     fetchItems();
-    refetchPoster();
+    fetchPoster();
 
     return () => {
       controller.abort();
@@ -161,15 +172,6 @@ const Homepage: React.FC = () => {
     }
   };
 
-  // Scroll function for Featured Products
-  const scrollFeatured = (direction: "left" | "right") => {
-    if (featuredScrollRef.current) {
-      const { clientWidth } = featuredScrollRef.current;
-      const scrollAmount = direction === "left" ? -clientWidth / 2 : clientWidth / 2;
-      featuredScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
-
   const renderProductCard = (item: Item) => (
     <div className={styles.scrollItem} key={item._id}>
       <ProductCard
@@ -193,6 +195,7 @@ const Homepage: React.FC = () => {
     <Layout>
       <div className={styles.container}>
         
+        {/* Modular Hero Carousel */}
         <HeroCarousel 
           posterUrl={posterUrl}
           isAdmin={isAdmin}
@@ -203,7 +206,6 @@ const Homepage: React.FC = () => {
         />
 
 
-        {/* Horizontal Scrolling Featured Products */}
        
 
         {/* Category Products */}
@@ -236,24 +238,27 @@ const Homepage: React.FC = () => {
             )}
           </div>
         </section>
-         <section className={styles.productSection}>
-          <div className={styles.featuredHeader}>
-            <h2 className={styles.italicTitle}>Our Best Sellers</h2>
-            <div className={styles.headerNav}>
-              <button onClick={() => scrollFeatured("left")}>&#10094;</button>
-              <button onClick={() => scrollFeatured("right")}>&#10095;</button>
-            </div>
-          </div>
 
-          {loading && <SkeletonGrid />}
-          {!loading && error && <div className={styles.errorWrapper}><p>{error}</p></div>}
-
-          {!loading && !error && featuredItems.length > 0 && (
-            <div className={styles.horizontalScrollGrid} ref={featuredScrollRef}>
-              {featuredItems.map(renderProductCard)}
-            </div>
-          )}
-        </section>
+         {/* Product Highlights */}
+        {loading && (
+          <section className={styles.productSection}>
+            <SkeletonGrid />
+          </section>
+        )}
+        {!loading && error && (
+          <section className={styles.productSection}>
+            <div className={styles.errorWrapper}><p>{error}</p></div>
+          </section>
+        )}
+        {!loading && !error && featuredItems.length > 0 && (
+          <ProductHighlights
+            items={featuredItems}
+            onOpenProduct={(item) => {
+              setSelectedProduct(item);
+              setIsProductModalOpen(true);
+            }}
+          />
+        )}
 
         {/* Modals */}
         <LoginPage isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }} />

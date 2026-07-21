@@ -14,6 +14,8 @@ export interface Item {
   images: { url: string; optimizeUrl: string }[];
   category: string;
   isActive: boolean;
+  stockQuantity?: number;
+  createdAt?: string;
 }
 
 interface ProductCardProps {

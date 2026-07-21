@@ -12,7 +12,7 @@ itemRouter.get('/items', itemCtr.getAllItems);
 itemRouter.get('/items/:id', itemCtr.getItemDetail);
 
 itemRouter.post('/items', allowUser("Admin"), bodyValidator(ItemCreateDTO), uploader().array('images', 5), itemCtr.createItem);
-itemRouter.patch('/items/:id', allowUser(), bodyValidator(ItemUpdateDTO), uploader().array('images', 5), itemCtr.updateItem);
-itemRouter.delete('/items/:id',allowUser(),itemCtr.deleteItem);
+itemRouter.patch('/items/:id', allowUser("Admin"), bodyValidator(ItemUpdateDTO), uploader().array('images', 5), itemCtr.updateItem);
+itemRouter.delete('/items/:id', allowUser("Admin"), itemCtr.deleteItem);
 
 export default itemRouter;

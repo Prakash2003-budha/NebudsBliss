@@ -1,14 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Layout from "../../components/layout/layout";
 import ProductCard, { type Item } from "../../components/productCard/ProductCard";
 import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
 import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
+import FilterSidebar, {
+  type SortOption,
+  type StockOption,
+  type AvailabilityState,
+} from "../../components/filterSidebar/FilterSidebar";
 import { API_ENDPOINTS, CATEGORY_SLUG_MAP } from "../../constants/constants";
 import { useCart } from "../../context/userCart";
 import { toast } from "react-toastify";
 import styles from "./category.page.module.scss";
+
+const NEW_WINDOW_DAYS = 21;
+
+const CATEGORY_LINKS = Object.entries(CATEGORY_SLUG_MAP).map(([slug, label]) => ({
+  slug,
+  label,
+}));
 
 interface User {
   role: string;
@@ -27,6 +39,13 @@ const CategoryPage: React.FC = () => {
   const [itemPendingDelete, setItemPendingDelete] = useState<Item | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [stockFilter, setStockFilter] = useState<StockOption>("all");
+  const [availability, setAvailability] = useState<AvailabilityState>({
+    onSale: false,
+    isNew: false,
+  });
 
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
@@ -66,6 +85,49 @@ const CategoryPage: React.FC = () => {
 
     return () => controller.abort();
   }, [categoryName]);
+
+  const visibleItems = useMemo(() => {
+    let result = [...items];
+
+    if (stockFilter === "in") {
+      result = result.filter((item) => (item.stockQuantity ?? 1) > 0);
+    } else if (stockFilter === "out") {
+      result = result.filter((item) => (item.stockQuantity ?? 1) <= 0);
+    }
+
+    if (availability.onSale) {
+      result = result.filter(
+        (item) => !!item.discountPrice && item.discountPrice < item.price
+      );
+    }
+
+    if (availability.isNew) {
+      const cutoff = Date.now() - NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+      result = result.filter(
+        (item) => item.createdAt && new Date(item.createdAt).getTime() >= cutoff
+      );
+    }
+
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "priceHigh":
+          return (b.discountPrice ?? b.price) - (a.discountPrice ?? a.price);
+        case "priceLow":
+          return (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price);
+        case "oldest":
+          return (
+            new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime()
+          );
+        case "newest":
+        default:
+          return (
+            new Date(b.createdAt ?? 0).getTime() - new Date(a.createdAt ?? 0).getTime()
+          );
+      }
+    });
+
+    return result;
+  }, [items, sortBy, stockFilter, availability]);
 
   const handleOpenProduct = (item: Item) => {
     setSelectedProduct(item);
@@ -123,31 +185,54 @@ const CategoryPage: React.FC = () => {
           <p>Browse everything we currently stock in this category.</p>
         </div>
 
-        {loading && <div className={styles.stateMessage}>Loading products...</div>}
+        <div className={styles.layout}>
+          <FilterSidebar
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+            stockFilter={stockFilter}
+            onStockChange={setStockFilter}
+            availability={availability}
+            onAvailabilityChange={(key) =>
+              setAvailability((prev) => ({ ...prev, [key]: !prev[key] }))
+            }
+            categories={CATEGORY_LINKS}
+            activeCategorySlug={slug?.toLowerCase()}
+          />
 
-        {!loading && error && <div className={styles.stateMessage}>{error}</div>}
+          <div className={styles.content}>
+            {loading && <div className={styles.stateMessage}>Loading products...</div>}
 
-        {!loading && !error && items.length === 0 && (
-          <div className={styles.stateMessage}>
-            No products available in {categoryName} right now. Check back soon!
+            {!loading && error && <div className={styles.stateMessage}>{error}</div>}
+
+            {!loading && !error && items.length === 0 && (
+              <div className={styles.stateMessage}>
+                No products available in {categoryName} right now. Check back soon!
+              </div>
+            )}
+
+            {!loading && !error && items.length > 0 && visibleItems.length === 0 && (
+              <div className={styles.stateMessage}>
+                No products match the selected filters. Try adjusting them.
+              </div>
+            )}
+
+            {!loading && !error && visibleItems.length > 0 && (
+              <div className={styles.productGrid}>
+                {visibleItems.map((item) => (
+                  <ProductCard
+                    key={item._id}
+                    item={item}
+                    isAdmin={isAdmin}
+                    deletingId={deletingId}
+                    onOpenProduct={handleOpenProduct}
+                    onDeleteClick={handleDeleteClick}
+                    addToCart={addToCart}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        )}
-
-        {!loading && !error && items.length > 0 && (
-          <div className={styles.productGrid}>
-            {items.map((item) => (
-              <ProductCard
-                key={item._id}
-                item={item}
-                isAdmin={isAdmin}
-                deletingId={deletingId}
-                onOpenProduct={handleOpenProduct}
-                onDeleteClick={handleDeleteClick}
-                addToCart={addToCart}
-              />
-            ))}
-          </div>
-        )}
+        </div>
 
         <PasswordConfirmModal
           isOpen={isPasswordModalOpen}
