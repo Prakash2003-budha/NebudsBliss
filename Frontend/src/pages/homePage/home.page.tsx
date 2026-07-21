@@ -12,7 +12,6 @@ import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfir
 import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
 import ProductCard, { type Item } from "../../components/productCard/ProductCard";
 import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
-import ProductHighlights from "../../components/productHighlights/ProductHighlights";
 import { useCart } from "../../context/userCart";
 
 interface User {
@@ -56,6 +55,7 @@ const Homepage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
 
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
+  const featuredScrollRef = useRef<HTMLDivElement>(null); 
 
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
@@ -172,6 +172,15 @@ const Homepage: React.FC = () => {
     }
   };
 
+  // Scroll function for Featured Products
+  const scrollFeatured = (direction: "left" | "right") => {
+    if (featuredScrollRef.current) {
+      const { clientWidth } = featuredScrollRef.current;
+      const scrollAmount = direction === "left" ? -clientWidth / 2 : clientWidth / 2;
+      featuredScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
   const renderProductCard = (item: Item) => (
     <div className={styles.scrollItem} key={item._id}>
       <ProductCard
@@ -206,9 +215,10 @@ const Homepage: React.FC = () => {
         />
 
 
-       
 
-        {/* Category Products */}
+        
+
+        {/* Category Products (Using ProductCard) */}
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>
             <h2>Shop by Category</h2>
@@ -231,34 +241,36 @@ const Homepage: React.FC = () => {
                 {activeItems
                   .filter((item) => item.category === selectedCategory)
                   .slice(0, 8)
-                  .map((item) => (
-                     <div key={item._id}>{renderProductCard(item)}</div>
-                  ))}
+                  .map(renderProductCard)}
               </div>
             )}
           </div>
         </section>
+        {/* Horizontal Scrolling Featured Products (Using ProductCard) */}
+        <section className={styles.productSection}>
+          <div className={styles.featuredHeader}>
+            <h2 className={styles.italicTitle}>Our Best Sellers</h2>
+            <div className={styles.headerNav}>
+              <button onClick={() => scrollFeatured("left")}>&#10094;</button>
+              <button onClick={() => scrollFeatured("right")}>&#10095;</button>
+            </div>
+          </div>
 
-         {/* Product Highlights */}
-        {loading && (
-          <section className={styles.productSection}>
-            <SkeletonGrid />
-          </section>
-        )}
-        {!loading && error && (
-          <section className={styles.productSection}>
-            <div className={styles.errorWrapper}><p>{error}</p></div>
-          </section>
-        )}
-        {!loading && !error && featuredItems.length > 0 && (
-          <ProductHighlights
-            items={featuredItems}
-            onOpenProduct={(item) => {
-              setSelectedProduct(item);
-              setIsProductModalOpen(true);
-            }}
-          />
-        )}
+          {loading && <SkeletonGrid />}
+          {!loading && error && <div className={styles.errorWrapper}><p>{error}</p></div>}
+          
+          {!loading && !error && featuredItems.length === 0 && (
+            <div className={styles.emptyWrapper}>
+              <p>No products available at the moment. Check back soon!</p>
+            </div>
+          )}
+
+          {!loading && !error && featuredItems.length > 0 && (
+            <div className={styles.horizontalScrollGrid} ref={featuredScrollRef}>
+              {featuredItems.map(renderProductCard)}
+            </div>
+          )}
+        </section>
 
         {/* Modals */}
         <LoginPage isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }} />
