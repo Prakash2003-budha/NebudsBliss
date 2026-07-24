@@ -12,6 +12,8 @@ import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfir
 import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
 import ProductCard, { type Item } from "../../components/productCard/ProductCard";
 import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
+import FeaturedPosters from "../../components/featuredPosters/FeaturedPosters";
+import ProductHighlights from "../../components/productHighlights/ProductHighlights";
 import { useCart } from "../../context/userCart";
 
 interface User {
@@ -41,6 +43,8 @@ const SkeletonGrid: React.FC = () => (
 const Homepage: React.FC = () => {
   const [activeItems, setActiveItems] = useState<Item[]>([]);
   const [featuredItems, setFeaturedItems] = useState<Item[]>([]);
+  const [featuredPosterItems, setFeaturedPosterItems] = useState<Item[]>([]);
+  const [newArrivalItems, setNewArrivalItems] = useState<Item[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(CATEGORIES[0] || null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -87,6 +91,11 @@ const Homepage: React.FC = () => {
         const shuffled = [...active].sort(() => Math.random() - 0.5);
         setActiveItems(active);
         setFeaturedItems(shuffled.slice(0, 8));
+        setFeaturedPosterItems(active.filter((item) => item.isFeatured).slice(0, 5));
+        const sortedByNewest = [...active].sort(
+          (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        );
+        setNewArrivalItems(sortedByNewest.slice(0, 8));
         setError(null);
       } catch (err) {
         if (axios.isCancel(err)) return;
@@ -162,6 +171,8 @@ const Homepage: React.FC = () => {
 
       toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
       setFeaturedItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
+      setFeaturedPosterItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
+      setNewArrivalItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setActiveItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
     } catch {
       toast.error(`Failed to delete "${itemPendingDelete.name}".`);
@@ -210,6 +221,27 @@ const Homepage: React.FC = () => {
           onLoginClick={() => setIsLoginModalOpen(true)}
           onRegisterClick={() => setIsRegisterModalOpen(true)}
         />
+
+        {!loading && !error && (
+          <FeaturedPosters
+            items={featuredPosterItems}
+            onOpenProduct={(item) => {
+              setSelectedProduct(item);
+              setIsProductModalOpen(true);
+            }}
+          />
+        )}
+
+        {!loading && !error && (
+          <ProductHighlights
+            items={newArrivalItems}
+            title="New Arrivals"
+            onOpenProduct={(item) => {
+              setSelectedProduct(item);
+              setIsProductModalOpen(true);
+            }}
+          />
+        )}
 
         <section className={styles.categorySection}>
           <div className={styles.sectionHeader}>

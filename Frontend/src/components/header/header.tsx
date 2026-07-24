@@ -59,8 +59,9 @@ export default function Header() {
         <nav className={styles.nav}>
           <Link to="/" className={styles.navLink}>Home</Link>
           <div className={styles.categoryDropdown}>
-            <span className={styles.navLink}>Categories</span>
+            <Link to="/shop" className={styles.navLink}>Shop</Link>
             <div className={styles.dropdownMenu}>
+              <Link to="/shop" className={styles.dropdownItem}>All Products</Link>
               <Link to="/category/earbuds" className={styles.dropdownItem}>Earbuds</Link>
               <Link to="/category/powerbanks" className={styles.dropdownItem}>Powerbank</Link>
               <Link to="/category/cameras" className={styles.dropdownItem}>Camera</Link>

@@ -1,0 +1,160 @@
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$dark-text: #222222;
+$light-text: #888888;
+$primary-color: #4a8b96;
+
+.featuredSection {
+  font-family: $font-primary;
+  margin: 3rem 0;
+}
+
+.sectionHeader {
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    font-weight: 800;
+    color: $dark-text;
+    margin: 0 0 0.25rem;
+  }
+
+  p {
+    color: $light-text;
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+.postersGrid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.25rem;
+  min-height: 480px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+}
+
+.tilesColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.poster {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #eee;
+  min-height: 220px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+
+    .posterImage {
+      transform: scale(1.06);
+    }
+  }
+}
+
+.heroPoster {
+  min-height: 480px;
+
+  @media (max-width: 900px) {
+    min-height: 320px;
+  }
+}
+
+.tilePoster {
+  min-height: 220px;
+}
+
+.posterImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 55%, rgba(0, 0, 0, 0) 100%);
+}
+
+.discountBadge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #e53935;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  z-index: 2;
+}
+
+.posterContent {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1.4rem;
+  color: #fff;
+  z-index: 1;
+}
+
+.posterCategory {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  opacity: 0.85;
+  margin-bottom: 0.4rem;
+}
+
+.posterTitle {
+  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+}
+
+.posterPriceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 0.6rem;
+}
+
+.oldPrice {
+  text-decoration: line-through;
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.newPrice {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.posterCta {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+  padding-bottom: 2px;
+}

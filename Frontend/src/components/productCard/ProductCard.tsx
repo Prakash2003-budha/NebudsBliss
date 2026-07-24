@@ -13,7 +13,9 @@ export interface Item {
   description: string;
   images: { url: string; optimizeUrl: string }[];
   category: string;
+  brand?: string;
   isActive: boolean;
+  isFeatured?: boolean;
   stockQuantity?: number;
   createdAt?: string;
 }

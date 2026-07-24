@@ -41,6 +41,18 @@ class ItemService {
         }
     }
 
+    getItemsPaginated = async ({ filter = {}, sort = { createdAt: -1 }, skip = 0, limit = 12 }) => {
+        try {
+            const [items, total] = await Promise.all([
+                ItemModel.find(filter).sort(sort).skip(skip).limit(limit),
+                ItemModel.countDocuments(filter)
+            ]);
+            return { items, total };
+        } catch (exception) {
+            throw exception;
+        }
+    }
+
     getItemById = async (id) => {
         try {
             return await ItemModel.findById(id);

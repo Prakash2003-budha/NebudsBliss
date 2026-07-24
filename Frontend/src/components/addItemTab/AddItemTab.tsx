@@ -21,6 +21,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     brand: '',
     stockQuantity: '0',
   });
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -83,6 +84,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       brand: '',
       stockQuantity: '0',
     });
+    setIsFeatured(false);
     setImages([]);
     setImagePreviews([]);
     setShowPasswordModal(false);
@@ -107,6 +109,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     dataPayload.append('sku', formData.sku.toUpperCase().trim());
     dataPayload.append('category', formData.category);
     dataPayload.append('stockQuantity', formData.stockQuantity);
+    dataPayload.append('isFeatured', String(isFeatured));
 
     if (formData.discountPrice) dataPayload.append('discountPrice', formData.discountPrice);
     if (formData.brand) dataPayload.append('brand', formData.brand);
@@ -254,6 +257,19 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
               </div>
+              <div className={styles.inputGroup}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={isFeatured}
+                    disabled={isSubmitting}
+                    onChange={(e) => setIsFeatured(e.target.checked)}
+                    style={{ width: 'auto' }}
+                  />
+                  Feature this product on the homepage poster section
+                </label>
+              </div>
+
               <div className={styles.inputGroup}>
                 <label>
                   Description * (Min. 10 Chars)

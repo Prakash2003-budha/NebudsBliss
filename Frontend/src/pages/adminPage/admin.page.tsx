@@ -16,6 +16,7 @@ interface AdminItem {
   discountPrice?: number;
   stockQuantity: number;
   isActive: boolean;
+  isFeatured?: boolean;
   images: { url: string; optimizeUrl: string }[];
 }
 
@@ -147,6 +148,27 @@ const AdminPage: React.FC = () => {
     }
   };
 
+  const handleToggleFeatured = async (item: AdminItem) => {
+    try {
+      setSavingId(item._id);
+      await axios.patch(
+        API_ENDPOINTS.UPDATE_ITEM(item._id),
+        { isFeatured: !item.isFeatured },
+        { headers: authHeaders() }
+      );
+      setItems((prev) =>
+        prev.map((i) => (i._id === item._id ? { ...i, isFeatured: !i.isFeatured } : i))
+      );
+      toast.success(
+        `"${item.name}" is now ${!item.isFeatured ? "featured on the homepage" : "no longer featured"}.`
+      );
+    } catch {
+      toast.error(`Failed to update "${item.name}".`);
+    } finally {
+      setSavingId(null);
+    }
+  };
+
   const handleDeleteConfirmed = async () => {
     if (!itemPendingDelete) return;
     try {
@@ -231,6 +253,7 @@ const AdminPage: React.FC = () => {
                       <th>Price</th>
                       <th>Stock</th>
                       <th>Visible</th>
+                      <th>Featured</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -282,6 +305,16 @@ const AdminPage: React.FC = () => {
                             onClick={() => handleToggleActive(item)}
                             disabled={savingId === item._id}
                             aria-label={item.isActive ? "Hide item" : "Show item"}
+                          >
+                            <span className={styles.toggleKnob} />
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className={`${styles.toggle} ${item.isFeatured ? styles.toggleOn : ""}`}
+                            onClick={() => handleToggleFeatured(item)}
+                            disabled={savingId === item._id}
+                            aria-label={item.isFeatured ? "Unfeature item" : "Feature item"}
                           >
                             <span className={styles.toggleKnob} />
                           </button>

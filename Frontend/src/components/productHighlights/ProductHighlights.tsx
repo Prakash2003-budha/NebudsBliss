@@ -24,7 +24,6 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
   };
 
   if (!items.length) return null;
-
   return (
     <section className={styles.highlights}>
       <div className={styles.header}>
@@ -49,12 +48,10 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
             item.images?.[0]?.optimizeUrl ||
             item.images?.[0]?.url ||
             (profile as string);
-
           const hasDiscount = !!item.discountPrice && item.discountPrice < item.price;
           const discountPercent = hasDiscount
             ? Math.round(((item.price - item.discountPrice!) / item.price) * 100)
             : 0;
-
           return (
             <div
               className={styles.card}
@@ -84,7 +81,6 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
                   />
                 </div>
               </div>
-
               <div className={styles.info}>
                 <h3>{item.name}</h3>
                 <div className={styles.priceRow}>
@@ -104,5 +100,4 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
     </section>
   );
 };
-
 export default ProductHighlights;

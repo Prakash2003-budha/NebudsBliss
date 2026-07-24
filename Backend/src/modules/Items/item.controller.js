@@ -34,15 +34,71 @@ class ItemController {
     getAllItems = async (req, res, next) => {
         try {
             let filter = {};
+
             if (req.query.category) {
-                filter.category = req.query.category;
+                // Supports a single category ("Camera") or a comma separated list ("Camera,Fan")
+                const categories = req.query.category.split(",").map((c) => c.trim()).filter(Boolean);
+                filter.category = categories.length > 1 ? { $in: categories } : categories[0];
             }
             if (req.query.isActive) {
                 filter.isActive = req.query.isActive === 'true';
             }
+            if (req.query.isFeatured) {
+                filter.isFeatured = req.query.isFeatured === 'true';
+            }
+            if (req.query.brand) {
+                const brands = req.query.brand.split(",").map((b) => b.trim()).filter(Boolean);
+                filter.brand = brands.length > 1 ? { $in: brands } : brands[0];
+            }
+            if (req.query.minPrice || req.query.maxPrice) {
+                filter.price = {};
+                if (req.query.minPrice) filter.price.$gte = Number(req.query.minPrice);
+                if (req.query.maxPrice) filter.price.$lte = Number(req.query.maxPrice);
+            }
+            if (req.query.search) {
+                filter.name = { $regex: req.query.search, $options: "i" };
+            }
+
+            // Pagination is opt-in: only kicks in when the client sends page/limit
+            // so existing callers (home page, category page) keep getting a plain array.
+            if (req.query.page || req.query.limit) {
+                const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+                const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 12, 1), 100);
+                const skip = (page - 1) * limit;
+
+                let sort = { createdAt: -1 };
+                switch (req.query.sortBy) {
+                    case "priceLow":
+                        sort = { price: 1 };
+                        break;
+                    case "priceHigh":
+                        sort = { price: -1 };
+                        break;
+                    case "oldest":
+                        sort = { createdAt: 1 };
+                        break;
+                    case "newest":
+                    default:
+                        sort = { createdAt: -1 };
+                }
+
+                const { items, total } = await itemSvc.getItemsPaginated({ filter, sort, skip, limit });
+
+                return res.json({
+                    data: items,
+                    message: "Items fetched successfully",
+                    status: "FETCH_SUCCESS",
+                    option: {
+                        page,
+                        limit,
+                        total,
+                        totalPages: Math.max(Math.ceil(total / limit), 1)
+                    }
+                });
+            }
 
             const items = await itemSvc.getAllItems(filter);
-            
+
             res.json({
                 data: items,
                 message: "Items fetched successfully",

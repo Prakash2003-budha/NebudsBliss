@@ -9,6 +9,7 @@ import ContactPage from './pages/contactUs/contactUs.page.tsx';
 import CheckOutPage from './pages/checkoutPage/CheckOutPage.tsx';
 import CartProvider from './context/CartContext.tsx';
 import CategoryPage from './pages/categoryPage/category.page.tsx';
+import ShopPage from './pages/shopPage/shop.page.tsx';
 import ProfilePage from './pages/profilePage/profile.page.tsx';
 import OrdersPage from './pages/ordersPage/orders.page.tsx';
 import AdminPage from './pages/adminPage/admin.page.tsx';
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/Checkout" element={<CheckOutPage />} />
           <Route path="/checkout" element={<CheckOutPage />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
+          <Route path="/shop" element={<ShopPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route path="/admin" element={<AdminPage />} />

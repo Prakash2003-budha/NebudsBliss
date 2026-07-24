@@ -44,6 +44,9 @@ export const ItemCreateDTO = Joi.object({
     }),
     isActive: Joi.boolean().default(true).messages({
         "boolean.base": "isActive must be a boolean value"
+    }),
+    isFeatured: Joi.boolean().default(false).messages({
+        "boolean.base": "isFeatured must be a boolean value"
     })
 });
 
