@@ -23,6 +23,7 @@ $card-bg: #ffffff;
   transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
+  height: 100%; // FIX: Tells the card to stretch to the height of its parent container
 
   &:hover {
     transform: translateY(-4px);
@@ -87,6 +88,8 @@ $card-bg: #ffffff;
         color: #222;
         margin: 0;
         line-height: 1.3;
+        // FIX: Always reserve exact height for 2 lines of text (1.3 * 0.95rem * 2)
+        min-height: calc(1.3 * 0.95rem * 2); 
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -109,7 +112,8 @@ $card-bg: #ffffff;
       font-size: 0.8rem;
       line-height: 1.5;
       margin: 0 0 12px 0;
-      flex-grow: 1;
+      // FIX: Always reserve exact height for 2 lines of text (1.5 * 0.8rem * 2)
+      min-height: calc(1.5 * 0.8rem * 2); 
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -120,7 +124,7 @@ $card-bg: #ffffff;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-top: 4px;
+      margin-top: auto; // FIX: Pushes the action buttons to the absolute bottom of the card
     }
 
     .addToCartBtn {

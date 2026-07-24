@@ -54,6 +54,10 @@ const ItemSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
+    isFeatured: {
+        type: Boolean,
+        default: false
+    },
     averageRating: {
         type: Number,
         default: 0,

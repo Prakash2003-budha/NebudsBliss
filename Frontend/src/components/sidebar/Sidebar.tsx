@@ -58,8 +58,10 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
         <nav className={styles.sidebarNav}>
           <Link to="/" className={styles.sidebarNavLink} onClick={closeSidebar}>Home</Link>
           
+          <Link to="/shop" className={styles.sidebarNavLink} onClick={closeSidebar}>Shop</Link>
           <div className={styles.sidebarSectionHeading}>Categories</div>
           <div className={styles.sidebarSubMenu}>
+            <Link to="/shop" className={styles.sidebarSubLink} onClick={closeSidebar}>All Products</Link>
             <Link to="/category/earbuds" className={styles.sidebarSubLink} onClick={closeSidebar}>Earbuds</Link>
             <Link to="/category/powerbanks" className={styles.sidebarSubLink} onClick={closeSidebar}>Powerbank</Link>
             <Link to="/category/cameras" className={styles.sidebarSubLink} onClick={closeSidebar}>Camera</Link>

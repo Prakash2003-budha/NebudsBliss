@@ -81,6 +81,22 @@ interface FilterSidebarProps {
   onAvailabilityChange: (key: keyof AvailabilityState) => void;
   categories: CategoryLink[];
   activeCategorySlug?: string;
+
+  // Shop-wide mode: when provided, categories render as toggleable checkboxes
+  // (multi-select) instead of navigation links to a single category page.
+  selectedCategorySlugs?: string[];
+  onCategoryToggle?: (slug: string) => void;
+
+  // Optional brand filter (shown when a brand list is supplied)
+  brands?: string[];
+  selectedBrands?: string[];
+  onBrandToggle?: (brand: string) => void;
+
+  // Optional price range filter
+  priceRange?: { min: string; max: string };
+  onPriceRangeChange?: (range: { min: string; max: string }) => void;
+
+  onClearFilters?: () => void;
 }
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
@@ -99,7 +115,16 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onAvailabilityChange,
   categories,
   activeCategorySlug,
+  selectedCategorySlugs,
+  onCategoryToggle,
+  brands,
+  selectedBrands = [],
+  onBrandToggle,
+  priceRange,
+  onPriceRangeChange,
+  onClearFilters,
 }) => {
+  const isMultiSelectMode = !!onCategoryToggle;
   return (
     <aside className={styles.filters}>
       <h2 className={styles.title}>Filters</h2>
@@ -164,23 +189,93 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       <div className={styles.section}>
         <h3>Category</h3>
-        <div className={styles.categoryGrid}>
-          {categories.map((cat) => (
-            <Link
-              key={cat.slug}
-              to={`/category/${cat.slug}`}
-              className={`${styles.categoryTile} ${
-                activeCategorySlug === cat.slug ? styles.categoryTileActive : ""
-              }`}
-            >
-              <span className={styles.categoryIcon}>
-                <CategoryIcon slug={cat.slug} />
-              </span>
-              <span>{cat.label}</span>
-            </Link>
-          ))}
-        </div>
+        {isMultiSelectMode ? (
+          <div className={styles.categoryGrid}>
+            {categories.map((cat) => {
+              const isSelected = selectedCategorySlugs?.includes(cat.slug);
+              return (
+                <button
+                  key={cat.slug}
+                  type="button"
+                  className={`${styles.categoryTile} ${isSelected ? styles.categoryTileActive : ""}`}
+                  onClick={() => onCategoryToggle?.(cat.slug)}
+                >
+                  <span className={styles.categoryIcon}>
+                    <CategoryIcon slug={cat.slug} />
+                  </span>
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={styles.categoryGrid}>
+            {categories.map((cat) => (
+              <Link
+                key={cat.slug}
+                to={`/category/${cat.slug}`}
+                className={`${styles.categoryTile} ${
+                  activeCategorySlug === cat.slug ? styles.categoryTileActive : ""
+                }`}
+              >
+                <span className={styles.categoryIcon}>
+                  <CategoryIcon slug={cat.slug} />
+                </span>
+                <span>{cat.label}</span>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
+
+      {brands && brands.length > 0 && onBrandToggle && (
+        <div className={styles.section}>
+          <h3>Brand</h3>
+          <div className={styles.brandList}>
+            {brands.map((brand) => (
+              <label className={styles.checkRow} key={brand}>
+                <input
+                  type="checkbox"
+                  checked={selectedBrands.includes(brand)}
+                  onChange={() => onBrandToggle(brand)}
+                />
+                <span>{brand}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {priceRange && onPriceRangeChange && (
+        <div className={styles.section}>
+          <h3>Price Range (Rs.)</h3>
+          <div className={styles.priceRangeRow}>
+            <input
+              type="number"
+              min="0"
+              placeholder="Min"
+              className={styles.priceInput}
+              value={priceRange.min}
+              onChange={(e) => onPriceRangeChange({ ...priceRange, min: e.target.value })}
+            />
+            <span className={styles.priceRangeDash}>–</span>
+            <input
+              type="number"
+              min="0"
+              placeholder="Max"
+              className={styles.priceInput}
+              value={priceRange.max}
+              onChange={(e) => onPriceRangeChange({ ...priceRange, max: e.target.value })}
+            />
+          </div>
+        </div>
+      )}
+
+      {onClearFilters && (
+        <button type="button" className={styles.clearFiltersBtn} onClick={onClearFilters}>
+          Clear All Filters
+        </button>
+      )}
     </aside>
   );
 };

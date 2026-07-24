@@ -1,0 +1,60 @@
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #4a8b96;
+$dark-text: #222222;
+$light-text: #888888;
+$bg-color: #f7f8f9;
+
+.container {
+  font-family: $font-primary;
+  background-color: $bg-color;
+  min-height: 60vh;
+  padding: 2.5rem 1.5rem 4rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+
+  h1 {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 800;
+    color: $dark-text;
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    color: $light-text;
+    margin: 0;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: start;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.content {
+  min-width: 0;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.stateMessage {
+  text-align: center;
+  color: $light-text;
+  padding: 3rem 1rem;
+  font-size: 1rem;
+}

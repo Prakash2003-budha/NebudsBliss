@@ -105,10 +105,65 @@ $border-color: #eaeaea;
   border: 1px solid $border-color;
   transition: all 0.2s ease;
   text-align: center;
+  font-family: inherit;
+  background: #fff;
+  cursor: pointer;
+  width: 100%;
 
   &:hover {
     border-color: $primary-color;
     color: $dark-text;
+  }
+}
+
+.brandList {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.priceRangeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceInput {
+  width: 100%;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid $border-color;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+  }
+}
+
+.priceRangeDash {
+  color: $light-text;
+}
+
+.clearFiltersBtn {
+  width: 100%;
+  margin-top: 1.1rem;
+  font-family: inherit;
+  background: #fff;
+  border: 1px solid $border-color;
+  color: $dark-text;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
   }
 }
 
