@@ -3,11 +3,9 @@ $dark-text: #222222;
 $light-bg: #f8f9fa;
 $breakpoint-mobile: 768px;
 
-// The requested primary font identity family variable
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 :global {
-  // Enforce font rules throughout the whole document fallback engine
   html, body {
     font-family: $font-primary;
   }
@@ -33,7 +31,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-family: $font-primary; // Applies typography chain downwards
+  font-family: $font-primary; 
 
   @media (max-width: $breakpoint-mobile) {
     align-items: flex-end;
