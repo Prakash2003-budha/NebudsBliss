@@ -17,24 +17,20 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     return sum + price * item.quantity;
   }, 0);
 
-  // 3. Create a handler function for the checkout button
   const handleCheckout = () => {
-    onClose(); // Close the drawer first
-    navigate("/Checkout"); // Redirect to your checkout page route
+    onClose(); 
+    navigate("/Checkout"); 
   };
 
   return (
     <>
-      {/* Dark overlay behind the drawer */}
       <div
         className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ""}`}
         onClick={onClose}
       />
 
-      {/* Drawer panel */}
       <div className={`${styles.drawer} ${isOpen ? styles.drawerOpen : ""}`}>
 
-        {/* Header */}
         <div className={styles.drawerHeader}>
           <h2>
             Your Cart
@@ -46,8 +42,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
             &times;
           </button>
         </div>
-
-        {/* Empty state */}
         {cartItems.length === 0 && (
           <div className={styles.emptyState}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -58,7 +52,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
           </div>
         )}
 
-        {/* Cart Items */}
         {cartItems.length > 0 && (
           <>
             <div className={styles.itemList}>
@@ -107,7 +100,6 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 <span className={styles.subtotalAmount}>Rs. {subtotal.toLocaleString()}</span>
               </div>
 
-              {/* 4. Attach the onClick handler to the button */}
               <button className={styles.checkoutBtn} onClick={handleCheckout}>
                 Proceed to Checkout
               </button>
