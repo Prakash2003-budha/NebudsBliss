@@ -37,7 +37,6 @@ const ShopPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart } = useCart();
 
-  // Capture the current time once when the component mounts to keep the render pure
   const [currentTime] = useState(() => Date.now());
 
   const [items, setItems] = useState<Item[]>([]);
@@ -62,8 +61,6 @@ const ShopPage: React.FC = () => {
   const [selectedCategorySlugs, setSelectedCategorySlugs] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<{ min: string; max: string }>({ min: "", max: "" });
 
-  // Brands are derived from whatever products are currently on the page,
-  // giving a "what's actually here" filter rather than a static hardcoded list.
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
@@ -132,7 +129,6 @@ const ShopPage: React.FC = () => {
     return () => controller.abort();
   }, [currentPage, selectedCategorySlugs, selectedBrands, priceRange, sortBy]);
 
-  // Client-side pass for filters the backend doesn't do server-side (stock, sale, new).
   const visibleItems = useMemo(() => {
     let result = [...items];
     const NEW_WINDOW_DAYS = 21;
