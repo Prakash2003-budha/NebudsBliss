@@ -11,7 +11,6 @@ interface FeaturedPostersProps {
 const FeaturedPosters: React.FC<FeaturedPostersProps> = ({ items, onOpenProduct }) => {
   if (!items.length) return null;
 
-  // First featured item gets the big hero poster slot, the rest fill smaller tiles.
   const [heroItem, ...restItems] = items;
 
   const renderPoster = (item: Item, variant: "hero" | "tile") => {

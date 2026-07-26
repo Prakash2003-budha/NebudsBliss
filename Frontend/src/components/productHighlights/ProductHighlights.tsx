@@ -82,7 +82,6 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
                 </div>
               </div>
               <div className={styles.info}>
-                <h3>{item.name}</h3>
                 <div className={styles.priceRow}>
                   {hasDiscount && <span className={styles.oldPrice}>Rs. {item.price}</span>}
                   <span className={styles.newPrice}>
