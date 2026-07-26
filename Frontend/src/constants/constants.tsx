@@ -33,6 +33,12 @@ export const API_ENDPOINTS = {
     UPLOAD_POSTER: `${BACKEND_URL}/poster`,
     DELETE_POSTER: `${BACKEND_URL}/poster`,
 
+    // Hero Slide Endpoints (multi-image homepage carousel)
+    GET_HERO_SLIDES: `${BACKEND_URL}/hero-slides`,
+    CREATE_HERO_SLIDE: `${BACKEND_URL}/hero-slides`,
+    UPDATE_HERO_SLIDE: (id: string) => `${BACKEND_URL}/hero-slides/${id}`,
+    DELETE_HERO_SLIDE: (id: string) => `${BACKEND_URL}/hero-slides/${id}`,
+
     // Order Endpoints
     CREATE_ORDER: `${BACKEND_URL}/orders`,
     GET_ALL_ORDERS: `${BACKEND_URL}/orders`,

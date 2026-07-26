@@ -4,6 +4,7 @@ import PasswordConfirmModal from '../passwordAsking/PasswordConfirmModal';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../../constants/constants';
 import { toast } from 'react-toastify';
+import { compressImages } from '../../utils/imageCompression';
 
 interface AddItemTabProps {
   isOpen: boolean;
@@ -46,22 +47,24 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      
+
       if (images.length + selectedFiles.length > 5) {
         toast.warning('You can only upload up to 5 images per product.');
         return;
       }
 
-      const newFiles = [...images, ...selectedFiles].slice(0, 5);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+
+      const compressedFiles = await compressImages(selectedFiles, { maxDimension: 1600, quality: 0.82 });
+
+      const newFiles = [...images, ...compressedFiles].slice(0, 5);
       setImages(newFiles);
 
-      const newPreviews = selectedFiles.map(file => URL.createObjectURL(file));
+      const newPreviews = compressedFiles.map(file => URL.createObjectURL(file));
       setImagePreviews(prev => [...prev, ...newPreviews].slice(0, 5));
-      
-      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 

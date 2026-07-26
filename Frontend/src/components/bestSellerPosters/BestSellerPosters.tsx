@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import styles from "./BestSellerPosters.module.scss";
 import profile from "../../img/icons/profile.black.png";
 import type { Item } from "../productCard/ProductCard";
+import { compressImage } from "../../utils/imageCompression";
 
 export interface BestSellerPoster {
   id: string;
@@ -90,12 +91,13 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
     persist(posters.map((p) => (p.id === id ? { ...p, ...patch } : p)));
   };
 
-  const handleImageChange = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    if (file.size > MAX_IMAGE_BYTES) {
-      toast.error("Image too large — please use one under 1.5MB.");
+    const compressed = await compressImage(file, { maxDimension: 1000, quality: 0.8 });
+    if (compressed.size > MAX_IMAGE_BYTES) {
+      toast.error("Image still too large after compression — try a smaller photo.");
       return;
     }
     const reader = new FileReader();
@@ -104,7 +106,7 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
       toast.success("Poster image updated.");
     };
     reader.onerror = () => toast.error("Couldn't read that image.");
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(compressed);
   };
 
   const handleAddPoster = () => {

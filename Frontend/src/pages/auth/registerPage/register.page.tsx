@@ -15,6 +15,7 @@ import locationIcon from "../../../img/icons/location.png";
 import calendarIcon from "../../../img/icons/calender.png";
 
 import { API_ENDPOINTS } from "../../../constants/constants";
+import { compressImage } from "../../../utils/imageCompression";
 
 interface SignUpModalProps {
   isOpen: boolean;
@@ -54,9 +55,10 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
     if (globalError) setGlobalError(null);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, image: e.target.files![0] }));
+      const compressed = await compressImage(e.target.files[0], { maxDimension: 800, quality: 0.82 });
+      setFormData((prev) => ({ ...prev, image: compressed }));
     }
   };
 
