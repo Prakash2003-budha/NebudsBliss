@@ -14,6 +14,7 @@ import ProductCard, { type Item } from "../../components/productCard/ProductCard
 import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
 import FeaturedPosters from "../../components/featuredPosters/FeaturedPosters";
 import ProductHighlights from "../../components/productHighlights/ProductHighlights";
+import BestSellerPosters from "../../components/bestSellerPosters/BestSellerPosters";
 import { useCart } from "../../context/userCart";
 
 interface User {
@@ -42,7 +43,6 @@ const SkeletonGrid: React.FC = () => (
 
 const Homepage: React.FC = () => {
   const [activeItems, setActiveItems] = useState<Item[]>([]);
-  const [featuredItems, setFeaturedItems] = useState<Item[]>([]);
   const [featuredPosterItems, setFeaturedPosterItems] = useState<Item[]>([]);
   const [newArrivalItems, setNewArrivalItems] = useState<Item[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(CATEGORIES[0] || null);
@@ -59,7 +59,6 @@ const Homepage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
 
   const [posterUrl, setPosterUrl] = useState<string | null>(null);
-  const featuredScrollRef = useRef<HTMLDivElement>(null); 
 
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
@@ -88,9 +87,7 @@ const Homepage: React.FC = () => {
         const response = await axios.get(API_ENDPOINTS.GET_ALL_ITEMS, { signal: controller.signal });
         const allItems: Item[] = response.data.data;
         const active = allItems.filter((item) => item.isActive);
-        const shuffled = [...active].sort(() => Math.random() - 0.5);
         setActiveItems(active);
-        setFeaturedItems(shuffled.slice(0, 8));
         setFeaturedPosterItems(active.filter((item) => item.isFeatured).slice(0, 5));
         const sortedByNewest = [...active].sort(
           (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
@@ -170,7 +167,6 @@ const Homepage: React.FC = () => {
       });
 
       toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
-      setFeaturedItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setFeaturedPosterItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setNewArrivalItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setActiveItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
@@ -179,14 +175,6 @@ const Homepage: React.FC = () => {
     } finally {
       setDeletingId(null);
       setItemPendingDelete(null);
-    }
-  };
-
-  const scrollFeatured = (direction: "left" | "right") => {
-    if (featuredScrollRef.current) {
-      const { clientWidth } = featuredScrollRef.current;
-      const scrollAmount = direction === "left" ? -clientWidth / 2 : clientWidth / 2;
-      featuredScrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
@@ -270,30 +258,34 @@ const Homepage: React.FC = () => {
             )}
           </div>
         </section>
-        <section className={styles.productSection}>
-          <div className={styles.featuredHeader}>
-            <h2 className={styles.italicTitle}>Our Best Sellers</h2>
-            <div className={styles.headerNav}>
-              <button onClick={() => scrollFeatured("left")}>&#10094;</button>
-              <button onClick={() => scrollFeatured("right")}>&#10095;</button>
+        {loading && (
+          <section className={styles.productSection}>
+            <div className={styles.featuredHeader}>
+              <h2 className={styles.italicTitle}>Our Best Sellers</h2>
             </div>
-          </div>
+            <SkeletonGrid />
+          </section>
+        )}
 
-          {loading && <SkeletonGrid />}
-          {!loading && error && <div className={styles.errorWrapper}><p>{error}</p></div>}
-          
-          {!loading && !error && featuredItems.length === 0 && (
-            <div className={styles.emptyWrapper}>
-              <p>No products available at the moment. Check back soon!</p>
+        {!loading && error && (
+          <section className={styles.productSection}>
+            <div className={styles.featuredHeader}>
+              <h2 className={styles.italicTitle}>Our Best Sellers</h2>
             </div>
-          )}
+            <div className={styles.errorWrapper}><p>{error}</p></div>
+          </section>
+        )}
 
-          {!loading && !error && featuredItems.length > 0 && (
-            <div className={styles.horizontalScrollGrid} ref={featuredScrollRef}>
-              {featuredItems.map(renderProductCard)}
-            </div>
-          )}
-        </section>
+        {!loading && !error && (
+          <BestSellerPosters
+            items={activeItems}
+            isAdmin={isAdmin}
+            onOpenProduct={(item) => {
+              setSelectedProduct(item);
+              setIsProductModalOpen(true);
+            }}
+          />
+        )}
 
         <LoginPage isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }} />
         <SignUpModal isOpen={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)} onSwitchToLogin={() => { setIsRegisterModalOpen(false); setIsLoginModalOpen(true); }} />

@@ -15,7 +15,6 @@ export interface CategoryLink {
   label: string;
 }
 
-// Small monoline icon set so the sidebar doesn't depend on extra image assets.
 const CategoryIcon: React.FC<{ slug: string }> = ({ slug }) => {
   const common = {
     width: 22,
@@ -82,12 +81,9 @@ interface FilterSidebarProps {
   categories: CategoryLink[];
   activeCategorySlug?: string;
 
-  // Shop-wide mode: when provided, categories render as toggleable checkboxes
-  // (multi-select) instead of navigation links to a single category page.
   selectedCategorySlugs?: string[];
   onCategoryToggle?: (slug: string) => void;
 
-  // Optional brand filter (shown when a brand list is supplied)
   brands?: string[];
   selectedBrands?: string[];
   onBrandToggle?: (brand: string) => void;
