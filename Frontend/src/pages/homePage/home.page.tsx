@@ -15,6 +15,7 @@ import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
 import FeaturedPosters from "../../components/featuredPosters/FeaturedPosters";
 import ProductHighlights from "../../components/productHighlights/ProductHighlights";
 import BestSellerPosters from "../../components/bestSellerPosters/BestSellerPosters";
+import RandomPicks from "../../components/randomPicks/RandomPicks";
 import { useCart } from "../../context/userCart";
 
 interface User {
@@ -284,6 +285,23 @@ const Homepage: React.FC = () => {
               setSelectedProduct(item);
               setIsProductModalOpen(true);
             }}
+          />
+        )}
+
+        {!loading && !error && (
+          <RandomPicks
+            items={activeItems}
+            isAdmin={isAdmin}
+            deletingId={deletingId}
+            onOpenProduct={(item) => {
+              setSelectedProduct(item);
+              setIsProductModalOpen(true);
+            }}
+            onDeleteClick={(item) => {
+              setItemPendingDelete(item);
+              setIsPasswordModalOpen(true);
+            }}
+            addToCart={addToCart}
           />
         )}
 
