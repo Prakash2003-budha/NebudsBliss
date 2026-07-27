@@ -172,6 +172,11 @@ $border-color: #eaeaea;
   font-weight: 700;
   cursor: pointer;
   font-family: $font-primary;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }
 
 .overlayBtn {
@@ -267,6 +272,11 @@ $border-color: #eaeaea;
   &:hover {
     border-color: $dark-text;
     color: $dark-text;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   @media (max-width: 600px) {

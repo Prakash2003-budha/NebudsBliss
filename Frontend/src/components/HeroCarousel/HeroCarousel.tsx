@@ -29,6 +29,12 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ isAdmin, onLoginClick, onRe
   const addInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // FIX: Adjust activeIndex during render if it goes out of bounds.
+  // This replaces the old useEffect and prevents cascading re-renders.
+  if (slides.length > 0 && activeIndex > slides.length - 1) {
+    setActiveIndex(slides.length - 1);
+  }
+
   const fetchSlides = async () => {
     try {
       const res = await axios.get(API_ENDPOINTS.GET_HERO_SLIDES);
@@ -43,13 +49,6 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ isAdmin, onLoginClick, onRe
   useEffect(() => {
     fetchSlides();
   }, []);
-
-  // Keep activeIndex in range whenever slides change.
-  useEffect(() => {
-    if (activeIndex > slides.length - 1) {
-      setActiveIndex(Math.max(0, slides.length - 1));
-    }
-  }, [slides, activeIndex]);
 
   // Autoplay through slides.
   useEffect(() => {

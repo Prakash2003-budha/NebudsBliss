@@ -39,6 +39,12 @@ export const API_ENDPOINTS = {
     UPDATE_HERO_SLIDE: (id: string) => `${BACKEND_URL}/hero-slides/${id}`,
     DELETE_HERO_SLIDE: (id: string) => `${BACKEND_URL}/hero-slides/${id}`,
 
+    // Best Seller Poster Endpoints
+    GET_BEST_SELLERS: `${BACKEND_URL}/best-sellers`,
+    CREATE_BEST_SELLER: `${BACKEND_URL}/best-sellers`,
+    UPDATE_BEST_SELLER: (id: string) => `${BACKEND_URL}/best-sellers/${id}`,
+    DELETE_BEST_SELLER: (id: string) => `${BACKEND_URL}/best-sellers/${id}`,
+
     // Order Endpoints
     CREATE_ORDER: `${BACKEND_URL}/orders`,
     GET_ALL_ORDERS: `${BACKEND_URL}/orders`,
