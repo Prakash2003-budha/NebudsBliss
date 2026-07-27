@@ -6,6 +6,7 @@ import { LocationPicker } from "../../components/LocationPicker/LocationPicker";
 import { API_ENDPOINTS, PAYMENT_METHOD } from "../../constants/constants"; 
 import styles from "./CheckOutPage.module.scss";
 import qrBank from "../../img/qrbank/bankqr.png"
+import { compressImage } from "../../utils/imageCompression";
 
 interface CheckoutFormState {
   fullName: string;
@@ -95,7 +96,7 @@ const CheckOutPage: React.FC = () => {
     }));
   };
 
-  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleScreenshotChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -109,11 +110,15 @@ const CheckOutPage: React.FC = () => {
       return;
     }
 
+    // Higher quality/dimension than product photos — the transaction ID and
+    // amount need to stay legible for verification.
+    const compressedFile = await compressImage(file, { maxDimension: 1400, quality: 0.88 });
+
     setSubmitError(null);
-    setPaymentScreenshot(file);
+    setPaymentScreenshot(compressedFile);
     setScreenshotPreview((prevUrl) => {
       if (prevUrl) URL.revokeObjectURL(prevUrl);
-      return URL.createObjectURL(file);
+      return URL.createObjectURL(compressedFile);
     });
   };
 

@@ -1,14 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "./BestSellerPosters.module.scss";
 import profile from "../../img/icons/profile.black.png";
 import type { Item } from "../productCard/ProductCard";
+import { API_ENDPOINTS } from "../../constants/constants";
+import { compressImage } from "../../utils/imageCompression";
 
 export interface BestSellerPoster {
-  id: string;
+  _id: string;
   name: string;
-  imageUrl: string | null;
+  imageUrl: string;
+  optimizeUrl: string;
   itemId: string | null;
+  order: number;
 }
 
 interface BestSellerPostersProps {
@@ -17,66 +22,44 @@ interface BestSellerPostersProps {
   onOpenProduct: (item: Item) => void;
 }
 
-const STORAGE_KEY = "bestSellerPosters_v1";
-const MIN_POSTERS = 4;
 const MAX_POSTERS = 8;
-const MAX_IMAGE_BYTES = 1.5 * 1024 * 1024; // ~1.5MB, keeps localStorage happy
-
-const makeId = () => `poster_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-
-const seedFromItems = (items: Item[]): BestSellerPoster[] =>
-  items.slice(0, MIN_POSTERS).map((item) => ({
-    id: makeId(),
-    name: item.name,
-    imageUrl: item.images?.[0]?.optimizeUrl || item.images?.[0]?.url || null,
-    itemId: item._id,
-  }));
-
-const loadPosters = (): BestSellerPoster[] | null => {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) return parsed;
-    return null;
-  } catch {
-    return null;
-  }
-};
-
-const savePosters = (posters: BestSellerPoster[]) => {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(posters));
-  } catch {
-    toast.error("Couldn't save — images may be too large for local storage.");
-  }
-};
 
 const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, onOpenProduct }) => {
   const [posters, setPosters] = useState<BestSellerPoster[]>([]);
+  const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
-  const [initialized, setInitialized] = useState(false);
+  const [busyIds, setBusyIds] = useState<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const addInputRef = useRef<HTMLInputElement>(null);
 
-  // Load from localStorage once, seeding defaults from real items the first time.
-  useEffect(() => {
-    if (initialized) return;
-    const stored = loadPosters();
-    if (stored && stored.length > 0) {
-      setPosters(stored);
-      setInitialized(true);
-    } else if (items.length > 0) {
-      const seeded = seedFromItems(items);
-      setPosters(seeded);
-      savePosters(seeded);
-      setInitialized(true);
+  const fetchPosters = async () => {
+    try {
+      const res = await axios.get(API_ENDPOINTS.GET_BEST_SELLERS);
+      setPosters(res.data.data || []);
+    } catch {
+      setPosters([]);
+    } finally {
+      setLoading(false);
     }
-  }, [items, initialized]);
+  };
 
-  const persist = (next: BestSellerPoster[]) => {
-    setPosters(next);
-    savePosters(next);
+  useEffect(() => {
+    fetchPosters();
+  }, []);
+
+  const authHeaders = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    return { Authorization: accessToken ? `Bearer ${accessToken}` : "" };
+  };
+
+  const setBusy = (id: string, value: boolean) => {
+    setBusyIds((prev) => {
+      const next = new Set(prev);
+      if (value) next.add(id);
+      else next.delete(id);
+      return next;
+    });
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -86,42 +69,97 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
     scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
   };
 
-  const updatePoster = (id: string, patch: Partial<BestSellerPoster>) => {
-    persist(posters.map((p) => (p.id === id ? { ...p, ...patch } : p)));
-  };
-
-  const handleImageChange = (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddPoster = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    if (file.size > MAX_IMAGE_BYTES) {
-      toast.error("Image too large — please use one under 1.5MB.");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      updatePoster(id, { imageUrl: reader.result as string });
-      toast.success("Poster image updated.");
-    };
-    reader.onerror = () => toast.error("Couldn't read that image.");
-    reader.readAsDataURL(file);
-  };
-
-  const handleAddPoster = () => {
     if (posters.length >= MAX_POSTERS) {
       toast.error(`You can only have up to ${MAX_POSTERS} posters.`);
       return;
     }
-    const next = [...posters, { id: makeId(), name: "New Poster", imageUrl: null, itemId: null }];
-    persist(next);
+    const formData = new FormData();
+    formData.append("image", await compressImage(file, { maxDimension: 1000, quality: 0.8 }));
+    formData.append("name", "New Poster");
+    try {
+      setBusy("add", true);
+      const res = await axios.post(API_ENDPOINTS.CREATE_BEST_SELLER, formData, {
+        headers: { "Content-Type": "multipart/form-data", ...authHeaders() },
+        withCredentials: true,
+      });
+      setPosters((prev) => [...prev, res.data.data]);
+      toast.success("Poster added.");
+    } catch (err) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(message || "Failed to add poster.");
+    } finally {
+      setBusy("add", false);
+    }
   };
 
-  const handleRemovePoster = (id: string) => {
+  const handleImageChange = async (id: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("image", await compressImage(file, { maxDimension: 1000, quality: 0.8 }));
+    try {
+      setBusy(id, true);
+      const res = await axios.put(API_ENDPOINTS.UPDATE_BEST_SELLER(id), formData, {
+        headers: { "Content-Type": "multipart/form-data", ...authHeaders() },
+        withCredentials: true,
+      });
+      setPosters((prev) => prev.map((p) => (p._id === id ? res.data.data : p)));
+      toast.success("Poster image updated.");
+    } catch (err) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(message || "Failed to update image.");
+    } finally {
+      setBusy(id, false);
+    }
+  };
+
+  const saveTextField = async (id: string, patch: { name?: string; itemId?: string | null }) => {
+    const formData = new FormData();
+    if (patch.name !== undefined) formData.append("name", patch.name);
+    if (patch.itemId !== undefined) formData.append("itemId", patch.itemId || "");
+    try {
+      setBusy(id, true);
+      const res = await axios.put(API_ENDPOINTS.UPDATE_BEST_SELLER(id), formData, {
+        headers: { "Content-Type": "multipart/form-data", ...authHeaders() },
+        withCredentials: true,
+      });
+      setPosters((prev) => prev.map((p) => (p._id === id ? res.data.data : p)));
+    } catch (err) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(message || "Failed to save changes.");
+    } finally {
+      setBusy(id, false);
+    }
+  };
+
+  // Local-only update while typing — persisted on blur via saveTextField.
+  const updateNameLocal = (id: string, name: string) => {
+    setPosters((prev) => prev.map((p) => (p._id === id ? { ...p, name } : p)));
+  };
+
+  const handleRemovePoster = async (id: string) => {
     if (posters.length <= 1) {
       toast.error("You need at least one poster.");
       return;
     }
-    persist(posters.filter((p) => p.id !== id));
+    try {
+      setBusy(id, true);
+      await axios.delete(API_ENDPOINTS.DELETE_BEST_SELLER(id), {
+        headers: authHeaders(),
+        withCredentials: true,
+      });
+      setPosters((prev) => prev.filter((p) => p._id !== id));
+      toast.success("Poster removed.");
+    } catch (err) {
+      const message = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(message || "Failed to remove poster.");
+      setBusy(id, false);
+    }
   };
 
   const handleTileClick = (poster: BestSellerPoster) => {
@@ -132,8 +170,8 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
     else toast.error("This product is no longer available.");
   };
 
-  if (!initialized && items.length === 0) return null;
-  if (posters.length === 0) return null;
+  if (loading) return null;
+  if (posters.length === 0 && !isAdmin) return null;
 
   return (
     <section className={styles.section}>
@@ -148,19 +186,22 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
               {editing ? "Done" : "✎ Manage"}
             </button>
           )}
-          <div className={styles.nav}>
-            <button aria-label="Scroll left" onClick={() => scroll("left")}>&#10094;</button>
-            <button aria-label="Scroll right" onClick={() => scroll("right")}>&#10095;</button>
-          </div>
+          {posters.length > 0 && (
+            <div className={styles.nav}>
+              <button aria-label="Scroll left" onClick={() => scroll("left")}>&#10094;</button>
+              <button aria-label="Scroll right" onClick={() => scroll("right")}>&#10095;</button>
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.track} ref={scrollRef}>
         {posters.map((poster) => {
           const linkedItem = poster.itemId ? items.find((i) => i._id === poster.itemId) : undefined;
+          const isBusy = busyIds.has(poster._id);
           return (
             <div
-              key={poster.id}
+              key={poster._id}
               className={`${styles.card} ${editing ? styles.cardEditing : ""}`}
               role={!editing && poster.itemId ? "button" : undefined}
               tabIndex={!editing && poster.itemId ? 0 : undefined}
@@ -171,7 +212,7 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
             >
               <div className={styles.imageWrap}>
                 <img
-                  src={poster.imageUrl || (profile as string)}
+                  src={poster.optimizeUrl || poster.imageUrl || (profile as string)}
                   alt={poster.name}
                   onError={(ev) => {
                     (ev.target as HTMLImageElement).src = profile as string;
@@ -185,19 +226,21 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
                       accept="image/*"
                       style={{ display: "none" }}
                       ref={(el) => {
-                        fileInputRefs.current[poster.id] = el;
+                        fileInputRefs.current[poster._id] = el;
                       }}
-                      onChange={(e) => handleImageChange(poster.id, e)}
+                      onChange={(e) => handleImageChange(poster._id, e)}
                     />
                     <button
                       className={styles.overlayBtn}
-                      onClick={() => fileInputRefs.current[poster.id]?.click()}
+                      disabled={isBusy}
+                      onClick={() => fileInputRefs.current[poster._id]?.click()}
                     >
-                      {poster.imageUrl ? "🔄 Replace image" : "📤 Upload image"}
+                      🔄 Replace image
                     </button>
                     <button
                       className={styles.overlayRemoveBtn}
-                      onClick={() => handleRemovePoster(poster.id)}
+                      disabled={isBusy}
+                      onClick={() => handleRemovePoster(poster._id)}
                     >
                       🗑 Remove
                     </button>
@@ -213,14 +256,17 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
                       type="text"
                       value={poster.name}
                       placeholder="Poster name"
+                      disabled={isBusy}
                       onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => updatePoster(poster.id, { name: e.target.value })}
+                      onChange={(e) => updateNameLocal(poster._id, e.target.value)}
+                      onBlur={(e) => saveTextField(poster._id, { name: e.target.value })}
                     />
                     <select
                       className={styles.linkSelect}
                       value={poster.itemId || ""}
+                      disabled={isBusy}
                       onClick={(e) => e.stopPropagation()}
-                      onChange={(e) => updatePoster(poster.id, { itemId: e.target.value || null })}
+                      onChange={(e) => saveTextField(poster._id, { itemId: e.target.value || null })}
                     >
                       <option value="">No linked product</option>
                       {items.map((item) => (
@@ -239,10 +285,19 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
         })}
 
         {editing && posters.length < MAX_POSTERS && (
-          <button className={styles.addCard} onClick={handleAddPoster}>
-            <span className={styles.addIcon}>+</span>
-            <span>Add Poster</span>
-          </button>
+          <>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              ref={addInputRef}
+              onChange={handleAddPoster}
+            />
+            <button className={styles.addCard} onClick={() => addInputRef.current?.click()} disabled={busyIds.has("add")}>
+              <span className={styles.addIcon}>+</span>
+              <span>Add Poster</span>
+            </button>
+          </>
         )}
       </div>
     </section>

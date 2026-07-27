@@ -59,8 +59,6 @@ const Homepage: React.FC = () => {
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Item | null>(null);
 
-  const [posterUrl, setPosterUrl] = useState<string | null>(null);
-
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -69,15 +67,6 @@ const Homepage: React.FC = () => {
   const isAdmin = user?.role === "Admin";
   const { addToCart } = useCart();
   const abortControllerRef = useRef<AbortController | null>(null);
-
-  const refetchPoster = async () => {
-    try {
-      const res = await axios.get(API_ENDPOINTS.GET_POSTER);
-      setPosterUrl(res.data.data?.imageUrl || null);
-    } catch {
-      setPosterUrl(null);
-    }
-  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -103,57 +92,12 @@ const Homepage: React.FC = () => {
       }
     };
 
-    const fetchPoster = async () => {
-      try {
-        const res = await axios.get(API_ENDPOINTS.GET_POSTER, { signal: controller.signal });
-        setPosterUrl(res.data.data?.imageUrl || null);
-      } catch (err) {
-        if (axios.isCancel(err)) return;
-        setPosterUrl(null);
-      }
-    };
-
     fetchItems();
-    fetchPoster();
 
     return () => {
       controller.abort();
     };
   }, []);
-
-  const handlePosterUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.[0]) return;
-    const formData = new FormData();
-    formData.append("image", e.target.files[0]);
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      await axios.post(API_ENDPOINTS.UPLOAD_POSTER, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: accessToken ? `Bearer ${accessToken}` : "",
-        },
-        withCredentials: true,
-      });
-      toast.success("Poster updated successfully.");
-      refetchPoster();
-    } catch {
-      toast.error("Failed to upload poster.");
-    }
-  };
-
-  const handlePosterDelete = async () => {
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      await axios.delete(API_ENDPOINTS.DELETE_POSTER, {
-        headers: { Authorization: accessToken ? `Bearer ${accessToken}` : "" },
-        withCredentials: true,
-      });
-      toast.success("Poster removed.");
-      setPosterUrl(null);
-    } catch {
-      toast.error("Failed to delete poster.");
-    }
-  };
 
   const handleDeleteConfirmed = async () => {
     if (!itemPendingDelete) return;
@@ -203,10 +147,7 @@ const Homepage: React.FC = () => {
       <div className={styles.container}>
         
         <HeroCarousel 
-          posterUrl={posterUrl}
           isAdmin={isAdmin}
-          onUpload={handlePosterUpload}
-          onDelete={handlePosterDelete}
           onLoginClick={() => setIsLoginModalOpen(true)}
           onRegisterClick={() => setIsRegisterModalOpen(true)}
         />
