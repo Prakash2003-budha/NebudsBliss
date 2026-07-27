@@ -35,18 +35,20 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ isAdmin, onLoginClick, onRe
     setActiveIndex(slides.length - 1);
   }
 
-  const fetchSlides = async () => {
-    try {
-      const res = await axios.get(API_ENDPOINTS.GET_HERO_SLIDES);
-      setSlides(res.data.data || []);
-    } catch {
-      setSlides([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // FIX: Move the async fetch function inside the useEffect to satisfy the linter
+  // and prevent the "synchronous state update" warning.
   useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const res = await axios.get(API_ENDPOINTS.GET_HERO_SLIDES);
+        setSlides(res.data.data || []);
+      } catch {
+        setSlides([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchSlides();
   }, []);
 
