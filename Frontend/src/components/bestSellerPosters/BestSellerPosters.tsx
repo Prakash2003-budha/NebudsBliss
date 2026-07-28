@@ -45,6 +45,7 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data fetch on mount
     fetchPosters();
   }, []);
 

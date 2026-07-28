@@ -90,7 +90,6 @@ const Homepage: React.FC = () => {
       const newSearch = params.toString();
       window.history.replaceState({}, "", `${window.location.pathname}${newSearch ? `?${newSearch}` : ""}`);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
