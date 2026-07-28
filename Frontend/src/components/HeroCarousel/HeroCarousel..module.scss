@@ -151,3 +151,42 @@
   .deleteBtn { background: #e53935; }
   .addBtn { background: #4a8b96; }
 }
+
+// On phones, show the whole poster instead of cropping it to a tall,
+// viewport-height slide — the image sets its own height via aspect-ratio.
+@media (max-width: 640px) {
+  .carouselSection {
+    height: auto;
+    min-height: 0;
+  }
+
+  .carouselContainer {
+    height: auto;
+  }
+
+  .carouselSlide {
+    height: auto;
+  
+
+  }
+
+  .posterImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #e6ecef;
+  }
+
+  .navBtn {
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+
+    &.leftBtn { left: 8px; }
+    &.rightBtn { right: 8px; }
+  }
+
+  .pagination {
+    bottom: 10px;
+  }
+}

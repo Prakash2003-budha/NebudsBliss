@@ -253,3 +253,85 @@ $danger: #d64545;
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 600px) {
+  .productCard {
+    border-radius: 10px;
+  }
+
+  .categoryTag {
+    top: 6px;
+    left: 6px;
+    font-size: 0.55rem;
+    padding: 3px 6px;
+    border-radius: 5px;
+    letter-spacing: 0.03em;
+  }
+
+  .saleTag {
+    top: 6px;
+    right: 6px;
+    font-size: 0.58rem;
+    padding: 3px 6px;
+    border-radius: 5px;
+  }
+
+  .cardBody {
+    padding: 8px 9px 10px;
+  }
+
+  .name {
+    font-size: 0.78rem;
+    min-height: calc(1.25em * 2);
+    margin-bottom: 2px;
+  }
+
+  .description {
+    display: none;
+  }
+
+  .priceRow {
+    margin-bottom: 8px;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .price {
+    font-size: 0.85rem;
+  }
+
+  .originalPrice {
+    font-size: 0.68rem;
+  }
+
+  .cardActions {
+    gap: 5px;
+  }
+
+  .addToCartBtn {
+    padding: 7px 6px;
+    font-size: 0.68rem;
+    border-radius: 7px;
+    gap: 4px;
+
+    .cartIcon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .deleteBtn {
+    flex-basis: 32px;
+    border-radius: 7px;
+
+    img {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  .outOfStockOverlay span {
+    font-size: 0.6rem;
+    padding: 5px 10px;
+  }
+}
