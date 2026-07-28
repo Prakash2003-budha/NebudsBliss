@@ -110,36 +110,23 @@ $light-text: #888888;
   }
 }
 
-.thumb {
-  position: absolute;
-  left: 16px;
-  bottom: -22px;
-  width: 60px;
-  height: 60px;
-  border-radius: 14px;
-  background: #fff;
-  padding: 4px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-
-  @media (max-width: 600px) {
-    width: 48px;
-    height: 48px;
-    left: 12px;
-    bottom: -18px;
-  }
-}
-
 .info {
   background: #fff;
-  padding: 30px 16px 18px;
+  padding: 14px 16px 18px;
+}
+
+.name {
+  margin: 0 0 6px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: $dark-text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 600px) {
+    font-size: 0.82rem;
+  }
 }
 
 .priceRow {

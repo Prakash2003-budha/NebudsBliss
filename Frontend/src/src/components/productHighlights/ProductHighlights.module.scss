@@ -1,0 +1,160 @@
+$font-primary: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #4a8b96;
+$dark-text: #222222;
+$light-text: #888888;
+
+.highlights {
+  font-family: $font-primary;
+  margin: 4rem auto;
+  max-width: 1400px;
+  padding: 0 2rem;
+
+  @media (max-width: 600px) {
+    margin: 2.5rem auto;
+    padding: 0 1rem;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.75rem;
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    font-style: italic;
+    color: #111;
+    margin: 0;
+    letter-spacing: -0.5px;
+
+    @media (max-width: 600px) {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+
+  button {
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $dark-text;
+      color: #fff;
+      border-color: $dark-text;
+    }
+  }
+}
+
+.track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  flex: 0 0 190px;
+  scroll-snap-align: start;
+  background: $dark-text;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 28px rgba(0, 0, 0, 0.14);
+
+    .imagePanel img:first-child {
+      transform: scale(1.06);
+    }
+  }
+
+  @media (max-width: 600px) {
+    flex-basis: 130px;
+    border-radius: 12px;
+  }
+}
+
+.imagePanel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #0d0d0d;
+
+  > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+}
+
+.info {
+  background: #fff;
+  padding: 10px 12px 12px;
+}
+
+.name {
+  margin: 0 0 4px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: $dark-text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 600px) {
+    font-size: 0.7rem;
+  }
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.oldPrice {
+  color: #aaa;
+  font-size: 0.75rem;
+  text-decoration: line-through;
+}
+
+.newPrice {
+  color: $dark-text;
+  font-size: 1rem;
+  font-weight: 800;
+
+  @media (max-width: 600px) {
+    font-size: 0.82rem;
+  }
+}
+
+.offBadge {
+  color: #e5544a;
+  font-size: 0.7rem;
+  font-weight: 700;
+}

@@ -1,0 +1,354 @@
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: #4a8b96;
+$dark-text: #222222;
+$light-text: #888888;
+$bg-color: #f7f8f9;
+$border-color: #eaeaea;
+
+.container {
+  font-family: $font-primary;
+  background-color: $bg-color;
+  min-height: 70vh;
+  padding: 2.5rem 1.5rem 4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: $dark-text;
+  margin: 0 0 1.5rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.tabBtn {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: $light-text;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.activeTab {
+  color: $primary-color;
+  border-bottom-color: $primary-color;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid $border-color;
+  border-radius: 14px;
+  padding: 1.5rem;
+}
+
+.hint {
+  color: $light-text;
+  font-size: 0.85rem;
+  margin: 0 0 1.25rem;
+}
+
+.stateMessage {
+  text-align: center;
+  color: $light-text;
+  padding: 2.5rem 1rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+
+  th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $light-text;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid $border-color;
+  }
+
+  td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid $border-color;
+    font-size: 0.9rem;
+    color: $dark-text;
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.itemNameCell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+}
+
+.thumb {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: $bg-color;
+}
+
+.miniInput {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+
+.actionsCell {
+  display: flex;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.saveBtn {
+  background-color: $primary-color;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.deleteBtn {
+  background-color: #fff;
+  color: #e53935;
+  border: 1px solid #e53935;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.toggle {
+  width: 40px;
+  height: 22px;
+  border-radius: 999px;
+  background-color: #d1d5db;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.toggleOn {
+  background-color: #10b981;
+}
+
+.toggleKnob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #fff;
+  transition: transform 0.2s ease;
+
+  .toggleOn & {
+    transform: translateX(18px);
+  }
+}
+
+.select {
+  padding: 6px 8px;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.82rem;
+}
+
+.orderIdCell {
+  font-weight: 700;
+}
+
+.orderDateCell {
+  font-size: 0.75rem;
+  color: $light-text;
+}
+
+/* Payment proof thumbnail */
+.proofThumbBtn {
+  padding: 0;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  display: block;
+  transition: border-color 0.15s ease;
+
+  &:hover {
+    border-color: $primary-color;
+  }
+}
+
+.proofThumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  display: block;
+}
+
+.proofMissing {
+  font-size: 0.78rem;
+  color: #b45309;
+  font-weight: 600;
+}
+
+.proofNa {
+  color: $light-text;
+}
+
+/* Lightbox */
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1000;
+}
+
+.lightboxContent {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.75rem;
+  max-width: 420px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: $bg-color;
+  color: $dark-text;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightboxTitle {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+  color: $dark-text;
+  padding-right: 1.5rem;
+}
+
+.lightboxSubtitle {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: $light-text;
+
+  strong {
+    color: $dark-text;
+    text-transform: capitalize;
+  }
+}
+
+.lightboxImage {
+  width: 100%;
+  max-height: 55vh;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid $border-color;
+  margin-bottom: 1.25rem;
+  background: $bg-color;
+}
+
+.lightboxActions {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.verifyBtn {
+  flex: 1;
+  background-color: #10b981;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.rejectBtn {
+  flex: 1;
+  background-color: #fff;
+  color: #e53935;
+  border: 1px solid #e53935;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}

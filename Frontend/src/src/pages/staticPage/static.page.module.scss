@@ -1,0 +1,35 @@
+$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$dark-text: #222222;
+$light-text: #888888;
+$bg-color: #f7f8f9;
+
+.container {
+  font-family: $font-primary;
+  background-color: $bg-color;
+  min-height: 60vh;
+  padding: 3rem 1.5rem 4rem;
+  max-width: 720px;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  h1 {
+    color: $dark-text;
+    font-size: 2rem;
+    margin: 0 0 0.5rem;
+  }
+}
+
+.updated {
+  color: $light-text;
+  font-size: 0.85rem;
+  margin: 0 0 1.5rem;
+}
+
+.body {
+  color: $dark-text;
+  line-height: 1.7;
+
+  p {
+    margin: 0 0 1rem;
+  }
+}

@@ -1,0 +1,22 @@
+$bg-color: #eaeaea;
+$breakpoint-mobile:768px;
+
+.container{
+    background-color: $bg-color;
+    .header{
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        img{
+            height: 100px;
+             @media (max-width: $breakpoint-mobile) {
+                height: 50px;
+            }
+        }
+    }
+    .subhead{
+        background-color: aliceblue;
+        display: flex;
+        justify-content: center;
+    }
+}
