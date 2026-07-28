@@ -68,6 +68,25 @@ const Homepage: React.FC = () => {
   const { addToCart } = useCart();
   const abortControllerRef = useRef<AbortController | null>(null);
 
+  // Handles the redirect coming back from the email-activation link
+  // (/auth/activater/:token on the backend redirects here with ?activated=true|false).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const activated = params.get("activated");
+    if (activated === "true") {
+      toast.success("Your account has been activated! You can now log in.");
+      setIsLoginModalOpen(true);
+    } else if (activated === "false") {
+      toast.error("That activation link is invalid or has already been used.");
+    }
+    if (activated !== null) {
+      params.delete("activated");
+      const newSearch = params.toString();
+      window.history.replaceState({}, "", `${window.location.pathname}${newSearch ? `?${newSearch}` : ""}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const controller = new AbortController();
     abortControllerRef.current = controller;
