@@ -17,8 +17,8 @@ export interface CategoryLink {
 
 const CategoryIcon: React.FC<{ slug: string }> = ({ slug }) => {
   const common = {
-    width: 22,
-    height: 22,
+    width: 18,
+    height: 18,
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
@@ -96,10 +96,10 @@ interface FilterSidebarProps {
 }
 
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: "priceHigh", label: "High Price" },
-  { value: "priceLow", label: "Low Price" },
   { value: "newest", label: "Newest" },
   { value: "oldest", label: "Oldest" },
+  { value: "priceLow", label: "Price: Low to High" },
+  { value: "priceHigh", label: "Price: High to Low" },
 ];
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -121,20 +121,40 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   onClearFilters,
 }) => {
   const isMultiSelectMode = !!onCategoryToggle;
+
+  const activeFilterCount =
+    (selectedCategorySlugs?.length || 0) +
+    selectedBrands.length +
+    (stockFilter !== "all" ? 1 : 0) +
+    (availability.onSale ? 1 : 0) +
+    (availability.isNew ? 1 : 0) +
+    (priceRange?.min || priceRange?.max ? 1 : 0);
+
   return (
     <aside className={styles.filters}>
-      <h2 className={styles.title}>Filters</h2>
+      <div className={styles.header}>
+        <h2 className={styles.title}>
+          Filters
+          {activeFilterCount > 0 && <span className={styles.countBadge}>{activeFilterCount}</span>}
+        </h2>
+        {onClearFilters && activeFilterCount > 0 && (
+          <button type="button" className={styles.resetLink} onClick={onClearFilters}>
+            Reset
+          </button>
+        )}
+      </div>
 
       <div className={styles.section}>
-        <h3>Sort By</h3>
-        <div className={styles.pillGrid}>
+        <h3>Sort by</h3>
+        <div className={styles.sortList}>
           {SORT_OPTIONS.map((opt) => (
             <button
               key={opt.value}
-              className={`${styles.pill} ${sortBy === opt.value ? styles.pillActive : ""}`}
+              className={`${styles.sortOption} ${sortBy === opt.value ? styles.sortOptionActive : ""}`}
               onClick={() => onSortChange(opt.value)}
               type="button"
             >
+              <span className={styles.sortDot} />
               {opt.label}
             </button>
           ))}
@@ -147,18 +167,22 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <input
             type="radio"
             name="stock"
+            className={styles.hiddenControl}
             checked={stockFilter === "in"}
             onChange={() => onStockChange(stockFilter === "in" ? "all" : "in")}
           />
+          <span className={styles.radioDot} />
           <span>In Stock</span>
         </label>
         <label className={styles.radioRow}>
           <input
             type="radio"
             name="stock"
+            className={styles.hiddenControl}
             checked={stockFilter === "out"}
             onChange={() => onStockChange(stockFilter === "out" ? "all" : "out")}
           />
+          <span className={styles.radioDot} />
           <span>Out of Stock</span>
         </label>
       </div>
@@ -168,56 +192,61 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         <label className={styles.checkRow}>
           <input
             type="checkbox"
+            className={styles.hiddenControl}
             checked={availability.onSale}
             onChange={() => onAvailabilityChange("onSale")}
           />
+          <span className={styles.checkBox} />
           <span>On Sale</span>
         </label>
         <label className={styles.checkRow}>
           <input
             type="checkbox"
+            className={styles.hiddenControl}
             checked={availability.isNew}
             onChange={() => onAvailabilityChange("isNew")}
           />
-          <span>New</span>
+          <span className={styles.checkBox} />
+          <span>New Arrivals</span>
         </label>
       </div>
 
       <div className={styles.section}>
         <h3>Category</h3>
         {isMultiSelectMode ? (
-          <div className={styles.categoryGrid}>
+          <div className={styles.categoryList}>
             {categories.map((cat) => {
               const isSelected = selectedCategorySlugs?.includes(cat.slug);
               return (
                 <button
                   key={cat.slug}
                   type="button"
-                  className={`${styles.categoryTile} ${isSelected ? styles.categoryTileActive : ""}`}
+                  className={`${styles.categoryRow} ${isSelected ? styles.categoryRowActive : ""}`}
                   onClick={() => onCategoryToggle?.(cat.slug)}
                 >
                   <span className={styles.categoryIcon}>
                     <CategoryIcon slug={cat.slug} />
                   </span>
-                  <span>{cat.label}</span>
+                  <span className={styles.categoryLabel}>{cat.label}</span>
+                  {isSelected && <span className={styles.categoryCheck}>&#10003;</span>}
                 </button>
               );
             })}
           </div>
         ) : (
-          <div className={styles.categoryGrid}>
+          <div className={styles.categoryList}>
             {categories.map((cat) => (
               <Link
                 key={cat.slug}
                 to={`/category/${cat.slug}`}
-                className={`${styles.categoryTile} ${
-                  activeCategorySlug === cat.slug ? styles.categoryTileActive : ""
+                className={`${styles.categoryRow} ${
+                  activeCategorySlug === cat.slug ? styles.categoryRowActive : ""
                 }`}
               >
                 <span className={styles.categoryIcon}>
                   <CategoryIcon slug={cat.slug} />
                 </span>
-                <span>{cat.label}</span>
+                <span className={styles.categoryLabel}>{cat.label}</span>
               </Link>
             ))}
           </div>
@@ -232,9 +261,11 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               <label className={styles.checkRow} key={brand}>
                 <input
                   type="checkbox"
+                  className={styles.hiddenControl}
                   checked={selectedBrands.includes(brand)}
                   onChange={() => onBrandToggle(brand)}
                 />
+                <span className={styles.checkBox} />
                 <span>{brand}</span>
               </label>
             ))}
@@ -244,7 +275,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       {priceRange && onPriceRangeChange && (
         <div className={styles.section}>
-          <h3>Price Range (Rs.)</h3>
+          <h3>Price range (Rs.)</h3>
           <div className={styles.priceRangeRow}>
             <input
               type="number"
@@ -254,7 +285,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               value={priceRange.min}
               onChange={(e) => onPriceRangeChange({ ...priceRange, min: e.target.value })}
             />
-            <span className={styles.priceRangeDash}>–</span>
+            <span className={styles.priceRangeDash}>&ndash;</span>
             <input
               type="number"
               min="0"
@@ -265,12 +296,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             />
           </div>
         </div>
-      )}
-
-      {onClearFilters && (
-        <button type="button" className={styles.clearFiltersBtn} onClick={onClearFilters}>
-          Clear All Filters
-        </button>
       )}
     </aside>
   );

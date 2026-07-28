@@ -1,30 +1,71 @@
 $font-primary: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
-$primary-color: #4a8b96;
-$dark-text: #222222;
-$light-text: #888888;
-$border-color: #eaeaea;
+$primary-color: #3f8791;
+$primary-tint: #eaf4f5;
+$ink: #1a1d1f;
+$muted: #767c82;
+$hairline: #ececec;
 
 .filters {
   font-family: $font-primary;
   background: #fff;
-  border: 1px solid $border-color;
-  border-radius: 16px;
-  padding: 1.5rem;
+  border: 1px solid $hairline;
+  border-radius: 14px;
+  padding: 1.35rem 1.4rem 1.5rem;
   align-self: flex-start;
   position: sticky;
   top: 90px;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
 .title {
-  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.15rem;
   font-weight: 800;
-  color: $dark-text;
-  margin: 0 0 1.25rem;
+  color: $ink;
+  margin: 0;
+}
+
+.countBadge {
+  background: $primary-color;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.resetLink {
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: $primary-color;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .section {
-  padding: 1.1rem 0;
-  border-top: 1px solid $border-color;
+  padding: 1rem 0;
+  border-top: 1px solid $hairline;
 
   &:first-of-type {
     border-top: none;
@@ -32,96 +73,239 @@ $border-color: #eaeaea;
   }
 
   h3 {
-    font-size: 0.95rem;
+    font-size: 0.78rem;
     font-weight: 700;
-    color: $dark-text;
-    margin: 0 0 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $muted;
+    margin: 0 0 0.75rem;
   }
 }
 
-.pillGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+// ---------- Sort ----------
+.sortList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.pill {
+.sortOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-family: inherit;
-  background: $border-color;
-  border: 1px solid transparent;
-  color: $dark-text;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 8px 10px;
+  background: none;
+  border: none;
   border-radius: 8px;
+  color: $ink;
+  font-size: 0.86rem;
+  font-weight: 500;
+  padding: 7px 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  text-align: left;
+  transition: background-color 0.15s ease;
 
   &:hover {
-    border-color: $primary-color;
+    background: #f5f6f7;
   }
 }
 
-.pillActive {
-  background: $dark-text;
-  color: #fff;
+.sortDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1.5px solid #cfd3d6;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.sortOptionActive {
+  color: $primary-color;
+  font-weight: 700;
+  background: $primary-tint;
+
+  .sortDot {
+    background: $primary-color;
+    border-color: $primary-color;
+  }
+
+  &:hover {
+    background: $primary-tint;
+  }
+}
+
+// ---------- Custom radio / checkbox ----------
+.hiddenControl {
+  position: absolute;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
 }
 
 .radioRow,
 .checkRow {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.9rem;
-  color: #444;
+  font-size: 0.86rem;
+  color: #3a3d40;
   padding: 6px 0;
   cursor: pointer;
+}
 
-  input {
-    width: 16px;
-    height: 16px;
-    accent-color: $primary-color;
-    cursor: pointer;
+.radioDot {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid #d4d7d9;
+  position: relative;
+  transition: border-color 0.15s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: $primary-color;
+    transform: scale(0);
+    transition: transform 0.15s ease;
   }
 }
 
-.categoryGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.hiddenControl:checked ~ .radioDot {
+  border-color: $primary-color;
+
+  &::after {
+    transform: scale(1);
+  }
 }
 
-.categoryTile {
+.checkBox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: 5px;
+  border: 1.5px solid #d4d7d9;
+  position: relative;
+  transition: all 0.15s ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 9px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.15s ease;
+  }
+}
+
+.hiddenControl:checked ~ .checkBox {
+  background: $primary-color;
+  border-color: $primary-color;
+
+  &::after {
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+.hiddenControl:focus-visible ~ .radioDot,
+.hiddenControl:focus-visible ~ .checkBox {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// ---------- Category ----------
+.categoryList {
   display: flex;
   flex-direction: column;
+  gap: 3px;
+}
+
+.categoryRow {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
-  color: $light-text;
-  font-size: 0.8rem;
+  color: #3a3d40;
+  font-size: 0.86rem;
   font-weight: 600;
-  padding: 12px 6px;
-  border-radius: 12px;
-  border: 1px solid $border-color;
-  transition: all 0.2s ease;
-  text-align: center;
   font-family: inherit;
-  background: #fff;
+  background: none;
+  border: none;
+  border-radius: 9px;
+  padding: 7px 8px;
   cursor: pointer;
+  text-align: left;
   width: 100%;
+  transition: background-color 0.15s ease, color 0.15s ease;
 
   &:hover {
-    border-color: $primary-color;
-    color: $dark-text;
+    background: #f5f6f7;
   }
 }
 
-.brandList {
-  max-height: 180px;
-  overflow-y: auto;
-  padding-right: 4px;
+.categoryIcon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #f2f3f4;
+  color: $muted;
+  transition: all 0.15s ease;
 }
 
+.categoryLabel {
+  flex: 1;
+}
+
+.categoryCheck {
+  color: $primary-color;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.categoryRowActive {
+  background: $primary-tint;
+  color: $primary-color;
+
+  .categoryIcon {
+    background: $primary-color;
+    color: #fff;
+  }
+
+  &:hover {
+    background: $primary-tint;
+  }
+}
+
+// ---------- Brand ----------
+.brandList {
+  max-height: 170px;
+  overflow-y: auto;
+  padding-right: 4px;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #e0e2e4;
+    border-radius: 4px;
+  }
+}
+
+// ---------- Price range ----------
 .priceRangeRow {
   display: flex;
   align-items: center;
@@ -133,9 +317,15 @@ $border-color: #eaeaea;
   min-width: 0;
   font-family: inherit;
   font-size: 0.85rem;
-  padding: 8px 10px;
+  padding: 9px 10px;
   border-radius: 8px;
-  border: 1px solid $border-color;
+  border: 1.5px solid $hairline;
+  color: $ink;
+  transition: border-color 0.15s ease;
+
+  &::placeholder {
+    color: #b4b8bb;
+  }
 
   &:focus {
     outline: none;
@@ -144,49 +334,8 @@ $border-color: #eaeaea;
 }
 
 .priceRangeDash {
-  color: $light-text;
-}
-
-.clearFiltersBtn {
-  width: 100%;
-  margin-top: 1.1rem;
-  font-family: inherit;
-  background: #fff;
-  border: 1px solid $border-color;
-  color: $dark-text;
-  font-weight: 700;
-  font-size: 0.85rem;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    border-color: $primary-color;
-    color: $primary-color;
-  }
-}
-
-.categoryIcon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: #f2f2f2;
-  color: $dark-text;
-}
-
-.categoryTileActive {
-  border-color: $dark-text;
-  color: $dark-text;
-  background: #fafafa;
-
-  .categoryIcon {
-    background: $dark-text;
-    color: #fff;
-  }
+  color: $muted;
+  flex-shrink: 0;
 }
 
 @media (max-width: 900px) {

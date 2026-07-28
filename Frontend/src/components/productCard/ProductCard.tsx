@@ -3,7 +3,7 @@ import React from "react";
 import styles from "./ProductCard.module.scss";
 import profile from "../../img/icons/profile.black.png";
 import cart from "../../img/icons/cart.png";
-import deleteIcon from "../../img/icons/delete.png"; 
+import deleteIcon from "../../img/icons/delete.png";
 
 export interface Item {
   _id: string;
@@ -48,9 +48,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
       ? item.images[0].optimizeUrl || item.images[0].url
       : (profile as string);
 
+  const hasDiscount = !!item.discountPrice && item.discountPrice < item.price;
+  const isOutOfStock = (item.stockQuantity ?? 1) <= 0;
+  const discountPercent = hasDiscount
+    ? Math.round(((item.price - item.discountPrice!) / item.price) * 100)
+    : 0;
+
   return (
     <div
-      className={styles.productCard}
+      className={`${styles.productCard} ${isOutOfStock ? styles.outOfStock : ""}`}
       onClick={() => onOpenProduct(item)}
       role="button"
       tabIndex={0}
@@ -58,29 +64,38 @@ const ProductCard: React.FC<ProductCardProps> = ({
         if (e.key === "Enter" || e.key === " ") onOpenProduct(item);
       }}
     >
-      <div className={styles.categoryTabContainer}>
-        <span className={styles.categoryTab}>{item.category}</span>
-      </div>
       <div className={styles.imageWrapper}>
+        <span className={styles.categoryTag}>{item.category}</span>
+        {hasDiscount && <span className={styles.saleTag}>-{discountPercent}%</span>}
         <img
           src={imageSrc}
           alt={item.name}
+          loading="lazy"
           onError={(e) => {
             (e.target as HTMLImageElement).src = profile as string;
           }}
         />
+        {isOutOfStock && (
+          <div className={styles.outOfStockOverlay}>
+            <span>Out of Stock</span>
+          </div>
+        )}
       </div>
       <div className={styles.cardBody}>
-        <div className={styles.nameRow}>
-          <h3>{item.name}</h3>
-          <span className={styles.priceBadge}>
-            Rs. {item.discountPrice ? item.discountPrice : item.price}
-          </span>
-        </div>
+        <h3 className={styles.name}>{item.name}</h3>
         <p className={styles.description}>{item.description}</p>
+
+        <div className={styles.priceRow}>
+          <span className={styles.price}>Rs. {(item.discountPrice ?? item.price).toLocaleString()}</span>
+          {hasDiscount && (
+            <span className={styles.originalPrice}>Rs. {item.price.toLocaleString()}</span>
+          )}
+        </div>
+
         <div className={styles.cardActions}>
           <button
             className={styles.addToCartBtn}
+            disabled={isOutOfStock}
             onClick={(e) => {
               e.stopPropagation();
               addToCart({
@@ -93,7 +108,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             }}
           >
             <img src={cart} alt="" className={styles.cartIcon} />
-            Add To Cart
+            {isOutOfStock ? "Unavailable" : "Add to cart"}
           </button>
           {isAdmin && (
             <button
@@ -103,14 +118,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 onDeleteClick(item);
               }}
               disabled={deletingId === item._id}
+              aria-label={`Delete ${item.name}`}
+              title="Delete item"
             >
               {deletingId === item._id ? (
-                "Deleting..."
+                <span className={styles.spinner} />
               ) : (
-                <>
-                  <img src={deleteIcon} alt="" />
-                  Delete
-                </>
+                <img src={deleteIcon} alt="" />
               )}
             </button>
           )}
