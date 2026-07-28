@@ -1,0 +1,9 @@
+.layoutContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Forces the layout to be at least the height of the screen */
+}
+
+.mainContent {
+  flex: 1; /* Automatically grows to fill all empty space, pushing the footer down */
+}
