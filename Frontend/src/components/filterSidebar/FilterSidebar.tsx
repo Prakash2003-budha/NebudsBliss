@@ -187,54 +187,56 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       </div>
 
-      <div className={styles.section}>
-        <h3>Stock</h3>
-        <label className={styles.radioRow}>
-          <input
-            type="radio"
-            name="stock"
-            className={styles.hiddenControl}
-            checked={stockFilter === "in"}
-            onChange={() => onStockChange(stockFilter === "in" ? "all" : "in")}
-          />
-          <span className={styles.radioDot} />
-          <span>In Stock</span>
-        </label>
-        <label className={styles.radioRow}>
-          <input
-            type="radio"
-            name="stock"
-            className={styles.hiddenControl}
-            checked={stockFilter === "out"}
-            onChange={() => onStockChange(stockFilter === "out" ? "all" : "out")}
-          />
-          <span className={styles.radioDot} />
-          <span>Out of Stock</span>
-        </label>
-      </div>
+      <div className={styles.filterRowContainer}>
+        <div className={styles.section}>
+          <h3>Stock</h3>
+          <label className={styles.radioRow}>
+            <input
+              type="radio"
+              name="stock"
+              className={styles.hiddenControl}
+              checked={stockFilter === "in"}
+              onChange={() => onStockChange(stockFilter === "in" ? "all" : "in")}
+            />
+            <span className={styles.radioDot} />
+            <span>In Stock</span>
+          </label>
+          <label className={styles.radioRow}>
+            <input
+              type="radio"
+              name="stock"
+              className={styles.hiddenControl}
+              checked={stockFilter === "out"}
+              onChange={() => onStockChange(stockFilter === "out" ? "all" : "out")}
+            />
+            <span className={styles.radioDot} />
+            <span>Out of Stock</span>
+          </label>
+        </div>
 
-      <div className={styles.section}>
-        <h3>Availability</h3>
-        <label className={styles.checkRow}>
-          <input
-            type="checkbox"
-            className={styles.hiddenControl}
-            checked={availability.onSale}
-            onChange={() => onAvailabilityChange("onSale")}
-          />
-          <span className={styles.checkBox} />
-          <span>On Sale</span>
-        </label>
-        <label className={styles.checkRow}>
-          <input
-            type="checkbox"
-            className={styles.hiddenControl}
-            checked={availability.isNew}
-            onChange={() => onAvailabilityChange("isNew")}
-          />
-          <span className={styles.checkBox} />
-          <span>New Arrivals</span>
-        </label>
+        <div className={styles.section}>
+          <h3>Availability</h3>
+          <label className={styles.checkRow}>
+            <input
+              type="checkbox"
+              className={styles.hiddenControl}
+              checked={availability.onSale}
+              onChange={() => onAvailabilityChange("onSale")}
+            />
+            <span className={styles.checkBox} />
+            <span>On Sale</span>
+          </label>
+          <label className={styles.checkRow}>
+            <input
+              type="checkbox"
+              className={styles.hiddenControl}
+              checked={availability.isNew}
+              onChange={() => onAvailabilityChange("isNew")}
+            />
+            <span className={styles.checkBox} />
+            <span>New Arrivals</span>
+          </label>
+        </div>
       </div>
 
       <div className={styles.section}>

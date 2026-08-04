@@ -59,6 +59,34 @@ $hairline: #ececec;
   display: block;
 }
 
+.filterRowContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  padding-top: 1.2rem;
+  border-top: 1.5px solid $hairline;
+
+  .section {
+    padding: 0 !important;
+    border-top: none !important;
+    margin: 0;
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 0.9rem;
+    }
+
+    &:first-of-type {
+      padding-top: 0 !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+}
+
 .title {
   display: flex;
   align-items: center;
@@ -147,6 +175,18 @@ $hairline: #ececec;
     height: 3px;
     background: linear-gradient(90deg, $primary-color 0%, transparent 100%);
     border-radius: 2px;
+  }
+}
+
+.filterRowContainer {
+  .section {
+    padding: 0;
+    border-top: none;
+
+    &:first-of-type {
+      border-top: none;
+      padding-top: 0;
+    }
   }
 }
 
