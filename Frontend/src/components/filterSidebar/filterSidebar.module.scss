@@ -60,8 +60,8 @@ $hairline: #ececec;
 }
 
 .filterRowContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
   padding-top: 1.2rem;
   border-top: 1.5px solid $hairline;
@@ -73,13 +73,19 @@ $hairline: #ececec;
 
     h3 {
       margin-top: 0;
-      margin-bottom: 0.9rem;
+      margin-bottom: 1rem;
     }
 
     &:first-of-type {
       padding-top: 0 !important;
     }
   }
+}
+
+.optionsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
@@ -267,9 +273,33 @@ $hairline: #ececec;
   padding: 8px 0;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-wrap: wrap;
 
   &:hover {
     color: $primary-color;
+  }
+}
+
+.optionsRow {
+  .radioRow,
+  .checkRow {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 9px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $primary-tint;
+      border-color: $primary-color;
+    }
+
+    span:last-child {
+      margin-top: 4px;
+      font-weight: 500;
+    }
   }
 }
 
@@ -416,6 +446,9 @@ $hairline: #ececec;
   max-height: 170px;
   overflow-y: auto;
   padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
   &::-webkit-scrollbar {
     width: 5px;
@@ -424,6 +457,33 @@ $hairline: #ececec;
   &::-webkit-scrollbar-thumb {
     background: #e0e2e4;
     border-radius: 4px;
+  }
+}
+
+.brandItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #3a3d40;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: none;
+  font-family: inherit;
+
+  &:hover {
+    color: $primary-color;
+
+    .checkBox {
+      border-color: $primary-color;
+    }
+  }
+
+  span:last-child {
+    font-weight: 500;
   }
 }
 
