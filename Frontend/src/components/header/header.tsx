@@ -27,6 +27,12 @@ export default function Header() {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
   const closeSidebar = () => setIsSidebarOpen(false);
 
+  const handleShopClick = () => {
+    navigate('/shop');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    closeSidebar();
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('accessToken');
@@ -59,7 +65,7 @@ export default function Header() {
         <nav className={styles.nav}>
           <Link to="/" className={styles.navLink}>Home</Link>
           <div className={styles.categoryDropdown}>
-            <Link to="/shop" className={styles.navLink}>Shop</Link>
+            <button onClick={handleShopClick} className={styles.navLink} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: 'inherit', fontFamily: 'inherit', padding: 0}}>Shop</button>
             <div className={styles.dropdownMenu}>
               <Link to="/shop" className={styles.dropdownItem}>All Products</Link>
               <Link to="/category/earbuds" className={styles.dropdownItem}>Earbuds</Link>

@@ -7,13 +7,19 @@ $hairline: #ececec;
 
 .filters {
   font-family: $font-primary;
-  background: #fff;
-  border: 1px solid $hairline;
-  border-radius: 14px;
-  padding: 1.35rem 1.4rem 1.5rem;
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border: 2px solid $primary-color;
+  border-radius: 16px;
+  padding: 1.5rem 1.5rem 1.5rem;
   align-self: flex-start;
   position: sticky;
   top: 90px;
+  box-shadow: 0 2px 8px rgba($primary-color, 0.08);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba($primary-color, 0.12);
+  }
 }
 
 .header {
@@ -24,7 +30,7 @@ $hairline: #ececec;
   width: 100%;
   background: none;
   border: none;
-  padding: 0;
+  padding: 0 0 1rem 0;
   margin-top: 0;
   font-family: inherit;
   color: inherit;
@@ -32,6 +38,8 @@ $hairline: #ececec;
   text-align: left;
   -webkit-appearance: none;
   appearance: none;
+  border-bottom: 2px solid $primary-tint;
+  transition: all 0.2s ease;
 }
 
 .headerRight {
@@ -55,10 +63,14 @@ $hairline: #ececec;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-size: 1.25rem;
+  font-weight: 900;
   color: $ink;
   margin: 0;
+  background: linear-gradient(135deg, $primary-color 0%, #2d5f68 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .countBadge {
@@ -85,28 +97,56 @@ $hairline: #ececec;
   font-weight: 700;
   cursor: pointer;
   padding: 0;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: $primary-color;
+    transition: width 0.2s ease;
+  }
 
   &:hover {
-    text-decoration: underline;
+    &::after {
+      width: 100%;
+    }
   }
 }
 
 .section {
-  padding: 1rem 0;
-  border-top: 1px solid $hairline;
+  padding: 1.2rem 0;
+  border-top: 1.5px solid $hairline;
 
   &:first-of-type {
     border-top: none;
-    padding-top: 0;
+    padding-top: 0.5rem;
   }
 
   h3 {
-    font-size: 0.78rem;
-    font-weight: 700;
+    font-size: 0.8rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: $muted;
-    margin: 0 0 0.75rem;
+    letter-spacing: 0.06em;
+    color: $primary-color;
+    margin: 0 0 0.9rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  h3::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    height: 3px;
+    background: linear-gradient(90deg, $primary-color 0%, transparent 100%);
+    border-radius: 2px;
   }
 }
 
@@ -114,7 +154,7 @@ $hairline: #ececec;
 .sortList {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .sortOption {
@@ -124,33 +164,37 @@ $hairline: #ececec;
   font-family: inherit;
   background: none;
   border: none;
+  border-left: 3px solid transparent;
   border-radius: 8px;
   color: $ink;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 500;
-  padding: 7px 8px;
+  padding: 9px 10px;
   cursor: pointer;
   text-align: left;
-  transition: background-color 0.15s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: #f5f6f7;
+    background: $primary-tint;
+    border-left-color: $primary-color;
+    transform: translateX(2px);
   }
 }
 
 .sortDot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  border: 1.5px solid #cfd3d6;
+  border: 1.8px solid $hairline;
   flex-shrink: 0;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .sortOptionActive {
   color: $primary-color;
   font-weight: 700;
   background: $primary-tint;
+  border-left-color: $primary-color;
 
   .sortDot {
     background: $primary-color;
@@ -178,10 +222,15 @@ $hairline: #ececec;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   color: #3a3d40;
-  padding: 6px 0;
+  padding: 8px 0;
   cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $primary-color;
+  }
 }
 
 .radioDot {
@@ -254,7 +303,7 @@ $hairline: #ececec;
 .categoryList {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
 }
 
 .categoryRow {
@@ -263,34 +312,36 @@ $hairline: #ececec;
   gap: 10px;
   text-decoration: none;
   color: #3a3d40;
-  font-size: 0.86rem;
+  font-size: 0.88rem;
   font-weight: 600;
   font-family: inherit;
-  background: none;
-  border: none;
-  border-radius: 9px;
-  padding: 7px 8px;
+  background: #f8f9fa;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 10px 12px;
   cursor: pointer;
   text-align: left;
   width: 100%;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: #f5f6f7;
+    background: $primary-tint;
+    border-color: $primary-color;
+    transform: translateX(3px);
   }
 }
 
 .categoryIcon {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  background: #f2f3f4;
-  color: $muted;
-  transition: all 0.15s ease;
+  border-radius: 9px;
+  background: #e8eff1;
+  color: $primary-color;
+  transition: all 0.2s ease;
 }
 
 .categoryLabel {
@@ -299,17 +350,20 @@ $hairline: #ececec;
 
 .categoryCheck {
   color: $primary-color;
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: 0.8rem;
+  font-weight: 900;
+  margin-left: auto;
 }
 
 .categoryRowActive {
   background: $primary-tint;
   color: $primary-color;
+  border-color: $primary-color;
 
   .categoryIcon {
     background: $primary-color;
     color: #fff;
+    transform: rotate(5deg);
   }
 
   &:hover {
@@ -345,11 +399,12 @@ $hairline: #ececec;
   min-width: 0;
   font-family: inherit;
   font-size: 0.85rem;
-  padding: 9px 10px;
-  border-radius: 8px;
-  border: 1.5px solid $hairline;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 2px solid $hairline;
   color: $ink;
-  transition: border-color 0.15s ease;
+  background: #f8f9fa;
+  transition: all 0.2s ease;
 
   &::placeholder {
     color: #b4b8bb;
@@ -358,34 +413,43 @@ $hairline: #ececec;
   &:focus {
     outline: none;
     border-color: $primary-color;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
   }
 }
 
 .priceRangeDash {
   color: $muted;
   flex-shrink: 0;
+  font-weight: 600;
 }
 
 @media (max-width: 900px) {
   .filters {
     position: static;
-    padding: 1rem 1.1rem;
+    padding: 1.2rem 1.2rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
   }
 
   .header {
     cursor: pointer;
     margin-bottom: 0;
+    padding: 0 0 0.8rem 0;
+    border-bottom: 2px solid $primary-tint;
   }
 
   .chevron {
     display: inline-block;
+    color: $primary-color;
+    font-size: 0.8rem;
   }
 
   .body {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.2s ease, margin-top 0.25s ease;
+    transition: max-height 0.3s ease, opacity 0.2s ease 0.1s, margin-top 0.25s ease;
   }
 
   .filtersOpen {
