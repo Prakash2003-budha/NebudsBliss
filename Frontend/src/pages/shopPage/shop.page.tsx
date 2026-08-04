@@ -81,6 +81,17 @@ const ShopPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const updateFilters = (page: number = 1) => {
+    const next = new URLSearchParams(searchParams);
+    if (page <= 1) {
+      next.delete("page");
+    } else {
+      next.set("page", String(page));
+    }
+    setSearchParams(next);
+    // No scroll for filter changes
+  };
+
   useEffect(() => {
     // Scroll to top when component mounts
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -162,19 +173,19 @@ const ShopPage: React.FC = () => {
     setSelectedCategorySlugs((prev) =>
       prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
     );
-    setPage(1);
+    updateFilters(1);
   };
 
   const toggleBrand = (brand: string) => {
     setSelectedBrands((prev) =>
       prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
     );
-    setPage(1);
+    updateFilters(1);
   };
 
   const handlePriceRangeChange = (range: { min: string; max: string }) => {
     setPriceRange(range);
-    setPage(1);
+    updateFilters(1);
   };
 
   const handleClearFilters = () => {
@@ -184,7 +195,7 @@ const ShopPage: React.FC = () => {
     setSelectedCategorySlugs([]);
     setSelectedBrands([]);
     setPriceRange({ min: "", max: "" });
-    setPage(1);
+    updateFilters(1);
   };
 
   const handleOpenProduct = (item: Item) => {
@@ -237,7 +248,7 @@ const ShopPage: React.FC = () => {
             sortBy={sortBy}
             onSortChange={(value) => {
               setSortBy(value);
-              setPage(1);
+              updateFilters(1);
             }}
             stockFilter={stockFilter}
             onStockChange={setStockFilter}

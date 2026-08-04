@@ -187,6 +187,73 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       </div>
 
+      {priceRange && onPriceRangeChange && (
+        <div className={styles.section}>
+          <h3>Price range (Rs.)</h3>
+          <div className={styles.priceRangeRow}>
+            <input
+              type="number"
+              min="0"
+              placeholder="Min"
+              className={styles.priceInput}
+              value={priceRange.min}
+              onChange={(e) => onPriceRangeChange({ ...priceRange, min: e.target.value })}
+            />
+            <span className={styles.priceRangeDash}>&ndash;</span>
+            <input
+              type="number"
+              min="0"
+              placeholder="Max"
+              className={styles.priceInput}
+              value={priceRange.max}
+              onChange={(e) => onPriceRangeChange({ ...priceRange, max: e.target.value })}
+            />
+          </div>
+        </div>
+      )}
+
+      <div className={styles.section}>
+        <h3>Category</h3>
+        {isMultiSelectMode ? (
+          <div className={styles.categoryList}>
+            {categories.map((cat) => {
+              const isSelected = selectedCategorySlugs?.includes(cat.slug);
+              return (
+                <button
+                  key={cat.slug}
+                  type="button"
+                  className={`${styles.categoryRow} ${isSelected ? styles.categoryRowActive : ""}`}
+                  onClick={() => onCategoryToggle?.(cat.slug)}
+                >
+                  <span className={styles.categoryIcon}>
+                    <CategoryIcon slug={cat.slug} />
+                  </span>
+                  <span className={styles.categoryLabel}>{cat.label}</span>
+                  {isSelected && <span className={styles.categoryCheck}>&#10003;</span>}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className={styles.categoryList}>
+            {categories.map((cat) => (
+              <Link
+                key={cat.slug}
+                to={`/category/${cat.slug}`}
+                className={`${styles.categoryRow} ${
+                  activeCategorySlug === cat.slug ? styles.categoryRowActive : ""
+                }`}
+              >
+                <span className={styles.categoryIcon}>
+                  <CategoryIcon slug={cat.slug} />
+                </span>
+                <span className={styles.categoryLabel}>{cat.label}</span>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className={styles.filterRowContainer}>
         <div className={styles.section}>
           <h3>Stock</h3>
@@ -243,48 +310,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       </div>
 
-      <div className={styles.section}>
-        <h3>Category</h3>
-        {isMultiSelectMode ? (
-          <div className={styles.categoryList}>
-            {categories.map((cat) => {
-              const isSelected = selectedCategorySlugs?.includes(cat.slug);
-              return (
-                <button
-                  key={cat.slug}
-                  type="button"
-                  className={`${styles.categoryRow} ${isSelected ? styles.categoryRowActive : ""}`}
-                  onClick={() => onCategoryToggle?.(cat.slug)}
-                >
-                  <span className={styles.categoryIcon}>
-                    <CategoryIcon slug={cat.slug} />
-                  </span>
-                  <span className={styles.categoryLabel}>{cat.label}</span>
-                  {isSelected && <span className={styles.categoryCheck}>&#10003;</span>}
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          <div className={styles.categoryList}>
-            {categories.map((cat) => (
-              <Link
-                key={cat.slug}
-                to={`/category/${cat.slug}`}
-                className={`${styles.categoryRow} ${
-                  activeCategorySlug === cat.slug ? styles.categoryRowActive : ""
-                }`}
-              >
-                <span className={styles.categoryIcon}>
-                  <CategoryIcon slug={cat.slug} />
-                </span>
-                <span className={styles.categoryLabel}>{cat.label}</span>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
       {brands && brands.length > 0 && onBrandToggle && (
         <div className={styles.section}>
           <h3>Brand</h3>
@@ -305,30 +330,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      {priceRange && onPriceRangeChange && (
-        <div className={styles.section}>
-          <h3>Price range (Rs.)</h3>
-          <div className={styles.priceRangeRow}>
-            <input
-              type="number"
-              min="0"
-              placeholder="Min"
-              className={styles.priceInput}
-              value={priceRange.min}
-              onChange={(e) => onPriceRangeChange({ ...priceRange, min: e.target.value })}
-            />
-            <span className={styles.priceRangeDash}>&ndash;</span>
-            <input
-              type="number"
-              min="0"
-              placeholder="Max"
-              className={styles.priceInput}
-              value={priceRange.max}
-              onChange={(e) => onPriceRangeChange({ ...priceRange, max: e.target.value })}
-            />
-          </div>
-        </div>
-      )}
+      <button className={styles.applyButton} type="button">
+        Apply Filters
+      </button>
       </div>
     </aside>
   );
