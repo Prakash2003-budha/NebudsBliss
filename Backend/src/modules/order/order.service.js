@@ -1,7 +1,17 @@
 import OrderModel from "./order.model.js";
+import ItemModel from "../ItemModel/item.model.js";
 import cloudianarySvc from "../../services/cloudinary.services.js";
 
+const SHIPPING_FEE = 200;
+
 class OrderService {
+    /**
+     * Builds the order document from the request.
+     *
+     * SECURITY: Prices and totals are NEVER taken from the client. The client
+     * may only specify productId + quantity — every price is re-read from the
+     * catalog, stock is validated, and the totals are recomputed server-side.
+     */
     orderDataTransform = async (req) => {
         try {
             let data = { ...req.body };
@@ -20,17 +30,71 @@ class OrderService {
                     public_id: upload.public_id
                 };
             }
-            
-            // Backend recalculation of totals for security
-            const subtotal = data.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shippingFee = data.items.length > 0 ? 200 : 0;
-            
+
+            // ---- SECURITY: Rebuild items from the database, rejecting any
+            // ---- client-supplied name/price fields entirely.
+            if (!Array.isArray(data.items) || data.items.length === 0) {
+                throw { code: 400, message: "Order must contain at least one item", status: "EMPTY_ORDER" };
+            }
+
+            const productIds = data.items.map((it) => it.productId);
+            const products = await ItemModel.find({ _id: { $in: productIds }, isActive: true });
+
+            const productMap = new Map(products.map((p) => [String(p._id), p]));
+
+            const rebuiltItems = [];
+            let subtotal = 0;
+
+            for (const line of data.items) {
+                const product = productMap.get(String(line.productId));
+                if (!product) {
+                    throw {
+                        code: 400,
+                        message: `One or more products in your order are no longer available.`,
+                        status: "PRODUCT_UNAVAILABLE"
+                    };
+                }
+
+                const quantity = Math.max(1, Math.floor(Number(line.quantity) || 1));
+
+                // Validate stock
+                if (product.stockQuantity < quantity) {
+                    throw {
+                        code: 400,
+                        message: `Only ${product.stockQuantity} unit(s) of "${product.name}" are in stock.`,
+                        status: "INSUFFICIENT_STOCK"
+                    };
+                }
+
+                const unitPrice = product.discountPrice ?? product.price;
+
+                rebuiltItems.push({
+                    productId: product._id,
+                    name: product.name,
+                    quantity,
+                    price: unitPrice
+                });
+
+                subtotal += unitPrice * quantity;
+            }
+
+            // Decrement stock so we never oversell.
+            await Promise.all(
+                rebuiltItems.map((line) =>
+                    ItemModel.updateOne(
+                        { _id: line.productId },
+                        { $inc: { stockQuantity: -line.quantity } }
+                    )
+                )
+            );
+
+            data.items = rebuiltItems;
             data.subtotal = subtotal;
-            data.shippingFee = shippingFee;
-            data.totalAmount = subtotal + shippingFee;
+            data.shippingFee = SHIPPING_FEE;
+            data.totalAmount = subtotal + SHIPPING_FEE;
             data.paymentStatus = "pending";
             data.orderStatus = "processing";
-            
+
             if (data.mapLink) {
                 data.mapUrl = data.mapLink;
             }

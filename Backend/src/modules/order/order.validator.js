@@ -46,9 +46,11 @@ export const OrderCreateDTO = Joi.object({
             productId: Joi.string().required().messages({
                 "any.required": "Product ID is required"
             }),
-            name: Joi.string().required(),
-            quantity: Joi.number().min(1).required(),
-            price: Joi.number().min(0).required()
+            // name/price are accepted for backward compatibility but are
+            // ignored server-side — the service re-reads them from the catalog.
+            name: Joi.string().optional(),
+            price: Joi.number().min(0).optional(),
+            quantity: Joi.number().min(1).required()
         })
     ).min(1).required().messages({
         "array.min": "Cart cannot be empty",

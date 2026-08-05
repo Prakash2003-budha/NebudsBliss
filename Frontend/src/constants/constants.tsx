@@ -1,15 +1,26 @@
 
-const getHost = (): string => {
-  if (typeof window !== "undefined" && window.location.hostname) {
-    return window.location.hostname;
+// VITE_API_URL lets docker-compose / production deployments point the
+// frontend at a specific backend URL. When unset, fall back to the dev
+// default (host machine port 9005).
+const getBackendUrl = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    return (import.meta.env.VITE_API_URL as string).replace(/\/+$/, "");
   }
-  return "localhost";
+
+  const getHost = (): string => {
+    if (typeof window !== "undefined" && window.location.hostname) {
+      return window.location.hostname;
+    }
+    return "localhost";
+  };
+
+  return `http://${getHost()}:9005`;
 };
 
-export const IpAddress = `http://${getHost()}`;
+export const IpAddress = `http://${typeof window !== "undefined" && window.location.hostname ? window.location.hostname : "localhost"}`;
 
 export const FRONTEND_URL = `${IpAddress}:5173`; 
-export const BACKEND_URL = `${IpAddress}:9005`;
+export const BACKEND_URL = getBackendUrl();
 
 
 export const API_ENDPOINTS = {

@@ -2,7 +2,15 @@ import { AppConfig, UserRole } from "../config/constants.js";
 import jwt from "jsonwebtoken";
 import autSvc from "../modules/auth/auth.service.js";
 
+const normalizeRoles = (roles) => {
+    // Accept either a string ("Admin"), an array (["Admin", "Staff"]), or null.
+    if (!roles) return null;
+    return Array.isArray(roles) ? roles : [roles];
+};
+
 const allowUser = (roles = null) => {
+    const allowedRoles = normalizeRoles(roles);
+
     return async (req, res, next) => {
         try {
             let token = req.headers['authorization'] || null;
@@ -37,18 +45,14 @@ const allowUser = (roles = null) => {
                 req.authUser = autSvc.publicUserProfile(user);
 
                 // Check authorization tiers (Admin bypasses checks, otherwise inspect assigned roles array)
-                if (!roles || user.role === UserRole.ADMIN) {
+                if (!allowedRoles || user.role === UserRole.ADMIN || allowedRoles.includes(user.role)) {
                     return next();
                 } else {
-                    if (roles.includes(user.role)) {
-                        return next();
-                    } else {
-                        return next({
-                            code: 403,
-                            message: "Access Denied. You do not have permission to view this resource.",
-                            status: "UNAUTHORIZED"
-                        });
-                    }
+                    return next({
+                        code: 403,
+                        message: "Access Denied. You do not have permission to view this resource.",
+                        status: "UNAUTHORIZED"
+                    });
                 }
             } else {
                 return next({

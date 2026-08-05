@@ -14,6 +14,7 @@ import ProfilePage from './pages/profilePage/profile.page.tsx';
 import OrdersPage from './pages/ordersPage/orders.page.tsx';
 import AdminPage from './pages/adminPage/admin.page.tsx';
 import { PrivacyPage, TermsPage } from './pages/staticPage/static.page.tsx';
+import { StandaloneLogin, StandaloneRegister } from './pages/auth/StandaloneAuth.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -21,11 +22,16 @@ createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<StandaloneLogin />} />
+          <Route path="/LoginPage" element={<StandaloneLogin />} />
+          <Route path="/register" element={<StandaloneRegister />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/about" element={<AboutUsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/AboutUs" element={<AboutUsPage />} />
           <Route path="/ContactPage" element={<ContactPage />} />
-          <Route path="/Checkout" element={<CheckOutPage />} />
           <Route path="/checkout" element={<CheckOutPage />} />
+          <Route path="/Checkout" element={<CheckOutPage />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/profile" element={<ProfilePage />} />
@@ -33,7 +39,6 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
-
         </Routes>
       </BrowserRouter>
     </CartProvider>

@@ -188,7 +188,7 @@ const CheckOutPage: React.FC = () => {
     // 3. Execution (Single try-catch block)
     try {
       setIsSubmitting(true);
-      const token = localStorage.getItem("token") || "";
+      const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
 
       const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
         method: "POST",
@@ -338,12 +338,12 @@ const CheckOutPage: React.FC = () => {
                 </label>
 
                 <label>
-                  Location
+                  City
                   <input
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    placeholder="Your Location"
+                    placeholder="e.g. Birgunj"
                     required
                     disabled={isSubmitting}
                   />

@@ -124,7 +124,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     try {
       const accessToken = localStorage.getItem('accessToken');
 
-      const response = await axios.post(API_ENDPOINTS.CREATE_ITEM, dataPayload, {
+      await axios.post(API_ENDPOINTS.CREATE_ITEM, dataPayload, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': accessToken ? `Bearer ${accessToken}` : ''
@@ -132,7 +132,6 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
         withCredentials: true 
       });
 
-      console.log("Database update successful:", response.data);
       toast.success('Item was added to the catalog successfully.');
       resetForm();
     } catch (error: unknown) { 

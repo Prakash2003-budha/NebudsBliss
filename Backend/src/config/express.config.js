@@ -8,18 +8,39 @@ import './db.config.js'
 
 const app = express();
 
-// 1. ADDED: You MUST use cors here so the frontend can talk to the backend!
-// Instead of hardcoding one IP (which breaks the moment you switch networks
-// or open the app from your phone), we allow any origin coming from
-// localhost or a private LAN address on port 5173 (the Vite dev server port).
+// 1. CORS. Two modes:
+//   - Development (default): allow localhost:5173 plus any private LAN
+//     origin on port 5173 so you can open the app from your phone
+//     (e.g. http://192.168.1.5:5173) while testing on the same network.
+//   - Production (NODE_ENV=production): strict allowlist only —
+//     either the CORS_ORIGIN env var (comma-separated) or localhost:5173.
+const DEV_ORIGIN = "http://localhost:5173";
+
+// Private-LAN origins on the Vite dev port (dev-only convenience).
 const LAN_ORIGIN_REGEX = /^http:\/\/((localhost)|(127\.0\.0\.1)|(192\.168\.\d{1,3}\.\d{1,3})|(10\.\d{1,3}\.\d{1,3}\.\d{1,3})|(172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})):5173$/;
+
+const isProduction = process.env.NODE_ENV === "production";
+
+// Optional env override: comma-separated list of allowed origins.
+const getExplicitOrigins = () => {
+  const raw = process.env.CORS_ORIGIN;
+  if (!raw) return [DEV_ORIGIN];
+  return raw.split(",").map((s) => s.trim()).filter(Boolean);
+};
+
+const explicitOrigins = getExplicitOrigins();
 
 app.use(cors({
   origin: (origin, callback) => {
     // Allow non-browser requests (curl/Postman) which send no origin header
     if (!origin) return callback(null, true);
 
-    if (LAN_ORIGIN_REGEX.test(origin)) {
+    if (explicitOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Dev-only: permit the Vite dev server on private LAN addresses (phone testing)
+    if (!isProduction && LAN_ORIGIN_REGEX.test(origin)) {
       return callback(null, true);
     }
 
