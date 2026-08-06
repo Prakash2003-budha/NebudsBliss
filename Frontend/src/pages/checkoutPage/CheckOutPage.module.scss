@@ -397,6 +397,121 @@ select {
   color: $dark-text;
 }
 
+// 11b. Promo Code Widget
+.promoBox {
+  margin: 0.25rem 0 1.5rem;
+  padding: 1rem;
+  border: 1px dashed $border-color;
+  border-radius: 12px;
+  background-color: #fbfbfc;
+
+  .promoLabel {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $light-text;
+  }
+}
+
+.promoRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.promoInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.promoBtn {
+  flex-shrink: 0;
+  background-color: var(--nb-primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--nb-primary-dark);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.promoMsgSuccess,
+.promoMsgError {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.promoMsgSuccess {
+  color: #16a34a;
+}
+
+.promoMsgError {
+  color: #d9534f;
+}
+
+.promoApplied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.promoAppliedInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.promoCodeBadge {
+  background-color: rgba(8, 95, 246, 0.12);
+  color: var(--nb-primary);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.promoSavings {
+  color: #16a34a;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.promoRemoveBtn {
+  background: none;
+  border: none;
+  color: #d9534f;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
 // 12. Checkout Breakdown Matrix
 .totalBox {
   display: flex;
@@ -419,6 +534,12 @@ select {
       color: $dark-text;
       font-weight: 700;
     }
+  }
+}
+
+.discountRow {
+  strong {
+    color: #16a34a !important;
   }
 }
 

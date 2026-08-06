@@ -20,6 +20,10 @@ const OrderSchema = new mongoose.Schema({
     items: [OrderItemSchema],
     subtotal: Number,
     shippingFee: Number,
+    // Optional applied promo code — the code itself is stored (uppercase)
+    // along with the exact rupee discount that was granted.
+    promoCode: { type: String },
+    discount: Number,
     totalAmount: Number,
     paymentMethod: { type: String, enum: ["cash", "bank"], required: true },
     // Optional proof-of-payment screenshot, mainly for bank transfers.

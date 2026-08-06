@@ -3,8 +3,26 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "../../components/layout/layout";
 import { API_ENDPOINTS } from "../../constants/constants";
-import profileIcon from "../../img/icons/profile.black.png";
 import styles from "./profile.page.module.scss";
+
+/** Format an ISO date as "Jan 5, 2026"; returns an em dash when empty/invalid. */
+const formatDate = (iso?: string): string => {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? "—" : d.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+/** Two-letter initials from a full name, used as the avatar fallback. */
+const getInitials = (name?: string): string => {
+  const parts = (name || "").trim().split(/\s+/).filter(Boolean).slice(0, 2);
+  return parts.map((p) => p[0].toUpperCase()).join("") || "?";
+};
+
+const displayValue = (value?: string): string => (value && value.trim() ? value : "—");
 
 interface Profile {
   fullName: string;
@@ -78,53 +96,62 @@ const ProfilePage: React.FC = () => {
         {!loading && !error && profile && (
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <img
-                src={profile.image?.url || profileIcon}
-                alt={profile.fullName}
-                className={styles.avatar}
-              />
-              <div>
+              {profile.image?.url ? (
+                <img
+                  src={profile.image.url}
+                  alt={profile.fullName}
+                  className={styles.avatar}
+                />
+              ) : (
+                <div className={styles.avatarFallback} aria-hidden="true">
+                  {getInitials(profile.fullName)}
+                </div>
+              )}
+              <div className={styles.identity}>
                 <h1>{profile.fullName}</h1>
-                <span className={styles.roleBadge}>{profile.role}</span>
+                <div className={styles.badges}>
+                  <span className={styles.roleBadge}>{profile.role}</span>
+                  <span className={profile.status ? styles.statusActive : styles.statusInactive}>
+                    {profile.status ? "Active" : "Not activated"}
+                  </span>
+                </div>
               </div>
             </div>
 
             <div className={styles.detailsGrid}>
               <div className={styles.detailItem}>
                 <span className={styles.label}>Email</span>
-                <span>{profile.email}</span>
+                <span>{displayValue(profile.email)}</span>
               </div>
               <div className={styles.detailItem}>
                 <span className={styles.label}>Phone</span>
-                <span>{profile.phone}</span>
+                <span>{displayValue(profile.phone)}</span>
               </div>
               <div className={styles.detailItem}>
                 <span className={styles.label}>Address</span>
-                <span>{profile.address}</span>
+                <span>{displayValue(profile.address)}</span>
               </div>
               <div className={styles.detailItem}>
                 <span className={styles.label}>Date of Birth</span>
-                <span>{new Date(profile.dob).toLocaleDateString()}</span>
-              </div>
-              <div className={styles.detailItem}>
-                <span className={styles.label}>Account Status</span>
-                <span>{profile.status ? "Active" : "Not Activated"}</span>
+                <span>{formatDate(profile.dob)}</span>
               </div>
               <div className={styles.detailItem}>
                 <span className={styles.label}>Member Since</span>
-                <span>{new Date(profile.createdAt).toLocaleDateString()}</span>
+                <span>{formatDate(profile.createdAt)}</span>
               </div>
             </div>
 
             <div className={styles.actions}>
-              <Link to="/orders" className={styles.primaryBtn}>
-                My Orders
-              </Link>
-              {profile.role === "Admin" && (
-                <Link to="/admin" className={styles.secondaryBtn}>
-                  Admin Dashboard
+              <div className={styles.actionGroup}>
+                <Link to="/orders" className={styles.primaryBtn}>
+                  My Orders
                 </Link>
-              )}
+                {profile.role === "Admin" && (
+                  <Link to="/admin" className={styles.secondaryBtn}>
+                    Admin Dashboard
+                  </Link>
+                )}
+              </div>
               <button className={styles.logoutBtn} onClick={handleLogout}>
                 Logout
               </button>

@@ -68,6 +68,13 @@ export const API_ENDPOINTS = {
     GET_REVIEWS: (itemId: string) => `${BACKEND_URL}/reviews?itemId=${itemId}`,
     CREATE_REVIEW: `${BACKEND_URL}/reviews`,
     DELETE_REVIEW: (id: string) => `${BACKEND_URL}/reviews/${id}`,
+
+    // Promo Code Endpoints
+    VALIDATE_PROMO: `${BACKEND_URL}/promo-codes/validate`,
+    GET_PROMO_CODES: `${BACKEND_URL}/promo-codes`,
+    CREATE_PROMO_CODE: `${BACKEND_URL}/promo-codes`,
+    UPDATE_PROMO_CODE: (id: string) => `${BACKEND_URL}/promo-codes/${id}`,
+    DELETE_PROMO_CODE: (id: string) => `${BACKEND_URL}/promo-codes/${id}`,
 };
 
 // Maps the friendly URL slugs used in /category/:slug links (header, sidebar, footer)

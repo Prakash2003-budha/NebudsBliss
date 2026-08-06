@@ -20,10 +20,28 @@ interface AdminItem {
   images: { url: string; optimizeUrl: string }[];
 }
 
+interface AdminOrderItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 interface AdminOrder {
   _id: string;
+  userId?: string;
   fullName: string;
   phone: string;
+  email?: string;
+  address?: string;
+  city?: string;
+  note?: string;
+  mapUrl?: string;
+  items?: AdminOrderItem[];
+  subtotal?: number;
+  shippingFee?: number;
+  discount?: number;
+  promoCode?: string;
   totalAmount: number;
   paymentMethod: "cash" | "bank";
   paymentStatus: "pending" | "completed" | "failed";
@@ -60,6 +78,7 @@ const AdminPage: React.FC = () => {
   const [ordersLoading, setOrdersLoading] = useState(true);
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [viewingOrder, setViewingOrder] = useState<AdminOrder | null>(null);
+  const [detailOrder, setDetailOrder] = useState<AdminOrder | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -199,6 +218,9 @@ const AdminPage: React.FC = () => {
         prev.map((o) => (o._id === order._id ? { ...o, [field]: value } : o))
       );
       setViewingOrder((prev) =>
+        prev && prev._id === order._id ? { ...prev, [field]: value } : prev
+      );
+      setDetailOrder((prev) =>
         prev && prev._id === order._id ? { ...prev, [field]: value } : prev
       );
       toast.success("Order updated.");
@@ -363,10 +385,12 @@ const AdminPage: React.FC = () => {
                       <th>Order</th>
                       <th>Customer</th>
                       <th>Total</th>
+                      <th>Promo</th>
                       <th>Payment</th>
                       <th>Payment Proof</th>
                       <th>Payment Status</th>
                       <th>Order Status</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -382,7 +406,17 @@ const AdminPage: React.FC = () => {
                           {order.fullName}
                           <div className={styles.orderDateCell}>{order.phone}</div>
                         </td>
-                        <td>Rs. {order.totalAmount}</td>
+                        <td>Rs. {order.totalAmount.toLocaleString()}</td>
+                        <td>
+                          {order.promoCode ? (
+                            <span className={styles.promoBadge}>
+                              {order.promoCode}
+                              {order.discount ? ` · −Rs. ${order.discount.toLocaleString()}` : ""}
+                            </span>
+                          ) : (
+                            <span className={styles.proofNa}>—</span>
+                          )}
+                        </td>
                         <td>{order.paymentMethod === PAYMENT_METHOD.CASH ? "Cash" : "Bank"}</td>
                         <td>
                           {order.paymentMethod === PAYMENT_METHOD.BANK ? (
@@ -433,6 +467,15 @@ const AdminPage: React.FC = () => {
                             <option value={ORDER_STATUS.DELIVERED}>Delivered</option>
                             <option value={ORDER_STATUS.CANCELLED}>Cancelled</option>
                           </select>
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            className={styles.detailBtn}
+                            onClick={() => setDetailOrder(order)}
+                          >
+                            Details
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -497,6 +540,169 @@ const AdminPage: React.FC = () => {
                 >
                   ✕ Reject Payment
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {detailOrder && (
+          <div className={styles.detailOverlay} onClick={() => setDetailOrder(null)}>
+            <div className={styles.detailContent} onClick={(e) => e.stopPropagation()}>
+              <button
+                type="button"
+                className={styles.lightboxClose}
+                onClick={() => setDetailOrder(null)}
+                aria-label="Close"
+              >
+                ×
+              </button>
+
+              <h3 className={styles.detailTitle}>
+                Order #{detailOrder._id.slice(-8).toUpperCase()}
+              </h3>
+              <p className={styles.detailPlaced}>
+                Placed {new Date(detailOrder.createdAt).toLocaleString()}
+              </p>
+
+              <div className={styles.detailSection}>
+                <h4>Customer</h4>
+                <div className={styles.detailGrid}>
+                  <div>
+                    <span>Name</span>
+                    <strong>{detailOrder.fullName}</strong>
+                  </div>
+                  <div>
+                    <span>Phone</span>
+                    <strong>{detailOrder.phone}</strong>
+                  </div>
+                  {detailOrder.email && (
+                    <div>
+                      <span>Email</span>
+                      <strong>{detailOrder.email}</strong>
+                    </div>
+                  )}
+                  <div>
+                    <span>Payment</span>
+                    <strong>
+                      {detailOrder.paymentMethod === PAYMENT_METHOD.CASH
+                        ? "Cash on delivery"
+                        : "Bank transfer"}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.detailSection}>
+                <h4>Shipping</h4>
+                <p className={styles.detailAddress}>
+                  {detailOrder.address}, {detailOrder.city}
+                </p>
+                {detailOrder.note && (
+                  <p className={styles.detailNote}>Note: {detailOrder.note}</p>
+                )}
+                {detailOrder.mapUrl && (
+                  <a
+                    href={detailOrder.mapUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.mapLink}
+                  >
+                    View location on map ↗
+                  </a>
+                )}
+              </div>
+
+              <div className={styles.detailSection}>
+                <h4>Items</h4>
+                <div className={styles.detailItems}>
+                  {(detailOrder.items || []).map((it, idx) => (
+                    <div key={idx} className={styles.detailItemRow}>
+                      <div className={styles.detailItemInfo}>
+                        <strong>{it.name}</strong>
+                        <span className={styles.detailItemQty}>
+                          × {it.quantity} @ Rs. {it.price.toLocaleString()}
+                        </span>
+                      </div>
+                      <span>Rs. {(it.price * it.quantity).toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className={styles.detailTotals}>
+                  <div>
+                    <span>Subtotal</span>
+                    <strong>Rs. {(detailOrder.subtotal ?? 0).toLocaleString()}</strong>
+                  </div>
+                  <div>
+                    <span>Shipping</span>
+                    <strong>Rs. {(detailOrder.shippingFee ?? 0).toLocaleString()}</strong>
+                  </div>
+                  {(detailOrder.discount ?? 0) > 0 && (
+                    <div className={styles.detailDiscount}>
+                      <span>Discount ({detailOrder.promoCode})</span>
+                      <strong>− Rs. {detailOrder.discount!.toLocaleString()}</strong>
+                    </div>
+                  )}
+                  <div className={styles.detailGrandTotal}>
+                    <span>Total</span>
+                    <strong>Rs. {detailOrder.totalAmount.toLocaleString()}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.detailSection}>
+                <h4>Status</h4>
+                <div className={styles.detailStatusRow}>
+                  <label>
+                    Payment
+                    <select
+                      className={styles.select}
+                      value={detailOrder.paymentStatus}
+                      disabled={updatingOrderId === detailOrder._id}
+                      onChange={(e) =>
+                        handleOrderStatusChange(detailOrder, "paymentStatus", e.target.value)
+                      }
+                    >
+                      <option value={PAYMENT_STATUS.PENDING}>Pending</option>
+                      <option value={PAYMENT_STATUS.COMPLETED}>Completed</option>
+                      <option value={PAYMENT_STATUS.FAILED}>Failed</option>
+                    </select>
+                  </label>
+                  <label>
+                    Order
+                    <select
+                      className={styles.select}
+                      value={detailOrder.orderStatus}
+                      disabled={updatingOrderId === detailOrder._id}
+                      onChange={(e) =>
+                        handleOrderStatusChange(detailOrder, "orderStatus", e.target.value)
+                      }
+                    >
+                      <option value={ORDER_STATUS.PROCESSING}>Processing</option>
+                      <option value={ORDER_STATUS.SHIPPED}>Shipped</option>
+                      <option value={ORDER_STATUS.DELIVERED}>Delivered</option>
+                      <option value={ORDER_STATUS.CANCELLED}>Cancelled</option>
+                    </select>
+                  </label>
+                </div>
+
+                {detailOrder.paymentMethod === PAYMENT_METHOD.BANK &&
+                  detailOrder.paymentScreenshot?.url && (
+                    <div className={styles.detailProof}>
+                      <button
+                        type="button"
+                        className={styles.proofThumbBtn}
+                        onClick={() => setViewingOrder(detailOrder)}
+                      >
+                        <img
+                          src={detailOrder.paymentScreenshot.url}
+                          alt={`Payment screenshot for order #${detailOrder._id.slice(-8).toUpperCase()}`}
+                          className={styles.detailProofImg}
+                        />
+                      </button>
+                      <span className={styles.detailProofHint}>
+                        Click to view full payment proof
+                      </span>
+                    </div>
+                  )}
               </div>
             </div>
           </div>

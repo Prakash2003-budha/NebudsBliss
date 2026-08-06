@@ -21,6 +21,13 @@ interface CheckoutFormState {
   mapLink: string;
 }
 
+interface AppliedPromo {
+  code: string;
+  discountAmount: number;
+  discountType: "percent" | "fixed";
+  discountValue: number;
+}
+
 const paymentOptions = [
   {
     value: PAYMENT_METHOD.CASH,
@@ -62,6 +69,12 @@ const CheckOutPage: React.FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
 
+  // Promo code state
+  const [promoInput, setPromoInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<AppliedPromo | null>(null);
+  const [promoStatus, setPromoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [promoMsg, setPromoMsg] = useState<string | null>(null);
+
   const subtotal = useMemo(() => {
     return cartItems.reduce((sum, item) => {
       const price = item.discountPrice ?? item.price;
@@ -70,7 +83,10 @@ const CheckOutPage: React.FC = () => {
   }, [cartItems]);
 
   const shipping = cartItems.length > 0 ? 200 : 0;
-  const total = subtotal + shipping;
+  // Clamp the discount so it can never exceed the subtotal (cart may change
+  // after a code was applied).
+  const discount = appliedPromo ? Math.min(appliedPromo.discountAmount, subtotal) : 0;
+  const total = subtotal + shipping - discount;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -131,6 +147,66 @@ const CheckOutPage: React.FC = () => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const handleApplyPromo = async () => {
+    const code = promoInput.trim();
+    if (!code) {
+      setPromoStatus("error");
+      setPromoMsg("Please enter a promo code.");
+      return;
+    }
+    if (cartItems.length === 0) {
+      setPromoStatus("error");
+      setPromoMsg("Add items to your cart before applying a promo code.");
+      return;
+    }
+
+    setPromoStatus("loading");
+    setPromoMsg(null);
+
+    try {
+      const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
+      const response = await fetch(API_ENDPOINTS.VALIDATE_PROMO, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ code, subtotal }),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "This promo code could not be applied.");
+      }
+
+      setAppliedPromo({
+        code: result.data.code.toUpperCase(),
+        discountAmount: result.data.discountAmount,
+        discountType: result.data.discountType,
+        discountValue: result.data.discountValue,
+      });
+      setPromoInput("");
+      setPromoMsg(null);
+    } catch (error) {
+      setAppliedPromo(null);
+      setPromoStatus("error");
+      if (error instanceof Error) {
+        setPromoMsg(error.message);
+      } else {
+        setPromoMsg("An unexpected error occurred.");
+      }
+    } finally {
+      setPromoStatus((prev) => (prev === "loading" ? "idle" : prev));
+    }
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoStatus("idle");
+    setPromoMsg(null);
+    setPromoInput("");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError(null);
@@ -181,6 +257,9 @@ const CheckOutPage: React.FC = () => {
         }))
       )
     );
+    if (appliedPromo) {
+      orderForm.append("promoCode", appliedPromo.code);
+    }
     if (paymentScreenshot) {
       orderForm.append("paymentScreenshot", paymentScreenshot);
     }
@@ -207,6 +286,7 @@ const CheckOutPage: React.FC = () => {
       setSubmitted(true);
       clearCart();
       clearScreenshot();
+      handleRemovePromo();
     } catch (error) { 
       console.error("Order submission failed:", error);
       if (error instanceof Error) {
@@ -511,6 +591,60 @@ const CheckOutPage: React.FC = () => {
                   ))}
                 </div>
 
+                <div className={styles.promoBox}>
+                  <span className={styles.promoLabel}>Promo code</span>
+
+                  {appliedPromo ? (
+                    <div className={styles.promoApplied}>
+                      <div className={styles.promoAppliedInfo}>
+                        <span className={styles.promoCodeBadge}>{appliedPromo.code}</span>
+                        <span className={styles.promoSavings}>
+                          − Rs. {discount.toLocaleString()}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.promoRemoveBtn}
+                        onClick={handleRemovePromo}
+                        disabled={isSubmitting}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className={styles.promoRow}>
+                        <input
+                          className={styles.promoInput}
+                          value={promoInput}
+                          onChange={(e) => setPromoInput(e.target.value)}
+                          placeholder="Enter promo code"
+                          disabled={isSubmitting || promoStatus === "loading"}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleApplyPromo();
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className={styles.promoBtn}
+                          onClick={handleApplyPromo}
+                          disabled={isSubmitting || promoStatus === "loading"}
+                        >
+                          {promoStatus === "loading" ? "Checking…" : "Apply"}
+                        </button>
+                      </div>
+                      {promoMsg && (
+                        <p className={promoStatus === "error" ? styles.promoMsgError : styles.promoMsgSuccess}>
+                          {promoMsg}
+                        </p>
+                      )}
+                    </>
+                  )}
+                </div>
+
                 <div className={styles.totalBox}>
                   <div>
                     <span>Subtotal</span>
@@ -520,6 +654,12 @@ const CheckOutPage: React.FC = () => {
                     <span>Shipping</span>
                     <strong>Rs. {shipping.toLocaleString()}</strong>
                   </div>
+                  {discount > 0 && (
+                    <div className={styles.discountRow}>
+                      <span>Discount ({appliedPromo?.code})</span>
+                      <strong>− Rs. {discount.toLocaleString()}</strong>
+                    </div>
+                  )}
                   <div className={styles.totalRow}>
                     <span>Total</span>
                     <strong>Rs. {total.toLocaleString()}</strong>

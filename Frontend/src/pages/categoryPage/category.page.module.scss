@@ -8,8 +8,8 @@ $bg-color: #f7f8f9;
   font-family: $font-primary;
   background-color: $bg-color;
   min-height: 60vh;
-  padding: 2.5rem 1.5rem 4rem;
-  max-width: 1280px;
+  padding: 2.5rem 2rem 4rem;
+  max-width: 1440px;
   margin: 0 auto;
   box-sizing: border-box;
 
@@ -57,8 +57,8 @@ $bg-color: #f7f8f9;
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 1.75rem;
 
   @media (max-width: 700px) {
     grid-template-columns: repeat(3, 1fr);
@@ -72,6 +72,12 @@ $bg-color: #f7f8f9;
 
   @media (max-width: 360px) {
     gap: 0.45rem;
+  }
+
+  // Large screens: a predictable 4-up layout with comfortable card sizing
+  // instead of auto-fill squeezing in extra small columns.
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

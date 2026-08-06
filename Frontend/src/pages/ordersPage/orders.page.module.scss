@@ -166,3 +166,304 @@ $border-color: #eaeaea;
   text-transform: capitalize;
   font-weight: 600;
 }
+
+/* ---- Page header (title + refresh) ---- */
+.titleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  .title {
+    margin: 0 0 0.25rem;
+  }
+}
+
+.updatedAt {
+  margin: 0;
+  font-size: 0.78rem;
+  color: $light-text;
+}
+
+.refreshBtn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid $border-color;
+  background: #fff;
+  color: $primary-color;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    box-shadow: 0 2px 8px rgba(8, 95, 246, 0.18);
+  }
+}
+
+.refreshBtnSpinning {
+  animation: nb-spin 0.9s linear infinite;
+}
+
+@keyframes nb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Filter tabs ---- */
+.filterTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.filterTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid $border-color;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: $light-text;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: $primary-color;
+    color: $primary-color;
+  }
+}
+
+.filterTabActive {
+  background: $primary-color;
+  border-color: $primary-color;
+  color: #fff;
+
+  .filterCount {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+  }
+}
+
+.filterCount {
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: $bg-color;
+  color: $light-text;
+  border-radius: 999px;
+  padding: 1px 7px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ---- Status tracker (stepper) ---- */
+.stepperWrap {
+  padding: 0 1.5rem 1.25rem;
+}
+
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: 84px;
+  flex-shrink: 0;
+}
+
+.stepDot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #d4d4d4;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  color: transparent;
+  transition: all 0.2s ease;
+}
+
+.stepDone .stepDot {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+.stepActive .stepDot {
+  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+.stepLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: $light-text;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.stepDone .stepLabel {
+  color: #10b981;
+}
+
+.stepActive .stepLabel {
+  color: $dark-text;
+  font-weight: 700;
+}
+
+.stepperLine {
+  flex: 1;
+  height: 2px;
+  margin-top: 11px; /* align the line's centre with the dot centre */
+  background: #e5e5e5;
+}
+
+.stepperLineDone {
+  background: #10b981;
+}
+
+.stepperNote {
+  margin: 0.9rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $dark-text;
+}
+
+.stepperHint {
+  color: $light-text;
+  font-weight: 400;
+}
+
+/* ---- Cancelled banner ---- */
+.cancelledBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 0 1.5rem 1.25rem;
+}
+
+.cancelledIcon {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #b91c1c;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.cancelledText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+
+  strong {
+    color: #b91c1c;
+    font-size: 0.9rem;
+  }
+
+  span {
+    font-size: 0.82rem;
+    color: #7f1d1d;
+  }
+}
+
+/* ---- Payment badge ---- */
+.paymentBadge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+
+.paymentPending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #b45309;
+}
+
+.paymentCompleted {
+  background: rgba(16, 185, 129, 0.15);
+  color: #047857;
+}
+
+.paymentFailed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+/* ---- Price breakdown extras ---- */
+.discountRow > span:last-child {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.mapLink {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: $primary-color;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.refundNote {
+  margin: 0.6rem 0 0;
+  font-size: 0.82rem;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .step {
+    width: 74px;
+  }
+
+  .stepLabel {
+    font-size: 0.66rem;
+  }
+
+  .stepperWrap {
+    padding: 0 1rem 1rem;
+  }
+
+  .cancelledBanner {
+    margin: 0 1rem 1rem;
+  }
+
+  .orderSummary {
+    padding: 1rem;
+  }
+}

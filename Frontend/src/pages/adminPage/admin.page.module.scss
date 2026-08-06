@@ -71,7 +71,7 @@ $border-color: #eaeaea;
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 720px;
+  min-width: 900px;
 
   th {
     text-align: left;
@@ -252,7 +252,7 @@ $border-color: #eaeaea;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  z-index: 1000;
+  z-index: 1200; /* Above sticky header (1001) so the overlay covers it too */
 }
 
 .lightboxContent {
@@ -313,10 +313,226 @@ $border-color: #eaeaea;
   background: $bg-color;
 }
 
-.lightboxActions {
+.promoBadge {
+  display: inline-block;
+  background-color: rgba(8, 95, 246, 0.12);
+  color: $primary-color;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 4px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.detailBtn {
+  background-color: #fff;
+  color: $primary-color;
+  border: 1px solid $primary-color;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background-color: $primary-color;
+    color: #fff;
+  }
+}
+
+/* Order detail modal */
+.detailOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1200; /* above sticky header (1001) so the overlay covers it too */
+}
+
+.detailContent {
+  background: #fff;
+  border-radius: 14px;
+  padding: 1.75rem;
+  max-width: 640px;
   width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  text-align: left;
+}
+
+.detailTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  color: $dark-text;
+  padding-right: 1.5rem;
+}
+
+.detailPlaced {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: $light-text;
+}
+
+.detailSection {
+  margin-top: 1.25rem;
+  border-top: 1px solid $border-color;
+  padding-top: 1rem;
+
+  h4 {
+    margin: 0 0 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $light-text;
+  }
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 1.25rem;
+
+  span {
+    display: block;
+    font-size: 0.72rem;
+    color: $light-text;
+    margin-bottom: 0.15rem;
+  }
+
+  strong {
+    font-size: 0.92rem;
+    color: $dark-text;
+  }
+}
+
+.detailAddress {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  color: $dark-text;
+}
+
+.detailNote {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  color: $light-text;
+  font-style: italic;
+}
+
+.mapLink {
+  color: $primary-color;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.detailItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.detailItemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: $dark-text;
+
+  > span {
+    white-space: nowrap;
+  }
+}
+
+.detailItemQty {
+  display: block;
+  font-size: 0.78rem;
+  color: $light-text;
+}
+
+.detailTotals {
+  border-top: 1px dashed $border-color;
+  padding-top: 0.6rem;
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.22rem 0;
+    font-size: 0.88rem;
+    color: $dark-text;
+  }
+
+  span {
+    color: $light-text;
+  }
+}
+
+.detailDiscount {
+  strong {
+    color: #16a34a;
+  }
+}
+
+.detailGrandTotal {
+  border-top: 1px dashed $border-color;
+  margin-top: 0.3rem;
+  padding-top: 0.55rem;
+
+  strong {
+    font-size: 1.05rem;
+  }
+}
+
+.detailStatusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: $light-text;
+  }
+}
+
+.detailProof {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.detailProofImg {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+
+.detailProofHint {
+  font-size: 0.8rem;
+  color: $light-text;
 }
 
 .verifyBtn {

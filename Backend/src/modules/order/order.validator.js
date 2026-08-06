@@ -60,6 +60,12 @@ export const OrderCreateDTO = Joi.object({
     paymentMethod: Joi.string().valid("cash", "bank").required().messages({
         "any.only": "Payment method must be either cash or bank",
         "any.required": "Payment method is required"
+    }),
+
+    // Optional promo code. The actual discount is never accepted from the
+    // client — the service re-validates the code and recomputes the amount.
+    promoCode: Joi.string().trim().max(30).optional().messages({
+        "string.max": "Promo code cannot exceed 30 characters"
     })
 });
 

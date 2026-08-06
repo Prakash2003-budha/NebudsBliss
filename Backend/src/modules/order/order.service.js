@@ -1,6 +1,7 @@
 import OrderModel from "./order.model.js";
 import ItemModel from "../ItemModel/item.model.js";
 import cloudianarySvc from "../../services/cloudinary.services.js";
+import promoCodeSvc from "../promoCode/promoCode.service.js";
 
 const SHIPPING_FEE = 200;
 
@@ -78,6 +79,23 @@ class OrderService {
                 subtotal += unitPrice * quantity;
             }
 
+            data.subtotal = subtotal;
+
+            // Optional promo code. The code is re-validated server-side and the
+            // discount amount is recomputed from OUR subtotal — never trusted
+            // from the client. Discount applies to the subtotal only.
+            // Runs BEFORE the stock decrement so an unusable code can't burn
+            // inventory for an order that will be rejected.
+            if (data.promoCode) {
+                const promo = await promoCodeSvc.validatePromo({
+                    code: data.promoCode,
+                    subtotal,
+                    userId: data.userId
+                });
+                data.promoCode = promo.code;
+                data.discount = promo.discountAmount;
+            }
+
             // Decrement stock so we never oversell.
             await Promise.all(
                 rebuiltItems.map((line) =>
@@ -89,9 +107,9 @@ class OrderService {
             );
 
             data.items = rebuiltItems;
-            data.subtotal = subtotal;
             data.shippingFee = SHIPPING_FEE;
-            data.totalAmount = subtotal + SHIPPING_FEE;
+
+            data.totalAmount = Math.max(0, subtotal + SHIPPING_FEE - (data.discount || 0));
             data.paymentStatus = "pending";
             data.orderStatus = "processing";
 

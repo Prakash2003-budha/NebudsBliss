@@ -1,5 +1,6 @@
 import orderSvc from "./order.service.js";
 import cloudianarySvc from "../../services/cloudinary.services.js";
+import promoCodeSvc from "../promoCode/promoCode.service.js";
 
 class OrderController {
     createOrder = async (req, res, next) => {
@@ -7,6 +8,12 @@ class OrderController {
         try {
             orderData = await orderSvc.orderDataTransform(req);
             const savedOrder = await orderSvc.orderStore(orderData);
+
+            // Only count the promo redemption once the order actually saved —
+            // a failed save shouldn't burn a usage slot.
+            if (orderData.promoCode) {
+                await promoCodeSvc.markUsage(orderData.promoCode, orderData.userId).catch(() => {});
+            }
 
             res.json({
                 data: savedOrder,
