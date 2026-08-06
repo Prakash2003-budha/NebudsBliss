@@ -77,6 +77,7 @@ const ProductDetailContent: React.FC<{
       <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
         &times;
       </button>
+      <span className={styles.dragHandle} aria-hidden="true" />
 
       <div className={styles.content}>
           {/* Gallery */}

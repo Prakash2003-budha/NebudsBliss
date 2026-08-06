@@ -57,6 +57,16 @@ $light-text: #888888;
       border-color: var(--nb-primary);
     }
   }
+
+  @media (max-width: 600px) {
+    gap: 6px;
+
+    button {
+      width: 32px;
+      height: 32px;
+      font-size: 0.8rem;
+    }
+  }
 }
 
 .track {
@@ -70,28 +80,36 @@ $light-text: #888888;
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media (max-width: 600px) {
+    gap: 8px;
+  }
 }
 
 .card {
   flex: 0 0 240px;
   scroll-snap-align: start;
-  background: $dark-text;
-  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #ececec;
+  border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 16px 28px rgba(0, 0, 0, 0.14);
+    border-color: transparent;
 
-    .imagePanel img:first-child {
+    .imagePanel > img {
       transform: scale(1.06);
     }
   }
 
   @media (max-width: 600px) {
-    flex-basis: 170px;
+    flex-basis: 122px;
+    border-radius: 10px;
   }
 }
 
@@ -100,7 +118,7 @@ $light-text: #888888;
   width: 100%;
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background: #0d0d0d;
+  background: #f3f4f6;
 
   > img {
     width: 100%;
@@ -110,46 +128,81 @@ $light-text: #888888;
   }
 }
 
+.offBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #e5544a;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(229, 84, 74, 0.35);
+
+  @media (max-width: 600px) {
+    top: 5px;
+    left: 5px;
+    font-size: 0.55rem;
+    padding: 2px 5px;
+  }
+}
+
 .info {
-  background: #fff;
-  padding: 14px 16px 18px;
+  padding: 12px 14px 14px;
+
+  @media (max-width: 600px) {
+    padding: 8px 9px 10px;
+  }
 }
 
 .name {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: 0.92rem;
-  font-weight: 700;
+  font-weight: 600;
   color: $dark-text;
-  white-space: nowrap;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  min-height: 2.4em;
 
   @media (max-width: 600px) {
-    font-size: 0.82rem;
+    font-size: 0.72rem;
+    min-height: 2.1em;
+    margin-bottom: 5px;
   }
 }
 
 .priceRow {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
+
+  @media (max-width: 600px) {
+    gap: 4px;
+  }
 }
 
 .oldPrice {
   color: #aaa;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-decoration: line-through;
+
+  @media (max-width: 600px) {
+    font-size: 0.68rem;
+  }
 }
 
 .newPrice {
   color: $dark-text;
-  font-size: 1.2rem;
-  font-weight: 800;
-}
-
-.offBadge {
-  color: #e5544a;
-  font-size: 0.78rem;
+  font-size: 1.1rem;
   font-weight: 700;
+
+  @media (max-width: 600px) {
+    font-size: 0.85rem;
+  }
 }

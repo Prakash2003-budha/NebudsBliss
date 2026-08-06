@@ -112,7 +112,7 @@ export default function Header() {
       {/* 4. RENDER MODALS WITH ALL REQUIRED PROPS */}
       <LoginPage 
         isOpen={isLoginModalOpen} 
-        onClose={() => setIsLoginModalOpen(false)}
+        onClose={() => { setIsLoginModalOpen(false); window.location.reload(); }}
         onSwitchToRegister={() => {
           setIsLoginModalOpen(false);
           setIsRegisterModalOpen(true);

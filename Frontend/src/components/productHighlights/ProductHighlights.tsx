@@ -65,6 +65,9 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
                     (e.target as HTMLImageElement).src = profile as string;
                   }}
                 />
+                {hasDiscount && (
+                  <span className={styles.offBadge}>-{discountPercent}% off</span>
+                )}
               </div>
               <div className={styles.info}>
                 <h3 className={styles.name}>{item.name}</h3>
@@ -73,9 +76,6 @@ const ProductHighlights: React.FC<ProductHighlightsProps> = ({
                   <span className={styles.newPrice}>
                     Rs. {hasDiscount ? item.discountPrice : item.price}
                   </span>
-                  {hasDiscount && (
-                    <span className={styles.offBadge}>-{discountPercent}% off</span>
-                  )}
                 </div>
               </div>
             </div>

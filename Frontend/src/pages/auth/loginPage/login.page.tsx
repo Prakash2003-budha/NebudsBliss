@@ -46,7 +46,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
         localStorage.setItem("user", JSON.stringify(data.data.user));
 
         onClose();
-        window.location.reload();
       } else {
         if (data && data.status === "ACCOUNT_NOT_ACTIVATED") {
           setErrorMessage("Your account is not activated. Please check your email.");

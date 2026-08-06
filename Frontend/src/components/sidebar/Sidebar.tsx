@@ -32,33 +32,48 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
 
       {/* Drawer */}
       <aside className={`${styles.sidebarDrawer} ${isOpen ? styles.sidebarOpen : ''}`}>
-        
-        {/* Profile Header (Always shows: User or Guest) */}
-        <div 
-          className={styles.sidebarProfileHeader} 
-          onClick={() => { 
-            if (user) { navigate('/profile'); } 
-            else { navigate('/LoginPage'); }
-            closeSidebar(); 
-          }}
-        >
-          <img 
-            src={user?.image?.url || profileIcon} 
-            alt="User Profile" 
-            className={styles.sidebarProfileImage} 
-            // Adds a dark background if they are a guest so the white icon is visible
-            style={!user?.image?.url ? { backgroundColor: '#000' } : {}} 
-          />
-          <span className={styles.sidebarProfileName}>
-            {user ? user.fullName : 'Welcome, Guest!'}
-          </span>
+
+        {/* Top bar: profile (left) + close button (right) */}
+        <div className={styles.sidebarTopBar}>
+          <div
+            className={styles.sidebarProfileHeader}
+            onClick={() => {
+              if (user) { navigate('/profile'); }
+              else { navigate('/LoginPage'); }
+              closeSidebar();
+            }}
+          >
+            <img
+              src={user?.image?.url || profileIcon}
+              alt="User Profile"
+              className={styles.sidebarProfileImage}
+              // Adds a dark background for guests so the white icon stays visible
+              style={!user?.image?.url ? { backgroundColor: '#000' } : {}}
+            />
+            <span className={styles.sidebarProfileName}>
+              {user ? user.fullName : 'Welcome, Guest!'}
+            </span>
+          </div>
+
+          <button
+            className={styles.sidebarClose}
+            onClick={closeSidebar}
+            aria-label="Close menu"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 strokeWidth="2.4" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
         </div>
 
         {/* Navigation */}
         <nav className={styles.sidebarNav}>
           <Link to="/" className={styles.sidebarNavLink} onClick={closeSidebar}>Home</Link>
-          
+
           <Link to="/shop" className={styles.sidebarNavLink} onClick={closeSidebar}>Shop</Link>
+
           <div className={styles.sidebarSectionHeading}>Categories</div>
           <div className={styles.sidebarSubMenu}>
             <Link to="/shop" className={styles.sidebarSubLink} onClick={closeSidebar}>All Products</Link>
@@ -68,6 +83,8 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
             <Link to="/category/accessories" className={styles.sidebarSubLink} onClick={closeSidebar}>Accessories</Link>
             <Link to="/category/fans" className={styles.sidebarSubLink} onClick={closeSidebar}>Fan</Link>
           </div>
+
+          <div className={styles.sidebarDivider} />
 
           <Link to="/AboutUs" className={styles.sidebarNavLink} onClick={closeSidebar}>About Us</Link>
           <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>

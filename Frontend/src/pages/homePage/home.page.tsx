@@ -271,7 +271,7 @@ const Homepage: React.FC = () => {
           />
         )}
 
-        <LoginPage isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }} />
+        <LoginPage isOpen={isLoginModalOpen} onClose={() => { setIsLoginModalOpen(false); window.location.reload(); }} onSwitchToRegister={() => { setIsLoginModalOpen(false); setIsRegisterModalOpen(true); }} />
         <SignUpModal isOpen={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)} onSwitchToLogin={() => { setIsRegisterModalOpen(false); setIsLoginModalOpen(true); }} />
         <PasswordConfirmModal isOpen={isPasswordModalOpen} onClose={() => { setIsPasswordModalOpen(false); setItemPendingDelete(null); }} onConfirm={handleDeleteConfirmed} />
         <ProductDetailModal item={selectedProduct} isOpen={isProductModalOpen} onClose={() => setIsProductModalOpen(false)} />
