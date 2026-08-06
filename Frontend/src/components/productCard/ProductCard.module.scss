@@ -1,5 +1,5 @@
-$primary-color: #3f8791;
-$primary-dark: #2b6169;
+$primary-color: var(--nb-primary);
+$primary-dark: var(--nb-primary-dark);
 $ink: #1a1d1f;
 $muted: #767c82;
 $hairline: #ececec;

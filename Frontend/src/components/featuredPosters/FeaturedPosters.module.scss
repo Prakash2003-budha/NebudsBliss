@@ -1,7 +1,7 @@
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $dark-text: #222222;
 $light-text: #888888;
-$primary-color: #4a8b96;
+$primary-color: var(--nb-primary);
 
 .featuredSection {
   font-family: $font-primary;

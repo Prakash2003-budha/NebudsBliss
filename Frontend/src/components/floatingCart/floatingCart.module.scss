@@ -1,7 +1,7 @@
 // Variables
 $primary-color:      #085ff6;
-$secoundary-color:   #3ce3ff; 
-$hover-color:        #bcf5ff;
+$secoundary-color:   var(--nb-primary); 
+$hover-color:        var(--nb-primary-light);
 $breakpoint-mobile:  768px;
 
 @keyframes pulse {
@@ -11,16 +11,15 @@ $breakpoint-mobile:  768px;
 }
 
 .floatingCartButton {
-  position: fixed;
-  bottom: 24px;     
-  right: 24px;      
-  z-index: 999;
-  width: 60px;       
-  height: 60px;    
-  background-color: $secoundary-color; 
+  // NOTE: sits inside Layout's responsive .floatingButtons stack, so it must
+  // not be position: fixed itself — the stack handles placement.
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-color: $secoundary-color;
   border: none;
   border-radius: 50%;
-  box-shadow: 0 10px 25px -5px rgba(8, 95, 246, 0.25); 
+  box-shadow: 0 10px 25px -5px rgba(8, 95, 246, 0.25);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -29,7 +28,7 @@ $breakpoint-mobile:  768px;
 
   &:hover {
     transform: scale(1.1);
-    background-color: $hover-color; 
+    background-color: $hover-color;
   }
 
   &:active {
@@ -37,10 +36,8 @@ $breakpoint-mobile:  768px;
   }
 
   @media (max-width: $breakpoint-mobile) {
-    bottom: 16px;
-    right: 16px;      
-    width: 52px;     
-    height: 52px;     
+    width: 52px;
+    height: 52px;
   }
 }
 
@@ -48,14 +45,14 @@ $breakpoint-mobile:  768px;
   width: 24px;
   height: 24px;
   object-fit: contain;
-  filter: brightness(0) saturate(100%) invert(9%) sepia(0%) saturate(0%) hue-rotate(174deg) brightness(96%) contrast(89%);
+  filter: brightness(0) invert(1);
 }
 
 .cartBadge {
   position: absolute;
   top: -2px;
   right: -2px;
-  background-color: $primary-color; 
+  background-color: var(--nb-accent); 
   color: white;
   font-size: 11px;
   font-weight: bold;

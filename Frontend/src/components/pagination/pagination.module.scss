@@ -1,5 +1,5 @@
 $font-primary: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
-$primary-color: #4a8b96;
+$primary-color: var(--nb-primary);
 $dark-text: #222222;
 $light-text: #888888;
 $border-color: #eaeaea;
@@ -41,8 +41,8 @@ $border-color: #eaeaea;
 }
 
 .pageBtnActive {
-  background: $dark-text;
-  border-color: $dark-text;
+  background: var(--nb-primary);
+  border-color: var(--nb-primary);
   color: #fff;
 
   &:hover {

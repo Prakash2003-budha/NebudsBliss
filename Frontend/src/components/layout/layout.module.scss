@@ -7,3 +7,23 @@
 .mainContent {
   flex: 1; /* Automatically grows to fill all empty space, pushing the footer down */
 }
+
+/* Fixed stack of floating action buttons (admin add + WhatsApp + cart).
+   Each button inside is position: relative so this container controls where
+   they sit. Order in the DOM: Admin (top) -> WhatsApp -> Cart (bottom). */
+.floatingButtons {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+
+  @media (max-width: 768px) {
+    right: 16px;
+    bottom: 16px;
+    gap: 12px;
+  }
+}

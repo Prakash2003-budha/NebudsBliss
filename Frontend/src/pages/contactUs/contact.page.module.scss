@@ -2,7 +2,7 @@
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 $primary-color: #085ff6;
-$secondary-color: #3ce3ff;
+$secondary-color: var(--nb-accent);
 
 $dark-text: #0f172a;
 $light-text: #5b6472;
@@ -245,7 +245,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .submitBtn {
-    background: $dark-text; 
+    background: var(--nb-primary); 
     color: #fff;
     border: none;
     padding: 14px 28px;
@@ -261,7 +261,7 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     &:hover:not(:disabled) {
-      background: $primary-color;
+      background: var(--nb-primary-dark);
       transform: translateY(-1px);
       box-shadow: 0 8px 20px rgba(8, 95, 246, 0.2);
     }

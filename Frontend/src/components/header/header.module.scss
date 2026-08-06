@@ -3,8 +3,8 @@ $primary-color: #085ff6;
 $dark-text: #222222;
 $light-bg: #f8f9fa;
 $border-color: #eeeeee;
-$secoundary-color: #3ce3ff;
-$hover-color: #bcf5ff;
+$secoundary-color: var(--nb-primary);
+$hover-color: var(--nb-primary-light);
 $breakpoint-mobile: 768px;
 
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -159,13 +159,13 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     .profileImage {
       /* Highlight the border slightly */
-      border-color: rgba($secoundary-color, 0.5);
+      border-color: rgba(8, 95, 246, 0.5);
       
       /* The Premium Stacked Glow:
          Layer 1: A tight, 4px soft ring directly around the image
          Layer 2: A wider, very soft 15px shadow that blends into the background
       */
-      box-shadow: 0 0 0 4px rgba($secoundary-color, 0.15); 
+      box-shadow: 0 0 0 4px rgba(8, 95, 246, 0.15); 
     }
   }
 

@@ -1,14 +1,14 @@
 $bg-color: #1a1a1a;
 $text-color: #aaaaaa;
 $title-color: #ffffff;
-$accent-color: #3ce3ff;
+$accent-color: var(--nb-primary);
 $border-color: #333333;
 
 .footer {
   background-color: $bg-color;
   color: $text-color;
   padding: 2rem 1rem 2rem 1rem;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--nb-font);
 
   .container {
     max-width: 1200px;

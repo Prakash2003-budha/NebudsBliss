@@ -1,0 +1,86 @@
+// Variables
+$whatsapp-color:      #25d366;
+$whatsapp-color-dark: #1ebe5a;
+$breakpoint-mobile:   768px;
+
+// The floating buttons are placed inside Layout's .floatingButtons stack,
+// so this element must NOT be position: fixed itself (it sits in the stack).
+.whatsAppButton {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background-color: $whatsapp-color;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: $whatsapp-color-dark;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+.whatsAppIcon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+// Hover label — desktop only (touch devices have no hover).
+.tooltip {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  transform: translateY(-50%) translateX(4px);
+  background-color: var(--nb-text, #1a2233);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  box-shadow: var(--nb-shadow, 0 4px 16px rgba(26, 34, 51, 0.1));
+
+  // Little arrow pointing at the button
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: var(--nb-text, #1a2233);
+  }
+
+  @media (pointer: coarse) {
+    display: none; // Don't chase a tooltip on touch devices
+  }
+}
+
+.whatsAppButton:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(0);
+}

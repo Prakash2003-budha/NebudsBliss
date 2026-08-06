@@ -2,7 +2,7 @@
 $card-bg:      #1c1c1e;
 $text-color:   #aaaaaa;
 $title-color:  #ffffff;
-$accent-color: #3ce3ff;
+$accent-color: var(--nb-primary);
 $input-bg:     #262629;
 $border-color: #333333;
 
@@ -17,7 +17,7 @@ $border-color: #333333;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: var(--nb-font);
 }
 
 // ── Card ──────────────────────────────────────────────────
@@ -135,7 +135,7 @@ $border-color: #333333;
   &:focus {
     outline: none;
     border-color: $accent-color;
-    box-shadow: 0 0 0 3px rgba($accent-color, 0.12);
+    box-shadow: 0 0 0 3px rgba(8, 95, 246, 0.12);
   }
 
   &::placeholder { color: #505050; }
@@ -238,7 +238,7 @@ $border-color: #333333;
   &:focus {
     outline: none;
     border-color: $accent-color;
-    box-shadow: 0 0 0 3px rgba($accent-color, 0.12);
+    box-shadow: 0 0 0 3px rgba(8, 95, 246, 0.12);
   }
 
   &::placeholder { color: #505050; }

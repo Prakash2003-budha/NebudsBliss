@@ -6,6 +6,7 @@ import FloatingCart from "../floatingCart/floatingCart";
 import AdminButton from "../adminButten/AdminButton";
 import AddItemTab from "../addItemTab/AddItemTab";
 import CartDrawer from "../cartDrawer/CartDrawer";
+import WhatsAppButton from "../whatsAppButton/whatsAppButton";
 import { useCart } from "../../context/userCart";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,12 +28,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
       </main>
 
-      <AdminButton onClick={() => setIsTabOpen(true)} />
+      <div className={styles.floatingButtons}>
+        <AdminButton onClick={() => setIsTabOpen(true)} />
+        <WhatsAppButton />
 
-      <FloatingCart
-        itemCount={totalCount}
-        onClick={() => setIsCartOpen(true)}
-      />
+        <FloatingCart
+          itemCount={totalCount}
+          onClick={() => setIsCartOpen(true)}
+        />
+      </div>
 
       <CartDrawer
         isOpen={isCartOpen}

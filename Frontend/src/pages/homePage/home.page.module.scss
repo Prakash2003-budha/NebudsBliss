@@ -1,6 +1,6 @@
 // Variables
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-$primary-color: #4a8b96;
+$primary-color: var(--nb-primary);
 $dark-text: #222222;
 $light-text: #888888;
 $bg-color: #f7f8f9;
@@ -82,9 +82,9 @@ $card-bg: #ffffff;
         }
 
         &.activePill {
-          background-color: $dark-text;
+          background-color: var(--nb-primary);
           color: #ffffff;
-          border-color: $dark-text;
+          border-color: var(--nb-primary);
           transform: scale(1.05);
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
