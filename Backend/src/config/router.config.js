@@ -5,6 +5,7 @@ import posterRouter from "../modules/poster/Poster.router.js";
 import orderRouter from "../modules/order/order.router.js";
 import heroSlideRouter from "../modules/heroSlide/HeroSlide.router.js";
 import bestSellerRouter from "../modules/bestSeller/BestSeller.router.js";
+import reviewRouter from "../modules/reviews/review.router.js";
 
 const router = Router();
 router.use(authRouter)
@@ -13,5 +14,6 @@ router.use(posterRouter)
 router.use(orderRouter)
 router.use(heroSlideRouter)
 router.use(bestSellerRouter)
+router.use(reviewRouter)
 
 export default router

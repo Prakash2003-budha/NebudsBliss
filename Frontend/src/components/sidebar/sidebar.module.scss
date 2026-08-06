@@ -27,6 +27,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
+  overscroll-behavior: none;
   z-index: 1100; /* Above the sticky header (1001) so it covers it too */
   opacity: 0;
   visibility: hidden;
@@ -139,6 +140,8 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 .sidebarNav {
   flex: 1 1 auto;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 1.5rem 1.25rem;
   display: flex;
   flex-direction: column;
@@ -207,6 +210,8 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   flex-direction: column;
   gap: 0.75rem;
   padding: 1.25rem;
+  // Keep the buttons clear of the iOS home indicator on devices with a notch.
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid #eeeeee;
   background-color: #ffffff;
   flex-shrink: 0;

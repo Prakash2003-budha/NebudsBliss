@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
@@ -20,6 +21,16 @@ interface SidebarProps {
 // 2. Component
 export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: SidebarProps) {
   const navigate = useNavigate();
+
+  // Lock body scroll while the drawer is open so the page behind doesn't move.
+  useEffect(() => {
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
 
   return (
     <div className={styles.sidebarWrapper}>

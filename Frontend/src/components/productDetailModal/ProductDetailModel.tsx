@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 import styles from "./Productdetailmodal.module.scss";
 import { useCart } from "../../context/userCart";
+import { API_ENDPOINTS } from "../../constants/constants";
 import profile from "../../img/icons/profile.black.png";
 
 interface Item {
@@ -22,6 +25,62 @@ interface ProductDetailModalProps {
 
 type TabKey = "details" | "reviews";
 
+interface ReviewUser {
+  _id: string;
+  fullName?: string;
+  image?: { url?: string; optimizeUrl?: string } | null;
+}
+
+interface Review {
+  _id: string;
+  item: string;
+  user: ReviewUser;
+  rating: number;
+  title: string;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Reads the logged-in user id from localStorage "user", if present.
+function currentUserId(user: { _id?: string } | null): string | undefined {
+  return user && user._id ? user._id : undefined;
+}
+
+const formatDate = (iso: string): string => {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+};
+
+interface ApiErrorBody {
+  message?: string;
+}
+
+// Pulls a friendly message out of an axios-style error when available.
+const errorMessage = (err: unknown, fallback: string): string => {
+  const body = (err as { response?: { data?: ApiErrorBody } })?.response?.data;
+  return body?.message || fallback;
+};
+
+// Static star row used to display a rating value (1-5).
+const StarDisplay: React.FC<{ value: number; size?: number }> = ({ value, size = 16 }) => {
+  const rounded = Math.round(value);
+  return (
+    <span className={styles.stars} aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span
+          key={n}
+          style={{ fontSize: size }}
+          className={`${styles.star} ${n <= rounded ? styles.starFilled : ""}`}
+        >
+          ★
+        </span>
+      ))}
+    </span>
+  );
+};
+
 // Holds all "per product" transient UI state (quantity, active image, active tab).
 // Mounted with key={item._id} from the parent, so React resets this state for us
 // whenever the product changes — no setState-in-an-effect needed.
@@ -34,6 +93,27 @@ const ProductDetailContent: React.FC<{
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<TabKey>("details");
 
+  // --- Review state ---
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
+  const [reviewsError, setReviewsError] = useState<string | null>(null);
+  const [rating, setRating] = useState<number>(0);
+  const [title, setTitle] = useState("");
+  const [comment, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [editingMine, setEditingMine] = useState(false);
+
+  const [currentUser] = useState(() => {
+    const stored = localStorage.getItem("user");
+    try {
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const isLoggedIn = !!currentUserId(currentUser) && !!localStorage.getItem("accessToken");
+
   const images = item.images && item.images.length > 0 ? item.images : null;
   const hasMultipleImages = !!images && images.length > 1;
   const activeImage = images ? images[activeImageIndex] : null;
@@ -41,6 +121,37 @@ const ProductDetailContent: React.FC<{
   const discountPercent = hasDiscount
     ? Math.round(((item.price - item.discountPrice!) / item.price) * 100)
     : 0;
+
+  const myUserId = currentUserId(currentUser);
+  const myReview = myUserId
+    ? reviews.find((r) => r.user && r.user._id === myUserId)
+    : null;
+  const average = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    : 0;
+
+  // Fetch the reviews for this product whenever it (re)mounts.
+  useEffect(() => {
+    let active = true;
+
+    axios
+      .get(API_ENDPOINTS.GET_REVIEWS(item._id))
+      .then((res) => {
+        if (!active) return;
+        setReviews(res.data?.data ?? []);
+      })
+      .catch(() => {
+        if (!active) return;
+        setReviewsError("Unable to load reviews right now.");
+      })
+      .finally(() => {
+        if (active) setReviewsLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [item._id]);
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, prev + delta));
@@ -65,6 +176,76 @@ const ProductDetailContent: React.FC<{
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
+
+  const openEditForm = () => {
+    if (myReview) {
+      setRating(myReview.rating);
+      setTitle(myReview.title || "");
+      setComment(myReview.comment);
+    }
+    setEditingMine(true);
+  };
+
+  const cancelEdit = () => {
+    setEditingMine(false);
+    setRating(0);
+    setTitle("");
+    setComment("");
+  };
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) {
+      toast.error("You must be logged in to leave a review.");
+      return;
+    }
+    if (!rating) {
+      toast.error("Please select a star rating.");
+      return;
+    }
+    if (!comment.trim()) {
+      toast.error("Please write a short comment.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await axios.post(
+        API_ENDPOINTS.CREATE_REVIEW,
+        { item: item._id, rating, title: title.trim(), comment: comment.trim() },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      toast.success(myReview ? "Your review has been updated." : "Review submitted. Thank you!");
+
+      const res = await axios.get(API_ENDPOINTS.GET_REVIEWS(item._id));
+      setReviews(res.data?.data ?? []);
+      cancelEdit();
+    } catch (err) {
+      toast.error(errorMessage(err, "Failed to submit your review. Please try again."));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+    if (!window.confirm("Delete your review?")) return;
+
+    try {
+      await axios.delete(API_ENDPOINTS.DELETE_REVIEW(reviewId), {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      toast.success("Review deleted.");
+      const res = await axios.get(API_ENDPOINTS.GET_REVIEWS(item._id));
+      setReviews(res.data?.data ?? []);
+      cancelEdit();
+    } catch (err) {
+      toast.error(errorMessage(err, "Failed to delete the review."));
+    }
+  };
 
   return (
     <div
@@ -187,7 +368,7 @@ const ProductDetailContent: React.FC<{
                 }`}
                 onClick={() => setActiveTab("reviews")}
               >
-                Reviews
+                Reviews{reviews.length ? ` (${reviews.length})` : ""}
               </button>
             </div>
 
@@ -201,9 +382,187 @@ const ProductDetailContent: React.FC<{
                   <p>No description available.</p>
                 )
               ) : (
-                <p className={styles.noReviews}>
-                  No reviews yet. Be the first to review this product.
-                </p>
+                <div className={styles.reviewsBlock}>
+                  {reviews.length > 0 && (
+                    <div className={styles.reviewsHeader}>
+                      <span className={styles.reviewsAverage}>
+                        {average.toFixed(1)}
+                      </span>
+                      <div className={styles.reviewsRatingWrap}>
+                        <StarDisplay value={average} size={15} />
+                        <span className={styles.reviewsCount}>
+                          {reviews.length}{" "}
+                          {reviews.length === 1 ? "review" : "reviews"}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {reviewsLoading ? (
+                    <p className={styles.noReviews}>Loading reviews…</p>
+                  ) : reviewsError ? (
+                    <p className={styles.noReviews}>{reviewsError}</p>
+                  ) : reviews.length === 0 ? (
+                    <p className={styles.noReviews}>
+                      No reviews yet. Be the first to review this product.
+                    </p>
+                  ) : (
+                    <ul className={styles.reviewList}>
+                      {reviews.map((review) => {
+                        const isMine =
+                          !!review.user && review.user._id === myUserId;
+                        return (
+                          <li key={review._id} className={styles.reviewItem}>
+                            <div className={styles.reviewTop}>
+                              <StarDisplay value={review.rating} size={14} />
+                              <span className={styles.reviewDate}>
+                                {formatDate(review.createdAt)}
+                              </span>
+                              {isMine && (
+                                <span className={styles.mineTag}>You</span>
+                              )}
+                            </div>
+                            {review.title && (
+                              <h4 className={styles.reviewTitle}>
+                                {review.title}
+                              </h4>
+                            )}
+                            <p className={styles.reviewComment}>
+                              {review.comment}
+                            </p>
+                            <div className={styles.reviewAuthor}>
+                              {review.user?.image?.optimizeUrl ||
+                              review.user?.image?.url ? (
+                                <img
+                                  className={styles.reviewAvatar}
+                                  src={
+                                    review.user!.image!.optimizeUrl ||
+                                    review.user!.image!.url ||
+                                    (profile as string)
+                                  }
+                                  alt=""
+                                />
+                              ) : (
+                                <span className={styles.reviewAvatarFallback}>
+                                  {(review.user?.fullName || "U")
+                                    .charAt(0)
+                                    .toUpperCase()}
+                                </span>
+                              )}
+                              <span className={styles.reviewName}>
+                                {review.user?.fullName || "Anonymous"}
+                              </span>
+                            </div>
+                            {isMine && (
+                              <div className={styles.reviewActions}>
+                                <button
+                                  type="button"
+                                  className={styles.reviewEditBtn}
+                                  onClick={openEditForm}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  type="button"
+                                  className={styles.reviewDeleteBtn}
+                                  onClick={() => handleDeleteReview(review._id)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+
+                  {!isLoggedIn ? (
+                    <p className={styles.loginPrompt}>
+                      <a href="/login" className={styles.loginPromptLink}>
+                        Log in
+                      </a>{" "}
+                      to write a review.
+                    </p>
+                  ) : myReview && !editingMine ? (
+                    <button
+                      type="button"
+                      className={styles.writeReviewBtn}
+                      onClick={openEditForm}
+                    >
+                      Edit your review
+                    </button>
+                  ) : (
+                    <form
+                      className={styles.reviewForm}
+                      onSubmit={handleSubmitReview}
+                    >
+                      <h4 className={styles.reviewFormTitle}>
+                        {editingMine ? "Edit your review" : "Write a review"}
+                      </h4>
+
+                      <div className={styles.ratingInput}>
+                        <span className={styles.ratingLabel}>Your rating</span>
+                        <span className={styles.starsInput}>
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <button
+                              key={n}
+                              type="button"
+                              className={`${styles.star} ${
+                                n <= rating ? styles.starFilled : ""
+                              }`}
+                              onClick={() => setRating(n)}
+                              aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </span>
+                      </div>
+
+                      <input
+                        className={styles.reviewInput}
+                        type="text"
+                        placeholder="Add a title (optional)"
+                        value={title}
+                        maxLength={80}
+                        onChange={(e) => setTitle(e.target.value)}
+                      />
+
+                      <textarea
+                        className={styles.reviewTextarea}
+                        placeholder="Share your thoughts about this product…"
+                        value={comment}
+                        maxLength={1000}
+                        rows={4}
+                        onChange={(e) => setComment(e.target.value)}
+                      />
+
+                      <div className={styles.reviewFormActions}>
+                        <button
+                          type="submit"
+                          className={styles.reviewSubmitBtn}
+                          disabled={submitting}
+                        >
+                          {submitting
+                            ? "Submitting…"
+                            : editingMine
+                            ? "Update review"
+                            : "Submit review"}
+                        </button>
+                        {editingMine && (
+                          <button
+                            type="button"
+                            className={styles.reviewCancelBtn}
+                            onClick={cancelEdit}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </div>
+                    </form>
+                  )}
+                </div>
               )}
             </div>
           </div>

@@ -330,9 +330,24 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
         </div>
       )}
 
-      <button className={styles.applyButton} type="button">
-        Apply Filters
-      </button>
+      {/* Filters apply instantly — show the live state and let the user clear it in one tap. */}
+      {onClearFilters && (
+        <div className={styles.filterFooter}>
+          <span className={styles.appliedSummary}>
+            {activeFilterCount > 0
+              ? `${activeFilterCount} filter${activeFilterCount === 1 ? "" : "s"} applied`
+              : "No filters applied"}
+          </span>
+          <button
+            type="button"
+            className={styles.clearAllButton}
+            onClick={onClearFilters}
+            disabled={activeFilterCount === 0}
+          >
+            Clear all
+          </button>
+        </div>
+      )}
       </div>
     </aside>
   );

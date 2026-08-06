@@ -63,6 +63,11 @@ export const API_ENDPOINTS = {
     GET_ORDER_DETAIL: (id: string) => `${BACKEND_URL}/orders/${id}`,
     UPDATE_ORDER: (id: string) => `${BACKEND_URL}/orders/${id}`,
     DELETE_ORDER: (id: string) => `${BACKEND_URL}/orders/${id}`,
+
+    // Review Endpoints
+    GET_REVIEWS: (itemId: string) => `${BACKEND_URL}/reviews?itemId=${itemId}`,
+    CREATE_REVIEW: `${BACKEND_URL}/reviews`,
+    DELETE_REVIEW: (id: string) => `${BACKEND_URL}/reviews/${id}`,
 };
 
 // Maps the friendly URL slugs used in /category/:slug links (header, sidebar, footer)
