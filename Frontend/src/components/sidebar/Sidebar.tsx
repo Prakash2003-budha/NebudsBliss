@@ -16,11 +16,24 @@ interface SidebarProps {
   closeSidebar: () => void;
   user: UserType | null; 
   handleLogout: () => void;
+  onRequireLogin?: () => void;
 }
 
 // 2. Component
-export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: SidebarProps) {
+export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRequireLogin }: SidebarProps) {
   const navigate = useNavigate();
+
+  // Open My Orders if signed in, otherwise trigger the login popup.
+  const handleMyOrdersClick = () => {
+    closeSidebar();
+    if (user) {
+      navigate('/orders');
+    } else if (onRequireLogin) {
+      onRequireLogin();
+    } else {
+      navigate('/LoginPage');
+    }
+  };
 
   // Lock body scroll while the drawer is open so the page behind doesn't move.
   useEffect(() => {
@@ -97,6 +110,13 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout }: Si
 
           <div className={styles.sidebarDivider} />
 
+          <button
+            className={styles.sidebarNavLink}
+            onClick={handleMyOrdersClick}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontFamily: 'inherit', fontSize: 'inherit', textAlign: 'left', width: '100%' }}
+          >
+            My Orders
+          </button>
           <Link to="/AboutUs" className={styles.sidebarNavLink} onClick={closeSidebar}>About Us</Link>
           <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
         </nav>

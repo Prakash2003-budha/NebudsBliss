@@ -5,11 +5,9 @@ import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
 import Sidebar from '../sidebar/Sidebar';
 
-// 1. IMPORT BOTH MODAL COMPONENTS
 import LoginPage from '../../pages/auth/loginPage/login.page';
 import SignUpPage from '../../pages/auth/registerPage/register.page'; 
 
-// (Assuming HamburgerIcon and CloseIcon are defined/imported here in your actual file)
 
 export default function Header() {
   const navigate = useNavigate();
@@ -31,6 +29,15 @@ export default function Header() {
     navigate('/shop');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     closeSidebar();
+  };
+
+  const handleMyOrdersClick = () => {
+    closeSidebar();
+    if (user) {
+      navigate('/orders');
+    } else {
+      setIsLoginModalOpen(true);
+    }
   };
 
   const handleLogout = () => {
@@ -77,6 +84,7 @@ export default function Header() {
           </div>
           <Link to="/AboutUs" className={styles.navLink}>About Us</Link>
           <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
+          <button onClick={handleMyOrdersClick} className={styles.navLink} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: 'inherit', fontFamily: 'inherit', padding: 0}}>My Orders</button>
         </nav>
 
         <div className={styles.signButton}>
@@ -106,7 +114,7 @@ export default function Header() {
 
       {/* Sidebar remains the same */}
       <div className={styles.mobileOnlySidebar}>
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} user={user} handleLogout={handleLogout} />
+        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} user={user} handleLogout={handleLogout} onRequireLogin={() => { closeSidebar(); setIsLoginModalOpen(true); }} />
       </div>
 
       {/* 4. RENDER MODALS WITH ALL REQUIRED PROPS */}
