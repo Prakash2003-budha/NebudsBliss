@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import Layout from "../../components/layout/layout";
@@ -36,8 +36,6 @@ interface ItemsResponse {
 const ShopPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { addToCart } = useCart();
-
-  const [currentTime] = useState(() => Date.now());
 
   const [items, setItems] = useState<Item[]>([]);
   const [totalPages, setTotalPages] = useState(1);
@@ -121,6 +119,13 @@ const ShopPage: React.FC = () => {
       params.sortBy = sortBy;
     }
 
+    // Stock/availability filters are applied server-side so they stay correct
+    // when combined with pagination (client-side filtering would only ever
+    // affect the items fetched for the current page).
+    if (stockFilter !== "all") params.stock = stockFilter;
+    if (availability.onSale) params.onSale = "true";
+    if (availability.isNew) params.isNew = "true";
+
     axios
       .get<ItemsResponse>(API_ENDPOINTS.GET_ALL_ITEMS, { params, signal: controller.signal })
       .then((res) => {
@@ -143,31 +148,7 @@ const ShopPage: React.FC = () => {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
-  }, [currentPage, selectedCategorySlugs, selectedBrands, priceRange, sortBy]);
-
-  const visibleItems = useMemo(() => {
-    let result = [...items];
-    const NEW_WINDOW_DAYS = 21;
-    const cutoff = currentTime - NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
-
-    if (stockFilter === "in") {
-      result = result.filter((item) => (item.stockQuantity ?? 1) > 0);
-    } else if (stockFilter === "out") {
-      result = result.filter((item) => (item.stockQuantity ?? 1) <= 0);
-    }
-
-    if (availability.onSale) {
-      result = result.filter((item) => !!item.discountPrice && item.discountPrice < item.price);
-    }
-
-    if (availability.isNew) {
-      result = result.filter(
-        (item) => item.createdAt && new Date(item.createdAt).getTime() >= cutoff
-      );
-    }
-
-    return result;
-  }, [items, stockFilter, availability, currentTime]);
+  }, [currentPage, selectedCategorySlugs, selectedBrands, priceRange, sortBy, stockFilter, availability]);
 
   const toggleCategory = (slug: string) => {
     setSelectedCategorySlugs((prev) =>
@@ -278,9 +259,9 @@ const ShopPage: React.FC = () => {
               </div>
             )}
 
-            {!loading && !error && visibleItems.length > 0 && (
+            {!loading && !error && items.length > 0 && (
               <div className={styles.productGrid}>
-                {visibleItems.map((item) => (
+                {items.map((item) => (
                   <ProductCard
                     key={item._id}
                     item={item}

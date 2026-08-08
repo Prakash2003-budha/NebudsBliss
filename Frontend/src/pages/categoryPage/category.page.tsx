@@ -13,6 +13,7 @@ import FilterSidebar, {
 import { API_ENDPOINTS, CATEGORY_SLUG_MAP } from "../../constants/constants";
 import { useCart } from "../../context/userCart";
 import { toast } from "react-toastify";
+import { effectivePrice } from "../../utils/price";
 import styles from "./category.page.module.scss";
 
 const NEW_WINDOW_DAYS = 21;
@@ -110,9 +111,15 @@ const CategoryPage: React.FC = () => {
     result.sort((a, b) => {
       switch (sortBy) {
         case "priceHigh":
-          return (b.discountPrice ?? b.price) - (a.discountPrice ?? a.price);
+          return (
+            effectivePrice(b.price, b.discountPrice) -
+            effectivePrice(a.price, a.discountPrice)
+          );
         case "priceLow":
-          return (a.discountPrice ?? a.price) - (b.discountPrice ?? b.price);
+          return (
+            effectivePrice(a.price, a.discountPrice) -
+            effectivePrice(b.price, b.discountPrice)
+          );
         case "oldest":
           return (
             new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime()

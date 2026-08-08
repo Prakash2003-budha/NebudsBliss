@@ -12,7 +12,13 @@ import CategoryPage from './pages/categoryPage/category.page.tsx';
 import ShopPage from './pages/shopPage/shop.page.tsx';
 import ProfilePage from './pages/profilePage/profile.page.tsx';
 import OrdersPage from './pages/ordersPage/orders.page.tsx';
-import AdminPage from './pages/adminPage/admin.page.tsx';
+import AdminLayout from './pages/admin/AdminLayout.tsx';
+import AdminDashboard from './pages/admin/AdminDashboard.tsx';
+import AdminOrders from './pages/admin/AdminOrders.tsx';
+import AdminProducts from './pages/admin/AdminProducts.tsx';
+import AdminPromos from './pages/admin/AdminPromos.tsx';
+import AdminPlaceholder from './pages/admin/AdminPlaceholder.tsx';
+import RequireAdmin from './pages/admin/RequireAdmin.tsx';
 import { PrivacyPage, TermsPage } from './pages/staticPage/static.page.tsx';
 import { StandaloneLogin, StandaloneRegister } from './pages/auth/StandaloneAuth.tsx';
 
@@ -36,7 +42,17 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<RequireAdmin />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="products/new" element={<AdminProducts />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="media" element={<AdminPlaceholder title="Media & Banners" icon="🖼️" />} />
+              <Route path="promos" element={<AdminPromos />} />
+              <Route path="reviews" element={<AdminPlaceholder title="Reviews" icon="⭐" />} />
+            </Route>
+          </Route>
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>

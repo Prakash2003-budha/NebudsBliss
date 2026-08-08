@@ -14,6 +14,18 @@ class ReviewService {
         }
     }
 
+    // Admin — every review in the store, with item + reviewer details.
+    getAllReviews = async () => {
+        try {
+            return await ReviewModel.find()
+                .populate("user", "fullName email image")
+                .populate("item", "name images")
+                .sort({ createdAt: -1 });
+        } catch (exception) {
+            throw exception;
+        }
+    }
+
     getSingleByFilter = async (filter) => {
         try {
             return await ReviewModel.findOne(filter)

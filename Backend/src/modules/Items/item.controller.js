@@ -59,6 +59,29 @@ class ItemController {
                 filter.name = { $regex: req.query.search, $options: "i" };
             }
 
+            // Storefront availability filters. The shop page sends these so the
+            // filters are applied server-side and work WITH pagination (filtering
+            // after a paginated fetch would only ever filter the current page).
+            if (req.query.stock === "in") {
+                filter.stockQuantity = { $gt: 0 };
+            } else if (req.query.stock === "out") {
+                filter.stockQuantity = { $lte: 0 };
+            }
+            if (req.query.onSale === "true") {
+                // "On sale" = a discount price that is set, positive, and below the price.
+                filter.$expr = {
+                    $and: [
+                        { $ne: ["$discountPrice", null] },
+                        { $gt: ["$discountPrice", 0] },
+                        { $lt: ["$discountPrice", "$price"] }
+                    ]
+                };
+            }
+            if (req.query.isNew === "true") {
+                const NEW_WINDOW_MS = 21 * 24 * 60 * 60 * 1000;
+                filter.createdAt = { $gte: new Date(Date.now() - NEW_WINDOW_MS) };
+            }
+
             // Pagination is opt-in: only kicks in when the client sends page/limit
             // so existing callers (home page, category page) keep getting a plain array.
             if (req.query.page || req.query.limit) {

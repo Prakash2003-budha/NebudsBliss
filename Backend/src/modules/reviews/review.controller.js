@@ -27,6 +27,22 @@ class ReviewController {
         }
     }
 
+    // Admin only — list all reviews across the store (with item + reviewer).
+    getAllReviews = async (req, res, next) => {
+        try {
+            const reviews = await reviewSvc.getAllReviews();
+
+            res.json({
+                data: reviews,
+                message: "Reviews fetched successfully",
+                status: "FETCH_SUCCESS",
+                option: null
+            });
+        } catch (exception) {
+            next(exception);
+        }
+    }
+
     // Authenticated — post a review. If the user has already reviewed this
     // product, their existing review is updated instead of adding a duplicate.
     createReview = async (req, res, next) => {

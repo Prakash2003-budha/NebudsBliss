@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8" /><title>seed</title></head>
+  <body>
+    <script>
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ _id: "seed-admin", fullName: "Test Admin", email: "admin@test.com", role: "Admin" })
+      );
+      localStorage.setItem("accessToken", "seed-token");
+      window.location.replace("/admin");
+    </script>
+  </body>
+</html>

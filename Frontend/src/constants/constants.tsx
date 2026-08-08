@@ -66,6 +66,7 @@ export const API_ENDPOINTS = {
 
     // Review Endpoints
     GET_REVIEWS: (itemId: string) => `${BACKEND_URL}/reviews?itemId=${itemId}`,
+  GET_ALL_REVIEWS: `${BACKEND_URL}/reviews/all`,
     CREATE_REVIEW: `${BACKEND_URL}/reviews`,
     DELETE_REVIEW: (id: string) => `${BACKEND_URL}/reviews/${id}`,
 

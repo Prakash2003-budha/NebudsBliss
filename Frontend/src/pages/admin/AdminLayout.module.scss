@@ -1,0 +1,290 @@
+// Admin shell — dark sidebar + light content, totally separate from the store.
+$sidebar-bg: #0f172a;
+$sidebar-hover: rgba(255, 255, 255, 0.06);
+$primary: #085ff6;
+$border: #e5e8ee;
+$text: #1a2233;
+$muted: #94a3b8;
+$breakpoint: 900px;
+
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f1f5f9;
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ---------------- Sidebar ---------------- */
+.sidebar {
+  width: 252px;
+  background: $sidebar-bg;
+  color: #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  transition: transform 0.25s ease;
+}
+
+.sidebarOpen {
+  transform: translateX(0);
+  box-shadow: 0 0 50px rgba(15, 23, 42, 0.45);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brandLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #1e293b;
+}
+
+.brandName {
+  font-weight: 800;
+  color: #fff;
+  font-size: 1.02rem;
+  letter-spacing: 0.01em;
+}
+
+.brandRole {
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #93c5fd;
+  background: rgba(8, 95, 246, 0.22);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: auto;
+}
+
+.nav {
+  flex: 1;
+  padding: 0.9rem 0.75rem;
+  overflow-y: auto;
+}
+
+.navSection {
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  padding: 0.7rem 0.75rem 0.4rem;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0.62rem 0.75rem;
+  border-radius: 10px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navLink svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.navLink:hover {
+  background: $sidebar-hover;
+  color: #fff;
+}
+
+.activeLink {
+  background: rgba(8, 95, 246, 0.28);
+  color: #fff;
+}
+
+.activeLink:hover {
+  background: rgba(8, 95, 246, 0.36);
+}
+
+.navCount {
+  margin-left: auto;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 1px 8px;
+  border-radius: 999px;
+  color: #e2e8f0;
+}
+
+.sidebarFooter {
+  padding: 0.9rem 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userChip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.userChip img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #1e293b;
+  flex-shrink: 0;
+}
+
+.userChipText {
+  min-width: 0;
+}
+
+.userChipName {
+  color: #fff;
+  font-size: 0.83rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userChipRole {
+  color: $muted;
+  font-size: 0.72rem;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  color: #fca5a5;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background: rgba(229, 57, 53, 0.16);
+}
+
+/* ---------------- Content ---------------- */
+.content {
+  flex: 1;
+  margin-left: 252px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid $border;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.menuBtn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #334155;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.menuBtn:hover {
+  background: #f1f5f9;
+}
+
+.topbarTitle {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: $text;
+}
+
+.topbarRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.viewStore {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border: 1.5px solid #c6d7f9;
+  padding: 7px 13px;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+
+.viewStore:hover {
+  background: rgba(8, 95, 246, 0.06);
+}
+
+.viewStore svg {
+  width: 15px;
+  height: 15px;
+}
+
+.main {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 40;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: $breakpoint) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .menuBtn {
+    display: inline-flex;
+  }
+}

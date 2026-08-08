@@ -5,6 +5,7 @@ import styles from "./Productdetailmodal.module.scss";
 import { useCart } from "../../context/userCart";
 import { API_ENDPOINTS } from "../../constants/constants";
 import profile from "../../img/icons/profile.black.png";
+import { isValidDiscount, cartDiscountPrice } from "../../utils/price";
 
 interface Item {
   _id: string;
@@ -14,6 +15,8 @@ interface Item {
   description: string;
   images: { url: string; optimizeUrl: string }[];
   category: string;
+  brand?: string;
+  stockQuantity?: number;
   isActive: boolean;
 }
 
@@ -117,10 +120,11 @@ const ProductDetailContent: React.FC<{
   const images = item.images && item.images.length > 0 ? item.images : null;
   const hasMultipleImages = !!images && images.length > 1;
   const activeImage = images ? images[activeImageIndex] : null;
-  const hasDiscount = !!item.discountPrice && item.discountPrice < item.price;
+  const hasDiscount = isValidDiscount(item.price, item.discountPrice);
   const discountPercent = hasDiscount
     ? Math.round(((item.price - item.discountPrice!) / item.price) * 100)
     : 0;
+  const isOutOfStock = typeof item.stockQuantity === "number" && item.stockQuantity <= 0;
 
   const myUserId = currentUserId(currentUser);
   const myReview = myUserId
@@ -163,7 +167,7 @@ const ProductDetailContent: React.FC<{
         _id: item._id,
         name: item.name,
         price: item.price,
-        discountPrice: item.discountPrice,
+        discountPrice: cartDiscountPrice(item.price, item.discountPrice),
         image: activeImage
           ? activeImage.optimizeUrl || activeImage.url
           : "https://via.placeholder.com/300x400",
@@ -328,6 +332,24 @@ const ProductDetailContent: React.FC<{
               Shipping is calculated at checkout
             </p>
 
+            {(item.brand || typeof item.stockQuantity === "number") && (
+              <div className={styles.productMeta}>
+                {item.brand && (
+                  <span className={styles.metaItem}>
+                    <strong>Brand:</strong> {item.brand}
+                  </span>
+                )}
+                {typeof item.stockQuantity === "number" && (
+                  <span className={styles.metaItem}>
+                    <strong>Stock:</strong>{" "}
+                    <span className={isOutOfStock ? styles.outOfStock : styles.inStock}>
+                      {isOutOfStock ? "Out of stock" : `${item.stockQuantity} in stock`}
+                    </span>
+                  </span>
+                )}
+              </div>
+            )}
+
             <div className={styles.quantityRow}>
               <div className={styles.quantitySelector}>
                 <button
@@ -346,8 +368,12 @@ const ProductDetailContent: React.FC<{
                   +
                 </button>
               </div>
-              <button className={styles.addToCartBtn} onClick={handleAddToCart}>
-                Add To Cart
+              <button
+                className={styles.addToCartBtn}
+                onClick={handleAddToCart}
+                disabled={isOutOfStock}
+              >
+                {isOutOfStock ? "Out of Stock" : "Add To Cart"}
               </button>
             </div>
 

@@ -1,0 +1,140 @@
+// Admin Promo Codes (billing) page — extra styles beyond the shared admin design system.
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.codeCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.copyButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #a8b1c0;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 3px 5px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.copyButton:hover {
+  color: #085ff6;
+  background: rgba(8, 95, 246, 0.08);
+}
+
+.copyButton.copied {
+  color: #0f9d6e;
+}
+
+.rowActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.expired {
+  color: #e53935;
+  font-weight: 700;
+}
+
+.usageCell {
+  font-size: 0.8rem;
+  color: #1a2233;
+  white-space: nowrap;
+}
+
+.usageHint {
+  margin-top: 2px;
+  font-size: 0.72rem;
+  color: #6b7688;
+}
+
+/* ---------- Promo form (create / edit modal) ---------- */
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed #eef2f7;
+}
+
+.toggleRow:last-child {
+  border-bottom: none;
+}
+
+.toggleInfo strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #1a2233;
+}
+
+.toggleInfo span {
+  font-size: 0.76rem;
+  color: #6b7688;
+}
+
+.formErrors {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: rgba(229, 57, 53, 0.08);
+  border: 1px solid rgba(229, 57, 53, 0.25);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formErrors li {
+  font-size: 0.8rem;
+  color: #c03835;
+}
+
+/* ---------- Status filter tabs ---------- */
+.filterTabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filterTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #e5e8ee;
+  background: #fff;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6b7688;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filterTab:hover {
+  border-color: #085ff6;
+  color: #085ff6;
+}
+
+.filterTabActive {
+  background: #085ff6;
+  border-color: #085ff6;
+  color: #fff;
+}
+
+@media (max-width: 700px) {
+  .filters {
+    gap: 0.5rem;
+  }
+}

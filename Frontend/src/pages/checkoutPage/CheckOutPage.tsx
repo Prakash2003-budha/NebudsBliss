@@ -7,6 +7,7 @@ import { API_ENDPOINTS, PAYMENT_METHOD } from "../../constants/constants";
 import styles from "./CheckOutPage.module.scss";
 import qrBank from "../../img/qrbank/bankqr.png"
 import { compressImage } from "../../utils/imageCompression";
+import { effectivePrice } from "../../utils/price";
 
 interface CheckoutFormState {
   fullName: string;
@@ -77,7 +78,7 @@ const CheckOutPage: React.FC = () => {
 
   const subtotal = useMemo(() => {
     return cartItems.reduce((sum, item) => {
-      const price = item.discountPrice ?? item.price;
+      const price = effectivePrice(item.price, item.discountPrice);
       return sum + price * item.quantity;
     }, 0);
   }, [cartItems]);
@@ -159,12 +160,17 @@ const CheckOutPage: React.FC = () => {
       setPromoMsg("Add items to your cart before applying a promo code.");
       return;
     }
+    const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
+    if (!token) {
+      setPromoStatus("error");
+      setPromoMsg("Please log in to apply a promo code.");
+      return;
+    }
 
     setPromoStatus("loading");
     setPromoMsg(null);
 
     try {
-      const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
       const response = await fetch(API_ENDPOINTS.VALIDATE_PROMO, {
         method: "POST",
         headers: {
@@ -217,6 +223,12 @@ const CheckOutPage: React.FC = () => {
       return;
     }
 
+    const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
+    if (!token) {
+      setSubmitError("Please log in to place your order.");
+      return;
+    }
+
     const requiredFields = [formData.fullName, formData.phone, formData.address, formData.city];
     const isComplete = requiredFields.every((field) => field.trim().length > 0);
 
@@ -253,7 +265,7 @@ const CheckOutPage: React.FC = () => {
           productId: item._id,
           name: item.name,
           quantity: item.quantity,
-          price: item.discountPrice ?? item.price,
+          price: effectivePrice(item.price, item.discountPrice),
         }))
       )
     );
@@ -267,7 +279,6 @@ const CheckOutPage: React.FC = () => {
     // 3. Execution (Single try-catch block)
     try {
       setIsSubmitting(true);
-      const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
 
       const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
         method: "POST",
@@ -557,13 +568,13 @@ const CheckOutPage: React.FC = () => {
                         <div className={styles.itemContent}>
                           <strong>{item.name}</strong>
                           <p>
-                            {item.quantity} × Rs. {item.discountPrice ?? item.price}
+                            {item.quantity} × Rs. {effectivePrice(item.price, item.discountPrice)}
                           </p>
                         </div>
                       </div>
                       <div className={styles.itemActions}>
                         <span>
-                          Rs. {((item.discountPrice ?? item.price) * item.quantity).toLocaleString()}
+                          Rs. {(effectivePrice(item.price, item.discountPrice) * item.quantity).toLocaleString()}
                         </span>
                         <div className={styles.qtyControl}>
                           <button

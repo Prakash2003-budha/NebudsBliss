@@ -1,0 +1,219 @@
+// Admin Products (Item Control) page — extra styles beyond the shared admin design system.
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ---------- Product table cell extras ---------- */
+.thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  object-fit: cover;
+  background: #f1f5f9;
+  border: 1px solid #e5e8ee;
+  display: block;
+}
+
+.price {
+  font-weight: 700;
+  color: #1a2233;
+}
+
+.oldPrice {
+  text-decoration: line-through;
+  color: #a8b1c0;
+  font-size: 0.76rem;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.stockLow {
+  color: #b45309;
+  font-weight: 700;
+}
+
+.stockOut {
+  color: #e53935;
+  font-weight: 700;
+}
+
+.rowActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* ---------- Product form (create / edit modal) ---------- */
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.imageGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.imageBox {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e5e8ee;
+  background: #f8fafc;
+}
+
+.imageBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imageRemove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(15, 23, 42, 0.68);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.imageRemove:hover {
+  background: #e53935;
+}
+
+.imageAdd {
+  width: 86px;
+  height: 86px;
+  border-radius: 10px;
+  border: 1.5px dashed #c3ccd9;
+  background: #f8fafc;
+  color: #6b7688;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px;
+  transition: all 0.15s ease;
+}
+
+.imageAdd:hover {
+  border-color: #085ff6;
+  color: #085ff6;
+  background: rgba(8, 95, 246, 0.04);
+}
+
+.imageAdd:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed #eef2f7;
+}
+
+.toggleRow:last-child {
+  border-bottom: none;
+}
+
+.toggleInfo strong {
+  display: block;
+  font-size: 0.85rem;
+  color: #1a2233;
+}
+
+.toggleInfo span {
+  font-size: 0.76rem;
+  color: #6b7688;
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #dbe1ea;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.86rem;
+  color: #1a2233;
+  background: #fff;
+  resize: vertical;
+  min-height: 96px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.textarea:focus {
+  border-color: #085ff6;
+  box-shadow: 0 0 0 3px rgba(8, 95, 246, 0.12);
+}
+
+.formErrors {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: rgba(229, 57, 53, 0.08);
+  border: 1px solid rgba(229, 57, 53, 0.25);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.formErrors li {
+  font-size: 0.8rem;
+  color: #c03835;
+}
+
+.productCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.thumbPlaceholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  background: #eef2f7;
+  border: 1px solid #e5e8ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+
+@media (max-width: 700px) {
+  .fieldRow {
+    grid-template-columns: 1fr;
+  }
+}

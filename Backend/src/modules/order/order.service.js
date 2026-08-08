@@ -67,7 +67,11 @@ class OrderService {
                     };
                 }
 
-                const unitPrice = product.discountPrice ?? product.price;
+                const rawDiscount = product.discountPrice;
+                // Only a positive discount below the price is honored. A stored 0/empty
+                // value would otherwise be picked up by `??` and make the item free.
+                const unitPrice =
+                    rawDiscount > 0 && rawDiscount < product.price ? rawDiscount : product.price;
 
                 rebuiltItems.push({
                     productId: product._id,

@@ -114,7 +114,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     dataPayload.append('stockQuantity', formData.stockQuantity);
     dataPayload.append('isFeatured', String(isFeatured));
 
-    if (formData.discountPrice) dataPayload.append('discountPrice', formData.discountPrice);
+    if (formData.discountPrice && parseFloat(formData.discountPrice) > 0) dataPayload.append('discountPrice', formData.discountPrice);
     if (formData.brand) dataPayload.append('brand', formData.brand);
 
     images.forEach(image => {

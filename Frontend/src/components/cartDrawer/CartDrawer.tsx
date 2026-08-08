@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
 import styles from "./CartDrawer.module.scss";
 import { useCart } from "../../context/userCart";
+import { effectivePrice, isValidDiscount } from "../../utils/price";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -13,7 +14,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate(); // 2. Initialize the navigate function
 
   const subtotal = cartItems.reduce((sum, item) => {
-    const price = item.discountPrice ?? item.price;
+    const price = effectivePrice(item.price, item.discountPrice);
     return sum + price * item.quantity;
   }, 0);
 
@@ -69,8 +70,8 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                   <div className={styles.itemDetails}>
                     <h4>{item.name}</h4>
                     <p className={styles.itemPrice}>
-                      Rs. {item.discountPrice ?? item.price}
-                      {item.discountPrice && (
+                      Rs. {effectivePrice(item.price, item.discountPrice)}
+                      {isValidDiscount(item.price, item.discountPrice) && (
                         <span className={styles.originalPrice}>Rs. {item.price}</span>
                       )}
                     </p>
@@ -79,7 +80,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
                   <div className={styles.itemRight}>
                     <p className={styles.itemTotal}>
-                      Rs. {((item.discountPrice ?? item.price) * item.quantity).toLocaleString()}
+                      Rs. {(effectivePrice(item.price, item.discountPrice) * item.quantity).toLocaleString()}
                     </p>
                     <button
                       className={styles.removeBtn}

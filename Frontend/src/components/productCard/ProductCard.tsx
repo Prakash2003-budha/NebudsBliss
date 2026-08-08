@@ -4,6 +4,7 @@ import styles from "./ProductCard.module.scss";
 import profile from "../../img/icons/profile.black.png";
 import cart from "../../img/icons/cart.png";
 import deleteIcon from "../../img/icons/delete.png";
+import { effectivePrice, isValidDiscount, cartDiscountPrice } from "../../utils/price";
 
 export interface Item {
   _id: string;
@@ -48,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       ? item.images[0].optimizeUrl || item.images[0].url
       : (profile as string);
 
-  const hasDiscount = !!item.discountPrice && item.discountPrice < item.price;
+  const hasDiscount = isValidDiscount(item.price, item.discountPrice);
   const isOutOfStock = (item.stockQuantity ?? 1) <= 0;
   const discountPercent = hasDiscount
     ? Math.round(((item.price - item.discountPrice!) / item.price) * 100)
@@ -86,7 +87,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <p className={styles.description}>{item.description}</p>
 
         <div className={styles.priceRow}>
-          <span className={styles.price}>Rs. {(item.discountPrice ?? item.price).toLocaleString()}</span>
+          <span className={styles.price}>Rs. {effectivePrice(item.price, item.discountPrice).toLocaleString()}</span>
           {hasDiscount && (
             <span className={styles.originalPrice}>Rs. {item.price.toLocaleString()}</span>
           )}
@@ -102,7 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 _id: item._id,
                 name: item.name,
                 price: item.price,
-                discountPrice: item.discountPrice,
+                discountPrice: cartDiscountPrice(item.price, item.discountPrice),
                 image: imageSrc,
               });
             }}

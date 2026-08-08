@@ -5,6 +5,30 @@ class ItemService {
     itemDataTransform = async (req) => {
         try {
             let data = { ...req.body };
+
+            // Normalize discountPrice: only a positive number below the price is a
+            // real discount. A blank/zero/invalid value means "no discount" and is
+            // REMOVED before saving — storing 0 would make every consumer that uses
+            // `discountPrice ?? price` treat the item as free.
+            if (
+                data.discountPrice === undefined ||
+                data.discountPrice === null ||
+                data.discountPrice === ""
+            ) {
+                delete data.discountPrice;
+            } else {
+                const dPrice = Number(data.discountPrice);
+                const basePrice = Number(data.price);
+                if (
+                    !Number.isFinite(dPrice) ||
+                    dPrice <= 0 ||
+                    (Number.isFinite(basePrice) && dPrice >= basePrice)
+                ) {
+                    delete data.discountPrice;
+                } else {
+                    data.discountPrice = dPrice;
+                }
+            }
             
             // Handle multiple image uploads if files exist
             if (req.files && req.files.length > 0) {
