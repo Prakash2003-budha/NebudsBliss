@@ -12,7 +12,6 @@ import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfir
 import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
 import ProductCard, { type Item } from "../../components/productCard/ProductCard";
 import HeroCarousel from "../../components/HeroCarousel/HeroCarousel";
-import FeaturedPosters from "../../components/featuredPosters/FeaturedPosters";
 import ProductHighlights from "../../components/productHighlights/ProductHighlights";
 import BestSellerPosters from "../../components/bestSellerPosters/BestSellerPosters";
 import RandomPicks from "../../components/randomPicks/RandomPicks";
@@ -44,7 +43,6 @@ const SkeletonGrid: React.FC = () => (
 
 const Homepage: React.FC = () => {
   const [activeItems, setActiveItems] = useState<Item[]>([]);
-  const [featuredPosterItems, setFeaturedPosterItems] = useState<Item[]>([]);
   const [newArrivalItems, setNewArrivalItems] = useState<Item[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(CATEGORIES[0] || null);
   const [loading, setLoading] = useState(true);
@@ -102,7 +100,6 @@ const Homepage: React.FC = () => {
         const allItems: Item[] = response.data.data;
         const active = allItems.filter((item) => item.isActive);
         setActiveItems(active);
-        setFeaturedPosterItems(active.filter((item) => item.isFeatured).slice(0, 5));
         const sortedByNewest = [...active].sort(
           (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
         );
@@ -136,7 +133,6 @@ const Homepage: React.FC = () => {
       });
 
       toast.success(`"${itemPendingDelete.name}" deleted successfully.`);
-      setFeaturedPosterItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setNewArrivalItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
       setActiveItems((prev) => prev.filter((item) => item._id !== itemPendingDelete._id));
     } catch {
@@ -175,16 +171,6 @@ const Homepage: React.FC = () => {
           onLoginClick={() => setIsLoginModalOpen(true)}
           onRegisterClick={() => setIsRegisterModalOpen(true)}
         />
-
-        {!loading && !error && (
-          <FeaturedPosters
-            items={featuredPosterItems}
-            onOpenProduct={(item) => {
-              setSelectedProduct(item);
-              setIsProductModalOpen(true);
-            }}
-          />
-        )}
 
         {!loading && !error && (
           <ProductHighlights

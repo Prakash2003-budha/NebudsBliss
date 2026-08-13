@@ -1,39 +1,102 @@
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-$dark-text: #222222;
-$light-text: #888888;
-$primary-color: var(--nb-primary);
+$primary: var(--nb-primary);
+$primary-dark: var(--nb-primary-dark);
+$primary-light: var(--nb-primary-light);
+$accent: var(--nb-accent);
+$ink: #1a2233;
+$muted: #6b7688;
 
 .featuredSection {
   font-family: $font-primary;
-  margin: 3rem 0;
+  margin: 3.5rem 0;
 }
 
+/* ---------- Section header ---------- */
 .sectionHeader {
-  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.headerLeft {
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $primary;
+    background: $primary-light;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 0.6rem;
+  }
 
   h2 {
-    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
     font-weight: 800;
-    color: $dark-text;
-    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+    color: $ink;
+    margin: 0 0 0.3rem;
+    background: linear-gradient(120deg, $ink 0%, $primary 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
   p {
-    color: $light-text;
     margin: 0;
+    color: $muted;
     font-size: 0.95rem;
   }
 }
 
+.viewAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: $primary;
+  text-decoration: none;
+  padding: 9px 16px;
+  border: 1.5px solid $primary-light;
+  border-radius: 999px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  span {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: $primary;
+    border-color: $primary;
+    color: #fff;
+
+    span {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* ---------- Grid ---------- */
 .postersGrid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  grid-template-columns: 1.45fr 1fr;
   gap: 1.25rem;
-  min-height: 480px;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    min-height: unset;
   }
 }
 
@@ -43,39 +106,49 @@ $primary-color: var(--nb-primary);
   gap: 1.25rem;
 
   @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 400px) {
     grid-template-columns: 1fr;
   }
 }
 
+/* ---------- Posters ---------- */
 .poster {
   position: relative;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
-  background: #eee;
+  background: linear-gradient(135deg, #eef1f6 0%, #e5e9f0 100%);
   min-height: 220px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 10px rgba(26, 34, 51, 0.06);
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(26, 34, 51, 0.18);
 
     .posterImage {
-      transform: scale(1.06);
+      transform: scale(1.07);
     }
   }
 }
 
 .heroPoster {
-  min-height: 480px;
+  min-height: 520px;
 
   @media (max-width: 900px) {
+    min-height: 360px;
+  }
+
+  @media (max-width: 600px) {
     min-height: 320px;
   }
 }
 
 .tilePoster {
-  min-height: 220px;
+  min-height: 200px;
 }
 
 .posterImage {
@@ -84,77 +157,233 @@ $primary-color: var(--nb-primary);
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.15) 55%, rgba(0, 0, 0, 0) 100%);
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(8, 14, 26, 0.88) 0%,
+    rgba(8, 14, 26, 0.35) 50%,
+    rgba(8, 14, 26, 0) 100%
+  );
+}
+
+/* ---------- Badges / ribbon ---------- */
+.featuredRibbon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, $accent 0%, #ff8f4c 100%);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
 }
 
 .discountBadge {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
   background: #e53935;
   color: #fff;
-  font-weight: 700;
-  font-size: 0.8rem;
-  padding: 5px 10px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  padding: 5px 11px;
   border-radius: 999px;
-  z-index: 2;
+  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.4);
 }
 
+/* ---------- Poster content ---------- */
 .posterContent {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 2;
   padding: 1.4rem;
   color: #fff;
-  z-index: 1;
 }
 
 .posterCategory {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.85;
-  margin-bottom: 0.4rem;
+  letter-spacing: 0.09em;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 0.6rem;
 }
 
 .posterTitle {
-  font-size: clamp(1.05rem, 2.4vw, 1.5rem);
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
   font-weight: 800;
-  margin: 0 0 0.5rem;
-  line-height: 1.2;
+  margin: 0 0 0.35rem;
+  line-height: 1.15;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.posterDesc {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .posterPriceRow {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-bottom: 0.6rem;
+  margin-bottom: 1rem;
 }
 
 .oldPrice {
   text-decoration: line-through;
-  opacity: 0.7;
+  opacity: 0.75;
   font-size: 0.85rem;
 }
 
 .newPrice {
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1.25rem;
+}
+
+/* ---------- Hero actions ---------- */
+.heroActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
 
 .posterCta {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 11px 20px;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  box-shadow: 0 8px 20px rgba(8, 95, 246, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  .ctaArrow {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(8, 95, 246, 0.45);
+
+    .ctaArrow {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.quickAddBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
   font-weight: 700;
   font-size: 0.85rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
-  padding-bottom: 2px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-2px);
+  }
+}
+
+/* ---------- Tiles ---------- */
+.tileTitle {
+  font-size: 1.02rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.tileFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.tilePriceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tileOldPrice {
+  font-size: 0.72rem;
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.tilePrice {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tileAddBtn {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, $primary 0%, $primary-dark 100%);
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 14px rgba(8, 95, 246, 0.35);
+
+  &:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 18px rgba(8, 95, 246, 0.5);
+  }
+}
+
+.cartIcon {
+  line-height: 1;
 }

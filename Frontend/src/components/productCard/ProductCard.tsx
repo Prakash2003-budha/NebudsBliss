@@ -72,7 +72,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
   }, [viewerOpen]);
 
   const hasDiscount = isValidDiscount(item.price, item.discountPrice);
-  const isOutOfStock = (item.stockQuantity ?? 1) <= 0;
+  const stock = item.stockQuantity ?? 1;
+  const isOutOfStock = stock <= 0;
+  const lowStock = !isOutOfStock && stock <= 5;
+  const availabilityLabel = isOutOfStock
+    ? "Out of stock"
+    : lowStock
+    ? `Only ${stock} left`
+    : "In stock";
   const discountPercent = hasDiscount
     ? Math.round(((item.price - item.discountPrice!) / item.price) * 100)
     : 0;
@@ -106,6 +113,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       >
         <span className={styles.categoryTag}>{item.category}</span>
         {hasDiscount && <span className={styles.saleTag}>-{discountPercent}%</span>}
+        {item.isFeatured && <span className={styles.featuredTag}>★ Featured</span>}
         <img
           src={imageSrc}
           alt={item.name}
@@ -124,14 +132,29 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </div>
       <div className={styles.cardBody}>
+        {item.brand && <span className={styles.brand}>{item.brand}</span>}
         <h3 className={styles.name}>{item.name}</h3>
         <p className={styles.description}>{item.description}</p>
 
         <div className={styles.priceRow}>
-          <span className={styles.price}>Rs. {effectivePrice(item.price, item.discountPrice).toLocaleString()}</span>
+          <span className={styles.price}>
+            <span className={styles.currency}>Rs.</span>
+            {effectivePrice(item.price, item.discountPrice).toLocaleString()}
+          </span>
           {hasDiscount && (
-            <span className={styles.originalPrice}>Rs. {item.price.toLocaleString()}</span>
+            <span className={styles.originalPrice}>
+              Rs. {item.price.toLocaleString()}
+            </span>
           )}
+        </div>
+
+        <div className={styles.availability}>
+          <span
+            className={`${styles.availDot} ${
+              isOutOfStock ? styles.dotOut : lowStock ? styles.dotLow : styles.dotIn
+            }`}
+          />
+          <span>{availabilityLabel}</span>
         </div>
 
         <div className={styles.cardActions}>
