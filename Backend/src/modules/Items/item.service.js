@@ -37,7 +37,7 @@ class ItemService {
                     const upload = await cloudianarySvc.fileUpload(file.path, 'items/');
                     data.images.push({
                         url: upload.url,
-                        optimizeUrl: upload.url,
+                        optimizeUrl: upload.url.replace('/upload/', '/upload/q_auto,f_auto/'),
                         public_id:  upload.public_id
                     });
                 }

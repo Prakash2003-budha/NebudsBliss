@@ -6,6 +6,11 @@
 
 .mainContent {
   flex: 1; /* Automatically grows to fill all empty space, pushing the footer down */
+  padding-top: 80px; /* Offset for the fixed header (72px header + 8px buffer) */
+
+  @media (max-width: 768px) {
+    padding-top: 56px; /* Offset for the mobile fixed header (48px + 8px buffer) */
+  }
 }
 
 /* Fixed stack of floating action buttons (admin add + WhatsApp + cart).

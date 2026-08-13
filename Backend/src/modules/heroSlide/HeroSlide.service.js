@@ -34,7 +34,7 @@ class HeroSlideService {
             const upload = await cloudianarySvc.fileUpload(filePath, "hero-slides/");
             return {
                 imageUrl: upload.url,
-                optimizeUrl: upload.url,
+                optimizeUrl: upload.url.replace('/upload/', '/upload/q_auto,f_auto/'),
                 public_id: upload.public_id,
             };
         } catch (exception) {
