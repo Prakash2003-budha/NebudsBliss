@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import styles from "./ProductCard.module.scss";
 import profile from "../../img/icons/profile.black.png";
@@ -49,6 +50,27 @@ const ProductCard: React.FC<ProductCardProps> = ({
       ? item.images[0].optimizeUrl || item.images[0].url
       : (profile as string);
 
+  const fullImageSrc =
+    item.images && item.images.length > 0
+      ? item.images[0].url || item.images[0].optimizeUrl
+      : (profile as string);
+
+  const [viewerOpen, setViewerOpen] = useState(false);
+
+  useEffect(() => {
+    if (!viewerOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setViewerOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [viewerOpen]);
+
   const hasDiscount = isValidDiscount(item.price, item.discountPrice);
   const isOutOfStock = (item.stockQuantity ?? 1) <= 0;
   const discountPercent = hasDiscount
@@ -65,7 +87,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
         if (e.key === "Enter" || e.key === " ") onOpenProduct(item);
       }}
     >
-      <div className={styles.imageWrapper}>
+      <div
+        className={styles.imageWrapper}
+        onClick={(e) => {
+          e.stopPropagation();
+          setViewerOpen(true);
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label={`View ${item.name} image in full size`}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            e.stopPropagation();
+            setViewerOpen(true);
+          }
+        }}
+      >
         <span className={styles.categoryTag}>{item.category}</span>
         {hasDiscount && <span className={styles.saleTag}>-{discountPercent}%</span>}
         <img
@@ -76,6 +114,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
             (e.target as HTMLImageElement).src = profile as string;
           }}
         />
+        <span className={styles.imageViewHint} aria-hidden="true">
+          <span>⤢ View full image</span>
+        </span>
         {isOutOfStock && (
           <div className={styles.outOfStockOverlay}>
             <span>Out of Stock</span>
@@ -131,6 +172,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
       </div>
+
+      {viewerOpen &&
+        createPortal(
+          <div
+            className={styles.imageViewer}
+            onClick={() => setViewerOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${item.name} — full image`}
+          >
+            <button
+              type="button"
+              className={styles.imageViewerClose}
+              onClick={() => setViewerOpen(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <img
+              src={fullImageSrc}
+              alt={item.name}
+              onClick={(e) => e.stopPropagation()}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = profile as string;
+              }}
+            />
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

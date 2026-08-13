@@ -120,6 +120,7 @@ const AdminOrders: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- matches the established admin data-loading pattern
     loadOrders();
   }, [loadOrders]);
 

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "./Productdetailmodal.module.scss";
@@ -95,6 +96,26 @@ const ProductDetailContent: React.FC<{
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<TabKey>("details");
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const lightboxOpenRef = useRef(false);
+
+  useEffect(() => {
+    lightboxOpenRef.current = lightboxOpen;
+  }, [lightboxOpen]);
+
+  // Registered on mount — before the parent modal registers its own Escape
+  // handler (child effects flush first) — so while the image lightbox is open,
+  // Escape only closes the lightbox, not the whole modal.
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (lightboxOpenRef.current && e.key === "Escape") {
+        e.stopImmediatePropagation();
+        setLightboxOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // --- Review state ---
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -118,7 +139,6 @@ const ProductDetailContent: React.FC<{
   const isLoggedIn = !!currentUserId(currentUser) && !!localStorage.getItem("accessToken");
 
   const images = item.images && item.images.length > 0 ? item.images : null;
-  const hasMultipleImages = !!images && images.length > 1;
   const activeImage = images ? images[activeImageIndex] : null;
   const hasDiscount = isValidDiscount(item.price, item.discountPrice);
   const discountPercent = hasDiscount
@@ -267,19 +287,42 @@ const ProductDetailContent: React.FC<{
       <div className={styles.content}>
           {/* Gallery */}
           <div className={styles.gallery}>
-            {hasMultipleImages ? (
-              // More than one image: show every image together in a grid.
-              // Clicking an image marks it "active" (used as the image added to cart).
-              <div className={styles.imageGrid}>
-                {images!.map((img, idx) => (
+            {/* One big main image — clicking it opens the full-size lightbox */}
+            <button
+              type="button"
+              className={styles.mainImageBtn}
+              onClick={() => setLightboxOpen(true)}
+              aria-label={`View ${item.name} image in full size`}
+            >
+              <img
+                src={
+                  activeImage
+                    ? activeImage.optimizeUrl || activeImage.url
+                    : (profile as string)
+                }
+                alt={item.name}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = profile as string;
+                }}
+              />
+              <span className={styles.zoomHint} aria-hidden="true">
+                ⤢ View full image
+              </span>
+            </button>
+
+            {/* Remaining images as small thumbnails */}
+            {images && images.length > 1 && (
+              <div className={styles.thumbnails} role="tablist" aria-label="Product images">
+                {images.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
-                    className={`${styles.gridImageWrapper} ${
-                      idx === activeImageIndex ? styles.activeGridImage : ""
+                    className={`${styles.thumbnailBtn} ${
+                      idx === activeImageIndex ? styles.activeThumbnail : ""
                     }`}
                     onClick={() => setActiveImageIndex(idx)}
-                    aria-label={`Select image ${idx + 1}`}
+                    aria-label={`View image ${idx + 1}`}
+                    aria-selected={idx === activeImageIndex}
                   >
                     <img
                       src={img.optimizeUrl || img.url}
@@ -290,20 +333,6 @@ const ProductDetailContent: React.FC<{
                     />
                   </button>
                 ))}
-              </div>
-            ) : (
-              <div className={styles.mainImageWrapper}>
-                <img
-                  src={
-                    activeImage
-                      ? activeImage.optimizeUrl || activeImage.url
-                      : (profile as string)
-                  }
-                  alt={item.name}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = profile as string;
-                  }}
-                />
               </div>
             )}
           </div>
@@ -592,6 +621,36 @@ const ProductDetailContent: React.FC<{
               )}
             </div>
           </div>
+
+      {/* Full-size image lightbox — rendered via portal to document.body */}
+      {lightboxOpen && activeImage &&
+        createPortal(
+          <div
+            className={styles.lightbox}
+            onClick={() => setLightboxOpen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${item.name} — full image`}
+          >
+            <button
+              type="button"
+              className={styles.lightboxClose}
+              onClick={() => setLightboxOpen(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <img
+              src={activeImage.optimizeUrl || activeImage.url}
+              alt={item.name}
+              onClick={(e) => e.stopPropagation()}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = profile as string;
+              }}
+            />
+          </div>,
+          document.body
+        )}
       </div>
     </div>
   );

@@ -264,17 +264,19 @@ const Donut: React.FC<{ counts: Record<string, number> }> = ({ counts }) => {
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
   const R = 70;
   const C = 2 * Math.PI * R;
-  let cumulative = 0;
-  const segments = STATUS_ORDER.filter((key) => (counts[key] ?? 0) > 0).map((key) => {
+  const activeKeys = STATUS_ORDER.filter((key) => (counts[key] ?? 0) > 0);
+  const segments = activeKeys.map((key, index) => {
     const frac = (counts[key] ?? 0) / (total || 1);
-    const segment = {
+    // Pure computation of the running offset (no mutation during render).
+    const cumulativeBefore = activeKeys
+      .slice(0, index)
+      .reduce((sum, k) => sum + (counts[k] ?? 0) / (total || 1), 0);
+    return {
       key,
       color: STATUS_COLORS[key] ?? "#64748b",
       dash: frac * C,
-      offset: -cumulative * C,
+      offset: -cumulativeBefore * C,
     };
-    cumulative += frac;
-    return segment;
   });
 
   return (
@@ -309,6 +311,8 @@ const AdminDashboard: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<RangeKey>("30");
+  // Captured once at mount so render stays pure (Date.now() is impure).
+  const [nowTs] = useState(() => Date.now());
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -328,13 +332,13 @@ const AdminDashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- matches the established admin data-loading pattern
     loadData();
   }, [loadData]);
 
   const itemById = useMemo(() => new Map(items.map((item) => [item._id, item])), [items]);
 
   const activeRange = RANGES.find((r) => r.key === range) ?? RANGES[1];
-  const nowTs = Date.now();
   const cutoff = activeRange.days === Infinity ? 0 : nowTs - activeRange.days * DAY_MS;
   const prevCutoff = activeRange.days === Infinity ? null : cutoff - activeRange.days * DAY_MS;
 
@@ -343,12 +347,15 @@ const AdminDashboard: React.FC = () => {
       ? Number(order.totalAmount ?? 0)
       : 0;
 
-  const inWindow = (order: Order): boolean => {
-    const t = new Date(order.createdAt ?? nowTs).getTime();
-    return t >= cutoff;
-  };
+  const inWindow = useCallback(
+    (order: Order): boolean => {
+      const t = new Date(order.createdAt ?? nowTs).getTime();
+      return t >= cutoff;
+    },
+    [nowTs, cutoff]
+  );
 
-  const rangeOrders = useMemo(() => orders.filter(inWindow), [orders, cutoff]);
+  const rangeOrders = useMemo(() => orders.filter(inWindow), [orders, inWindow]);
 
   const prevOrders = useMemo(
     () =>
@@ -358,7 +365,7 @@ const AdminDashboard: React.FC = () => {
             const t = new Date(order.createdAt ?? nowTs).getTime();
             return t < cutoff && t >= prevCutoff;
           }),
-    [orders, cutoff, prevCutoff]
+    [orders, cutoff, prevCutoff, nowTs]
   );
 
   const sumRevenue = (list: Order[]): number =>
@@ -400,7 +407,7 @@ const AdminDashboard: React.FC = () => {
         value,
       };
     });
-  }, [rangeOrders, activeRange.days]);
+  }, [rangeOrders, activeRange.days, nowTs]);
 
   const statusCounts = useMemo(() => {
     const counts: Record<string, number> = {};
