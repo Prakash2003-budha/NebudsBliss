@@ -35,6 +35,7 @@ interface ProductFormState {
   description: string;
   price: string;
   discountPrice: string;
+  discountPercent: string;
   sku: string;
   category: string;
   brand: string;
@@ -53,6 +54,7 @@ const EMPTY_FORM: ProductFormState = {
   description: "",
   price: "",
   discountPrice: "",
+  discountPercent: "",
   sku: "",
   category: "",
   brand: "",
@@ -151,6 +153,10 @@ const AdminProducts: React.FC = () => {
       description: item.description || "",
       price: item.price != null ? String(item.price) : "",
       discountPrice: item.discountPrice != null ? String(item.discountPrice) : "",
+      discountPercent:
+        item.price > 0 && item.discountPrice != null
+          ? String(Math.round(((item.price - item.discountPrice) / item.price) * 100))
+          : "",
       sku: item.sku || "",
       category: item.category || "",
       brand: item.brand || "",
@@ -176,7 +182,33 @@ const AdminProducts: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [name]: value };
+
+      // Discount % drives the discount price automatically.
+      if (name === "discountPercent") {
+        const price = parseFloat(next.price);
+        const pct = parseFloat(value);
+        if (!isNaN(price) && price > 0 && !isNaN(pct) && pct > 0 && pct <= 100) {
+          next.discountPrice = String(Math.round((price - (price * pct) / 100) * 100) / 100);
+        } else if (value === "" || (!isNaN(pct) && pct <= 0)) {
+          next.discountPrice = "";
+        }
+      }
+
+      // Editing the discount price directly mirrors the percentage back.
+      if (name === "discountPrice") {
+        const price = parseFloat(next.price);
+        const dPrice = parseFloat(value);
+        if (!isNaN(price) && price > 0 && !isNaN(dPrice) && dPrice > 0 && dPrice < price) {
+          next.discountPercent = String(Math.round(((price - dPrice) / price) * 100));
+        } else if (value === "" || (!isNaN(dPrice) && dPrice <= 0)) {
+          next.discountPercent = "";
+        }
+      }
+
+      return next;
+    });
   };
 
   const handleImagesChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,6 +252,9 @@ const AdminProducts: React.FC = () => {
       errors.push("Discount price cannot be negative.");
     if (dPrice !== null && !isNaN(price) && price >= 0 && dPrice >= price)
       errors.push("Discount price must be lower than the regular price.");
+    const dPct = form.discountPercent === "" ? null : parseFloat(form.discountPercent);
+    if (dPct !== null && (isNaN(dPct) || dPct < 0 || dPct > 100))
+      errors.push("Discount percentage must be between 0 and 100.");
     return errors;
   }, [form]);
 
@@ -240,6 +275,8 @@ const AdminProducts: React.FC = () => {
       // make every consumer that does `discountPrice ?? price` show a free item.
       if (form.discountPrice !== "" && parseFloat(form.discountPrice) > 0)
         payload.append("discountPrice", form.discountPrice);
+      if (form.discountPercent !== "" && parseFloat(form.discountPercent) > 0)
+        payload.append("discountPercent", form.discountPercent);
       if (form.brand.trim() !== "") payload.append("brand", form.brand.trim());
       formImages.forEach((img) => payload.append("images", img));
 
@@ -644,8 +681,23 @@ const AdminProducts: React.FC = () => {
                       step="0.01"
                       value={form.discountPrice}
                       onChange={handleFormChange}
-                      placeholder="Optional — must be lower than price"
+                      placeholder="e.g. 4249"
                     />
+                  </div>
+                  <div className={shared.formGroup}>
+                    <label>Discount %</label>
+                    <input
+                      className={shared.input}
+                      name="discountPercent"
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="1"
+                      value={form.discountPercent}
+                      onChange={handleFormChange}
+                      placeholder="e.g. 15"
+                    />
+                    <small>Auto-calculates the discount price.</small>
                   </div>
                 </div>
 

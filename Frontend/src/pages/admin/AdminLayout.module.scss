@@ -172,23 +172,31 @@ $breakpoint: 900px;
 }
 
 .logoutBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 11px;
-  padding: 0.6rem 0.75rem;
-  border-radius: 10px;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0.36rem 0.6rem;
+  border-radius: 8px;
   color: #fca5a5;
   background: none;
   border: none;
   font: inherit;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
+  width: 100%;
   transition: background 0.15s ease;
 }
 
+.logoutBtn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
 .logoutBtn:hover {
-  background: rgba(229, 57, 53, 0.16);
+  background: rgba(229, 57, 53, 0.12);
 }
 
 /* ---------------- Content ---------------- */

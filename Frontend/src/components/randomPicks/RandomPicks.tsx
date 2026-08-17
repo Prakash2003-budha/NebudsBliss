@@ -18,9 +18,6 @@ interface RandomPicksProps {
   }) => void;
 }
 
-// Enough items to fill 2 full rows even on the widest grid (6 columns) -> 12.
-const MAX_PICKS = 12;
-
 const shuffle = <T,>(arr: T[]): T[] => {
   const copy = [...arr];
   for (let i = copy.length - 1; i > 0; i--) {
@@ -41,7 +38,7 @@ const RandomPicks: React.FC<RandomPicksProps> = ({
   const navigate = useNavigate();
 
   // Reshuffled only when the underlying item list changes (not on every render).
-  const picks = useMemo(() => shuffle(items).slice(0, MAX_PICKS), [items]);
+  const picks = useMemo(() => shuffle(items), [items]);
 
   if (picks.length === 0) return null;
 

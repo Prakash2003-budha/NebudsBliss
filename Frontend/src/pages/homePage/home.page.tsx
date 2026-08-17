@@ -176,10 +176,17 @@ const Homepage: React.FC = () => {
           <ProductHighlights
             items={newArrivalItems}
             title="New Arrivals"
+            isAdmin={isAdmin}
+            deletingId={deletingId}
             onOpenProduct={(item) => {
               setSelectedProduct(item);
               setIsProductModalOpen(true);
             }}
+            onDeleteClick={(item) => {
+              setItemPendingDelete(item);
+              setIsPasswordModalOpen(true);
+            }}
+            addToCart={addToCart}
           />
         )}
 

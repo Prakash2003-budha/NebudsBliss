@@ -30,31 +30,20 @@ $dark-text: #222222;
   }
 }
 
-// Exactly two rows, filled column-by-column, scrolling sideways once it
-// overflows -- keeps the "two row" layout consistent at every breakpoint.
+// Responsive grid that shows every product — wraps into as many rows as needed.
 .grid {
   display: grid;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(2, 1fr);
-  grid-auto-columns: minmax(200px, 220px);
-  gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 0.5rem;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 18px;
 
   @media (max-width: 600px) {
-    grid-auto-columns: minmax(150px, 165px);
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
   }
 }
 
 .gridItem {
-  scroll-snap-align: start;
+  display: flex;
 }
 
 .moreWrapper {

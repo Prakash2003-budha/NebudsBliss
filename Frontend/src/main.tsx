@@ -17,7 +17,8 @@ import AdminDashboard from './pages/admin/AdminDashboard.tsx';
 import AdminOrders from './pages/admin/AdminOrders.tsx';
 import AdminProducts from './pages/admin/AdminProducts.tsx';
 import AdminPromos from './pages/admin/AdminPromos.tsx';
-import AdminPlaceholder from './pages/admin/AdminPlaceholder.tsx';
+import AdminMedia from './pages/admin/AdminMedia.tsx';
+import AdminReviews from './pages/admin/AdminReviews.tsx';
 import RequireAdmin from './pages/admin/RequireAdmin.tsx';
 import { PrivacyPage, TermsPage } from './pages/staticPage/static.page.tsx';
 import { StandaloneLogin, StandaloneRegister } from './pages/auth/StandaloneAuth.tsx';
@@ -48,9 +49,9 @@ createRoot(document.getElementById('root')!).render(
               <Route path="orders" element={<AdminOrders />} />
               <Route path="products/new" element={<AdminProducts />} />
               <Route path="products" element={<AdminProducts />} />
-              <Route path="media" element={<AdminPlaceholder title="Media & Banners" icon="🖼️" />} />
+              <Route path="media" element={<AdminMedia />} />
               <Route path="promos" element={<AdminPromos />} />
-              <Route path="reviews" element={<AdminPlaceholder title="Reviews" icon="⭐" />} />
+              <Route path="reviews" element={<AdminReviews />} />
             </Route>
           </Route>
           <Route path="/terms" element={<TermsPage />} />

@@ -24,6 +24,11 @@ export const ItemCreateDTO = Joi.object({
         "number.base": "Discount price must be a number",
         "number.min": "Discount price cannot be negative"
     }),
+    discountPercent: Joi.number().min(0).max(100).allow(null, "").messages({
+        "number.base": "Discount percent must be a number",
+        "number.min": "Discount percent cannot be negative",
+        "number.max": "Discount percent cannot exceed 100"
+    }),
     sku: Joi.string().required().messages({
         "string.base": "SKU must be a text value",
         "string.empty": "SKU is required",

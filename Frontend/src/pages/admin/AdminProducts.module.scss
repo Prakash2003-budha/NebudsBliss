@@ -50,9 +50,12 @@
 /* ---------- Product form (create / edit modal) ---------- */
 .fieldRow {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 1rem;
-}
+
+  @media (min-width: 701px) and (max-width: 900px) {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
 
 .imageGrid {
   display: flex;
@@ -216,4 +219,5 @@
   .fieldRow {
     grid-template-columns: 1fr;
   }
+}
 }

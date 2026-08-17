@@ -17,6 +17,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     description: '',
     price: '',
     discountPrice: '',
+    discountPercent: '',
     sku: '',
     category: '',
     brand: '',
@@ -44,7 +45,33 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+
+      // Discount % drives the discount price automatically.
+      if (name === "discountPercent") {
+        const price = parseFloat(next.price);
+        const pct = parseFloat(value);
+        if (!isNaN(price) && price > 0 && !isNaN(pct) && pct > 0 && pct <= 100) {
+          next.discountPrice = String(Math.round((price - (price * pct) / 100) * 100) / 100);
+        } else if (value === "" || (!isNaN(pct) && pct <= 0)) {
+          next.discountPrice = "";
+        }
+      }
+
+      // Editing the discount price directly mirrors the percentage back.
+      if (name === "discountPrice") {
+        const price = parseFloat(next.price);
+        const dPrice = parseFloat(value);
+        if (!isNaN(price) && price > 0 && !isNaN(dPrice) && dPrice > 0 && dPrice < price) {
+          next.discountPercent = String(Math.round(((price - dPrice) / price) * 100));
+        } else if (value === "" || (!isNaN(dPrice) && dPrice <= 0)) {
+          next.discountPercent = "";
+        }
+      }
+
+      return next;
+    });
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,6 +109,7 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       description: '',
       price: '',
       discountPrice: '',
+      discountPercent: '',
       sku: '',
       category: '',
       brand: '',
@@ -114,7 +142,10 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     dataPayload.append('stockQuantity', formData.stockQuantity);
     dataPayload.append('isFeatured', String(isFeatured));
 
-    if (formData.discountPrice && parseFloat(formData.discountPrice) > 0) dataPayload.append('discountPrice', formData.discountPrice);
+    if (formData.discountPrice && parseFloat(formData.discountPrice) > 0)
+      dataPayload.append('discountPrice', formData.discountPrice);
+    if (formData.discountPercent !== '' && parseFloat(formData.discountPercent) > 0)
+      dataPayload.append('discountPercent', formData.discountPercent);
     if (formData.brand) dataPayload.append('brand', formData.brand);
 
     images.forEach(image => {
@@ -240,6 +271,14 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                     type="number" name="discountPrice" step="0.01" min="0" placeholder="0.00" disabled={isSubmitting}
                     value={formData.discountPrice} onChange={handleChange}
                   />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label>Discount %</label>
+                  <input 
+                    type="number" name="discountPercent" min="0" max="100" step="1" placeholder="e.g. 15" disabled={isSubmitting}
+                    value={formData.discountPercent} onChange={handleChange}
+                  />
+                  <small>Auto-calculates the discount price.</small>
                 </div>
               </div>
 

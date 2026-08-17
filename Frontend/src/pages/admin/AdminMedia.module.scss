@@ -1,0 +1,223 @@
+// Admin Media & Banners page — media-specific layout built on the shared admin design system.
+
+.mediaSection {
+  background: #fff;
+  border: 1px solid #e5e8ee;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.sectionTitle {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #e5e8ee;
+  color: #1a2233;
+}
+
+.sectionBody {
+  padding: 1.25rem;
+}
+
+/* Homepage banner */
+.posterView {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.posterImg {
+  width: 100%;
+  max-width: 720px;
+  height: 220px;
+  object-fit: cover;
+  object-position: center;
+  border: 1px dashed #e5e8ee;
+  border-radius: 10px;
+  background: #f1f5f9;
+}
+
+/* Hero slides */
+.heroGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 0.9rem;
+}
+
+.heroTile {
+  border: 1px dashed #e5e8ee;
+  border-radius: 10px;
+  padding: 0.5rem;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.heroThumb {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #e2e8f0;
+}
+
+.heroMeta {
+  font-size: 0.76rem;
+  color: #64748b;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 0.25rem;
+}
+
+/* Best seller list */
+.sellerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sellerRow {
+  display: grid;
+  grid-template-columns: 64px 1fr 160px 1fr auto;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.6rem 0.7rem;
+  border: 1px dashed #e5e8ee;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.sellerThumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #e2e8f0;
+  grid-column: 1;
+}
+
+.sellerName {
+  grid-column: 2;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a2233;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sellerItem {
+  grid-column: 3;
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sellerOrder {
+  grid-column: 4;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.sellerActions {
+  grid-column: 5;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Creator / editor row */
+.creatorRow {
+  display: grid;
+  grid-template-columns: 1fr 160px 160px auto;
+  gap: 0.65rem;
+  align-items: end;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #e5e8ee;
+}
+
+.creatorRow .creatorName {
+  grid-column: 1;
+}
+
+.creatorRow .creatorItem {
+  grid-column: 2;
+}
+
+.creatorRow .fileInput {
+  grid-column: 3;
+}
+
+.creatorRow .createBtn {
+  grid-column: 4;
+}
+
+/* File upload control */
+.fileRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+}
+
+.fileInput {
+  font-size: 0.82rem;
+  color: #475569;
+}
+
+.fileLabel {
+  font-size: 0.8rem;
+  color: #475569;
+  min-width: 120px;
+}
+
+.fileName {
+  font-size: 0.78rem;
+  color: #64748b;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.emptyState {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 760px) {
+  .sellerRow {
+    grid-template-columns: 64px 1fr 1fr;
+    grid-template-areas:
+      "thumb name actions"
+      "thumb item actions";
+  }
+  .sellerThumb { grid-area: thumb; }
+  .sellerName { grid-area: name; }
+  .sellerItem { grid-area: item; }
+  .sellerOrder { grid-area: item; }
+  .sellerActions { grid-area: actions; }
+  .creatorRow {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .creatorRow .creatorItem { grid-column: 1; }
+  .creatorRow .createBtn { grid-column: 2; }
+}

@@ -136,7 +136,7 @@ const AdminLayout: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  let user: StoredUser | null = null;
+  let user: StoredUser | null;
   try {
     const raw = localStorage.getItem("user");
     user = raw ? (JSON.parse(raw) as StoredUser) : null;
@@ -254,6 +254,4 @@ const AdminLayout: React.FC = () => {
     </div>
   );
 };
-
 export default AdminLayout;
-

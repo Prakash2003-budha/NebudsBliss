@@ -6,6 +6,31 @@ class ItemService {
         try {
             let data = { ...req.body };
 
+            const basePrice = Number(data.price);
+
+            // discountPercent (0-100). When provided and valid, the discount price
+            // is derived automatically so admins can price items by percentage.
+            if (
+                data.discountPercent !== undefined &&
+                data.discountPercent !== null &&
+                data.discountPercent !== ""
+            ) {
+                const pct = Number(data.discountPercent);
+                if (
+                    Number.isFinite(pct) &&
+                    pct > 0 &&
+                    pct <= 100 &&
+                    Number.isFinite(basePrice) &&
+                    basePrice > 0
+                ) {
+                    data.discountPercent = pct;
+                    data.discountPrice =
+                        Math.round((basePrice - (basePrice * pct) / 100) * 100) / 100;
+                } else {
+                    delete data.discountPercent;
+                }
+            }
+
             // Normalize discountPrice: only a positive number below the price is a
             // real discount. A blank/zero/invalid value means "no discount" and is
             // REMOVED before saving — storing 0 would make every consumer that uses
@@ -16,17 +41,23 @@ class ItemService {
                 data.discountPrice === ""
             ) {
                 delete data.discountPrice;
+                delete data.discountPercent;
             } else {
                 const dPrice = Number(data.discountPrice);
-                const basePrice = Number(data.price);
                 if (
                     !Number.isFinite(dPrice) ||
                     dPrice <= 0 ||
                     (Number.isFinite(basePrice) && dPrice >= basePrice)
                 ) {
                     delete data.discountPrice;
+                    delete data.discountPercent;
                 } else {
                     data.discountPrice = dPrice;
+                    // Re-derive the stored percentage from the final discount price so
+                    // the two fields never drift apart (also covers fixed-price edits).
+                    if (Number.isFinite(basePrice) && basePrice > 0 && dPrice < basePrice) {
+                        data.discountPercent = Math.round(((basePrice - dPrice) / basePrice) * 100);
+                    }
                 }
             }
             

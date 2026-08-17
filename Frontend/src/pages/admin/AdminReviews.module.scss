@@ -1,0 +1,141 @@
+// Admin Reviews page — list and moderate product reviews.
+// Built on the shared admin design system (admin.shared.module.scss).
+
+.reviewsSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  align-items: center;
+}
+
+.summaryStat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.summaryStat .count {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a2233;
+}
+
+.searchBox {
+  margin-left: auto;
+  width: 230px;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reviewCard {
+  background: #fff;
+  border: 1px solid #e5e8ee;
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  display: grid;
+  grid-template-columns: 36px 1fr 160px auto;
+  gap: 0.65rem 0.85rem;
+  align-items: start;
+}
+
+.reviewAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #e2e8f0;
+  grid-row: 1 / span 3;
+  flex-shrink: 0;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+}
+
+.reviewAuthor {
+  font-weight: 600;
+  color: #1a2233;
+}
+
+.reviewRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.8rem;
+  color: #b45309;
+}
+
+.reviewTitle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a2233;
+  margin: 0;
+}
+
+.reviewComment {
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.4;
+}
+
+.reviewMeta {
+  grid-column: 3;
+  font-size: 0.74rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.reviewProduct {
+  font-size: 0.76rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reviewActions {
+  grid-column: 4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 760px) {
+  .reviewCard {
+    grid-template-columns: 1fr auto;
+  }
+  .reviewAvatar {
+    grid-column: 1 / span 1;
+    grid-row: 1;
+  }
+  .reviewHeader {
+    grid-column: 1;
+  }
+  .reviewTitle {
+    grid-column: 1;
+  }
+  .reviewComment {
+    grid-column: 1;
+  }
+  .reviewMeta {
+    grid-column: 1;
+  }
+  .reviewProduct {
+    grid-column: 2;
+  }
+  .reviewActions {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}

@@ -23,6 +23,11 @@ const ItemSchema = new mongoose.Schema({
         type: Number,
         min: [0, "Discount price cannot be negative"]
     },
+    discountPercent: {
+        type: Number,
+        min: [0, "Discount percent cannot be negative"],
+        max: [100, "Discount percent cannot exceed 100"]
+    },
     sku: {
         type: String,
         required: [true, "SKU (Stock Keeping Unit) is required"],
