@@ -297,3 +297,82 @@ $drawer-width: 420px;
     transform: scale(0.98);
   }
 }
+// Cross-sell / upsell recommendations
+.recommendations {
+  border-top: 1px solid $border;
+  padding: 14px 16px;
+}
+
+.recoTitle {
+  font-size: 0.82rem;
+  color: $light-text;
+  margin: 0 0 10px;
+}
+
+.recoList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.recoItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recoImage {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.recoImagePlaceholder {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: $bg;
+  flex-shrink: 0;
+}
+
+.recoInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.recoInfo h5 {
+  font-size: 0.78rem;
+  margin: 0 0 2px;
+  color: $dark-text;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recoPrice {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $dark-text;
+  margin: 0;
+}
+
+.recoAddBtn {
+  border: 1px solid $primary;
+  background: $primary;
+  color: #fff;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 0.88;
+  }
+}

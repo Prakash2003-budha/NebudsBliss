@@ -19,6 +19,17 @@ export interface Item {
   isFeatured?: boolean;
   stockQuantity?: number;
   createdAt?: string;
+  specs?: {
+    batteryCapacity?: number;
+    batteryType?: string;
+    bluetoothVersion?: string;
+    fastCharging?: boolean;
+    weight?: number;
+    dimensions?: string;
+    warrantyPeriod?: number;
+    colorOptions?: string[];
+    compatibility?: string;
+  };
 }
 
 interface ProductCardProps {
@@ -34,6 +45,9 @@ interface ProductCardProps {
     discountPrice?: number;
     image: string;
   }) => void;
+  // Compare feature
+  isComparing?: boolean;
+  onCompareToggle?: (item: Item) => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -43,6 +57,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onOpenProduct,
   onDeleteClick,
   addToCart,
+  isComparing,
+  onCompareToggle,
 }) => {
   const imageSrc =
     item.images && item.images.length > 0
@@ -117,6 +133,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         <div className={styles.cardActions}>
+          {onCompareToggle && (
+            <button
+              type="button"
+              className={`${styles.compareBtn} ${isComparing ? styles.compareBtnActive : ""}`}
+              title={isComparing ? "Remove from compare" : "Add to compare"}
+              aria-pressed={!!isComparing}
+              onClick={(e) => {
+                e.stopPropagation();
+                onCompareToggle(item);
+              }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 9h11M4 15h16M19 6l3 3-3 3M5 18l-3-3 3-3" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          )}
           <button
             className={styles.addToCartBtn}
             disabled={isOutOfStock}

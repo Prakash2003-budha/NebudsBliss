@@ -22,6 +22,16 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     category: '',
     brand: '',
     stockQuantity: '0',
+    // Technical specifications
+    batteryCapacity: '',
+    batteryType: '',
+    bluetoothVersion: '',
+    fastCharging: false,
+    weight: '',
+    dimensions: '',
+    warrantyPeriod: '',
+    colorOptions: '',
+    compatibility: '',
   });
   const [isFeatured, setIsFeatured] = useState(false);
 
@@ -114,6 +124,15 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
       category: '',
       brand: '',
       stockQuantity: '0',
+      batteryCapacity: '',
+      batteryType: '',
+      bluetoothVersion: '',
+      fastCharging: false,
+      weight: '',
+      dimensions: '',
+      warrantyPeriod: '',
+      colorOptions: '',
+      compatibility: '',
     });
     setIsFeatured(false);
     setImages([]);
@@ -147,6 +166,17 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
     if (formData.discountPercent !== '' && parseFloat(formData.discountPercent) > 0)
       dataPayload.append('discountPercent', formData.discountPercent);
     if (formData.brand) dataPayload.append('brand', formData.brand);
+
+    // Technical specifications payload
+    dataPayload.append('specs[batteryCapacity]', formData.batteryCapacity || '0');
+    dataPayload.append('specs[batteryType]', formData.batteryType);
+    dataPayload.append('specs[bluetoothVersion]', formData.bluetoothVersion);
+    dataPayload.append('specs[fastCharging]', String(formData.fastCharging));
+    dataPayload.append('specs[weight]', formData.weight || '0');
+    dataPayload.append('specs[dimensions]', formData.dimensions);
+    dataPayload.append('specs[warrantyPeriod]', formData.warrantyPeriod || '0');
+    dataPayload.append('specs[colorOptions]', formData.colorOptions);
+    dataPayload.append('specs[compatibility]', formData.compatibility);
 
     images.forEach(image => {
       dataPayload.append('images', image);
@@ -309,6 +339,96 @@ const AddItemTab: React.FC<AddItemTabProps> = ({ isOpen, onClose }) => {
                   />
                   Feature this product on the homepage poster section
                 </label>
+              </div>
+
+              {/* Technical Specifications Section */}
+              <div style={{ marginTop: 16, padding: '16px', background: '#f8f9fb', borderRadius: 12, border: '1px solid #e5e7eb' }}>
+                <h4 style={{ margin: '0 0 12px', fontSize: '0.95rem', color: '#111' }}>
+                  Technical Specifications (Electronics)
+                </h4>
+                <div className={styles.formRow}>
+                  <div className={styles.inputGroup}>
+                    <label>Battery Capacity (mAh)</label>
+                    <input
+                      type="number" name="batteryCapacity" min="0" placeholder="e.g. 5000" disabled={isSubmitting}
+                      value={formData.batteryCapacity}
+                      onChange={(e) => setFormData((p) => ({ ...p, batteryCapacity: e.target.value }))}
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>Battery Type</label>
+                    <input
+                      type="text" name="batteryType" placeholder="e.g. Lithium-ion" disabled={isSubmitting}
+                      value={formData.batteryType}
+                      onChange={(e) => setFormData((p) => ({ ...p, batteryType: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className={styles.formRow}>
+                  <div className={styles.inputGroup}>
+                    <label>Bluetooth Version</label>
+                    <input
+                      type="text" name="bluetoothVersion" placeholder="e.g. 5.3" disabled={isSubmitting}
+                      value={formData.bluetoothVersion}
+                      onChange={(e) => setFormData((p) => ({ ...p, bluetoothVersion: e.target.value }))}
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, paddingTop: 24, cursor: 'pointer' }}>
+                      <input
+                        type="checkbox" name="fastCharging" disabled={isSubmitting}
+                        checked={formData.fastCharging}
+                        onChange={(e) => setFormData((p) => ({ ...p, fastCharging: e.target.checked }))}
+                        style={{ width: 'auto' }}
+                      />
+                      Fast Charging
+                    </label>
+                  </div>
+                </div>
+                <div className={styles.formRow}>
+                  <div className={styles.inputGroup}>
+                    <label>Weight (grams)</label>
+                    <input
+                      type="number" name="weight" min="0" placeholder="e.g. 180" disabled={isSubmitting}
+                      value={formData.weight}
+                      onChange={(e) => setFormData((p) => ({ ...p, weight: e.target.value }))}
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>Dimensions (L x W x H)</label>
+                    <input
+                      type="text" name="dimensions" placeholder="e.g. 15 x 8 x 2 cm" disabled={isSubmitting}
+                      value={formData.dimensions}
+                      onChange={(e) => setFormData((p) => ({ ...p, dimensions: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className={styles.formRow}>
+                  <div className={styles.inputGroup}>
+                    <label>Warranty Period (months)</label>
+                    <input
+                      type="number" name="warrantyPeriod" min="0" placeholder="e.g. 12" disabled={isSubmitting}
+                      value={formData.warrantyPeriod}
+                      onChange={(e) => setFormData((p) => ({ ...p, warrantyPeriod: e.target.value }))}
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <label>Color Options (comma separated)</label>
+                    <input
+                      type="text" name="colorOptions" placeholder="e.g. Black, White, Blue" disabled={isSubmitting}
+                      value={formData.colorOptions}
+                      onChange={(e) => setFormData((p) => ({ ...p, colorOptions: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className={styles.inputGroup}>
+                  <label>Compatibility</label>
+                  <input
+                    type="text" name="compatibility" placeholder="e.g. iOS & Android, USB-C devices" disabled={isSubmitting}
+                    value={formData.compatibility}
+                    onChange={(e) => setFormData((p) => ({ ...p, compatibility: e.target.value }))}
+                  />
+                </div>
               </div>
 
               <div className={styles.inputGroup}>

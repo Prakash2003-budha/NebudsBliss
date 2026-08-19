@@ -19,6 +19,18 @@ interface Item {
   brand?: string;
   stockQuantity?: number;
   isActive: boolean;
+  // Technical specifications for electronics
+  specs?: {
+    batteryCapacity?: number;  // mAh
+    batteryType?: string;
+    bluetoothVersion?: string;
+    fastCharging?: boolean;
+    weight?: number;  // grams
+    dimensions?: string;  // L x W x H
+    warrantyPeriod?: number;  // months
+    colorOptions?: string[];
+    compatibility?: string;
+  };
 }
 
 interface ProductDetailModalProps {
@@ -102,6 +114,39 @@ const ProductDetailContent: React.FC<{
   useEffect(() => {
     lightboxOpenRef.current = lightboxOpen;
   }, [lightboxOpen]);
+
+  // Render the technical specifications table from item.specs
+  const renderSpecs = () => {
+    if (!item.specs) return null;
+    const specEntries = [
+      { label: "Battery Capacity", value: item.specs.batteryCapacity ? `${item.specs.batteryCapacity} mAh` : "N/A" },
+      { label: "Battery Type", value: item.specs.batteryType ? item.specs.batteryType : "N/A" },
+      { label: "Bluetooth Version", value: item.specs.bluetoothVersion ? item.specs.bluetoothVersion : "N/A" },
+      { label: "Fast Charging", value: item.specs.fastCharging ? "Yes" : "No" },
+      { label: "Weight", value: item.specs.weight ? `${item.specs.weight} g` : "N/A" },
+      { label: "Dimensions", value: item.specs.dimensions ? item.specs.dimensions : "N/A" },
+      { label: "Warranty Period", value: item.specs.warrantyPeriod ? `${item.specs.warrantyPeriod} months` : "N/A" },
+      { label: "Color Options", value: item.specs.colorOptions?.length ? item.specs.colorOptions.join(", ") : "N/A" },
+      { label: "Compatibility", value: item.specs.compatibility ? item.specs.compatibility : "N/A" },
+    ];
+
+    return (
+      <div className={styles.specSection}>
+        <h4 className={styles.specHeading}>Technical Specifications</h4>
+        <div className={styles.specTable}>
+          {specEntries.map((entry, index) => (
+            <div
+              key={index}
+              className={`${styles.specRow} ${index % 2 === 0 ? styles.specRowEven : styles.specRowOdd}`}
+            >
+              <div className={styles.specCell}>{entry.label}</div>
+              <div className={styles.specCell}>{entry.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   // Registered on mount — before the parent modal registers its own Escape
   // handler (child effects flush first) — so while the image lightbox is open,
@@ -429,13 +474,16 @@ const ProductDetailContent: React.FC<{
 
             <div className={styles.tabContent}>
               {activeTab === "details" ? (
-                descriptionParagraphs.length > 0 ? (
-                  descriptionParagraphs.map((line, idx) => (
-                    <p key={idx}>{line}</p>
-                  ))
-                ) : (
-                  <p>No description available.</p>
-                )
+                <>
+                  {descriptionParagraphs.length > 0 ? (
+                    descriptionParagraphs.map((line, idx) => (
+                      <p key={idx}>{line}</p>
+                    ))
+                  ) : (
+                    <p>No description available.</p>
+                  )}
+                  {item.specs && renderSpecs()}
+                </>
               ) : (
                 <div className={styles.reviewsBlock}>
                   {reviews.length > 0 && (

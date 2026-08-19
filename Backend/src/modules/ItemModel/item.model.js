@@ -72,6 +72,18 @@ const ItemSchema = new mongoose.Schema({
     numberOfReviews: {
         type: Number,
         default: 0
+    },
+    // Technical specifications for electronics
+    specs: {
+        batteryCapacity: { type: Number, default: 0 },  // mAh
+        batteryType: { type: String, default: "" },
+        bluetoothVersion: { type: String, default: "" },
+        fastCharging: { type: Boolean, default: false },
+        weight: { type: Number, default: 0 },  // grams
+        dimensions: { type: String, default: "" },  // L x W x H
+        warrantyPeriod: { type: Number, default: 0 },  // months
+        colorOptions: [{ type: String, default: [] }],
+        compatibility: { type: String, default: "" }
     }
 }, {
     timestamps: true, 

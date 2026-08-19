@@ -92,6 +92,16 @@ interface FilterSidebarProps {
   priceRange?: { min: string; max: string };
   onPriceRangeChange?: (range: { min: string; max: string }) => void;
 
+  // Spec-based filters (technical specs)
+  batteryMin?: string;
+  onBatteryMinChange?: (v: string) => void;
+  bluetoothVersion?: string;
+  onBluetoothChange?: (v: string) => void;
+  fastChargingOnly?: boolean;
+  onFastChargingChange?: (v: boolean) => void;
+  selectedColors?: string[];
+  onColorToggle?: (color: string) => void;
+
   onClearFilters?: () => void;
 }
 
@@ -119,9 +129,19 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   priceRange,
   onPriceRangeChange,
   onClearFilters,
+  batteryMin,
+  onBatteryMinChange,
+  bluetoothVersion,
+  onBluetoothChange,
+  fastChargingOnly,
+  onFastChargingChange,
+  selectedColors = [],
+  onColorToggle,
 }) => {
   const isMultiSelectMode = !!onCategoryToggle;
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const COMMON_COLORS = ["Black", "White", "Blue", "Red", "Green", "Silver", "Gold", "Pink", "Gray"];
 
   const activeFilterCount =
     (selectedCategorySlugs?.length || 0) +
@@ -129,7 +149,11 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     (stockFilter !== "all" ? 1 : 0) +
     (availability.onSale ? 1 : 0) +
     (availability.isNew ? 1 : 0) +
-    (priceRange?.min || priceRange?.max ? 1 : 0);
+    (priceRange?.min || priceRange?.max ? 1 : 0) +
+    (batteryMin ? 1 : 0) +
+    (bluetoothVersion ? 1 : 0) +
+    (fastChargingOnly ? 1 : 0) +
+    selectedColors.length;
 
   return (
     <aside className={`${styles.filters} ${isOpen ? styles.filtersOpen : ""}`}>
@@ -327,6 +351,77 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
               </label>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Technical specification filters */}
+      {(onBatteryMinChange || onBluetoothChange || onFastChargingChange || onColorToggle) && (
+        <div className={styles.specFilters}>
+          {onBatteryMinChange && (
+            <div className={styles.section}>
+              <h3>Battery Capacity</h3>
+              <div className={styles.priceInputs}>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="Min mAh e.g. 5000"
+                  className={styles.priceInput}
+                  value={batteryMin}
+                  onChange={(e) => onBatteryMinChange(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
+          {onBluetoothChange && (
+            <div className={styles.section}>
+              <h3>Bluetooth Version</h3>
+              <div className={styles.priceInputs}>
+                <input
+                  type="text"
+                  placeholder="e.g. 5.3"
+                  className={styles.priceInput}
+                  value={bluetoothVersion}
+                  onChange={(e) => onBluetoothChange(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
+          {onFastChargingChange && (
+            <div className={styles.section}>
+              <label className={styles.checkRow}>
+                <input
+                  type="checkbox"
+                  className={styles.hiddenControl}
+                  checked={fastChargingOnly}
+                  onChange={(e) => onFastChargingChange(e.target.checked)}
+                />
+                <span className={styles.checkBox} />
+                <span>Fast Charging</span>
+              </label>
+            </div>
+          )}
+
+          {onColorToggle && (
+            <div className={styles.section}>
+              <h3>Color</h3>
+              <div className={styles.brandList}>
+                {COMMON_COLORS.map((color) => (
+                  <label className={styles.brandItem} key={color}>
+                    <input
+                      type="checkbox"
+                      className={styles.hiddenControl}
+                      checked={selectedColors.includes(color)}
+                      onChange={() => onColorToggle(color)}
+                    />
+                    <span className={styles.checkBox} />
+                    <span>{color}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

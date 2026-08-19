@@ -9,12 +9,26 @@ const normalizeRoles = (roles) => {
 };
 
 const allowUser = (roles = null) => {
-    const allowedRoles = normalizeRoles(roles);
+    // Support BOTH legacy usage (allowUser(), allowUser("Admin")) and the newer
+    // options object: allowUser({ optional: true }) or allowUser({ roles: "Admin" }).
+    let allowedRoles = null;
+    let optional = false;
+    if (roles && typeof roles === "object" && !Array.isArray(roles) && !(roles instanceof String)) {
+        allowedRoles = normalizeRoles(roles.roles ?? null);
+        optional = !!roles.optional;
+    } else {
+        allowedRoles = normalizeRoles(roles);
+    }
 
     return async (req, res, next) => {
         try {
             let token = req.headers['authorization'] || null;
             if (!token) {
+                // When the route is optional (guest checkout), continue without a user.
+                if (optional) {
+                    req.authUser = null;
+                    return next();
+                }
                 // Return immediately out of the middleware execution if token is missing
                 return next({
                     code: 401,

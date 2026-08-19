@@ -1,0 +1,131 @@
+$primary-color: var(--nb-primary);
+$ink: #1a1d1f;
+$muted: #767c82;
+$hairline: #ececec;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 1.5rem;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 18px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  font-family: "Outfit", system-ui, sans-serif;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid $hairline;
+  z-index: 2;
+
+  h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: $ink;
+  }
+}
+
+.closeBtn {
+  border: none;
+  background: transparent;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: $muted;
+  cursor: pointer;
+
+  &:hover {
+    color: $ink;
+  }
+}
+
+.grid {
+  padding: 8px 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.labelCol {
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: $muted;
+  background: #f6f8fa;
+  border-bottom: 1px solid $hairline;
+  display: flex;
+  align-items: center;
+}
+
+.productCol {
+  position: relative;
+  padding: 10px 14px;
+  border-bottom: 1px solid $hairline;
+  border-left: 1px solid $hairline;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.productImage {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+
+.productName {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: $ink;
+}
+
+.rowValue {
+  font-size: 0.8rem;
+  color: $ink;
+}
+
+.removeBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: $muted;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+
+  &:hover {
+    background: rgba(214, 69, 69, 0.15);
+    color: #d64545;
+  }
+}

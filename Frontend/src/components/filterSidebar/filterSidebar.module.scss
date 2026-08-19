@@ -500,6 +500,13 @@ $hairline: #ececec;
   gap: 8px;
 }
 
+// Wrapper for spec filter inputs (battery / bluetooth)
+.priceInputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .priceInput {
   width: 100%;
   min-width: 0;

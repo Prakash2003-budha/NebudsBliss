@@ -56,7 +56,36 @@ class ItemController {
                 if (req.query.maxPrice) filter.price.$lte = Number(req.query.maxPrice);
             }
             if (req.query.search) {
-                filter.name = { $regex: req.query.search, $options: "i" };
+                // Search across name, brand, sku (model number), and category.
+                const r = { $regex: req.query.search, $options: "i" };
+                filter.$or = [
+                    { name: r },
+                    { brand: r },
+                    { sku: r },
+                    { category: r },
+                ];
+            }
+
+            // --- Spec-based filtering (battery, bluetooth, fast charging, color) ---
+            if (req.query.batteryMin) {
+                filter["specs.batteryCapacity"] = {
+                    ...(filter["specs.batteryCapacity"] || {}),
+                    $gte: Number(req.query.batteryMin),
+                };
+            }
+            if (req.query.bluetooth) {
+                // e.g. bluetooth=5.3  -> match version 5.3 (regex for flexible matching)
+                const v = String(req.query.bluetooth).replace(".", "\\.");
+                filter["specs.bluetoothVersion"] = { $regex: v, $options: "i" };
+            }
+            if (req.query.fastCharging === "true") {
+                filter["specs.fastCharging"] = true;
+            }
+            if (req.query.color) {
+                const colors = req.query.color.split(",").map((c) => c.trim()).filter(Boolean);
+                if (colors.length > 0) {
+                    filter["specs.colorOptions"] = { $in: colors };
+                }
             }
 
             // Storefront availability filters. The shop page sends these so the

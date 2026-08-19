@@ -28,10 +28,11 @@ const parseOrderJsonFields = (req, res, next) => {
     }
 };
 
-// Users need to be logged in to create orders and view them
+// Users can create orders as a guest (no login required). If a token is present
+// in the Authorization header, allowUser() will attach the user to the order.
 orderRouter.post(
     '/orders',
-    allowUser(),
+    allowUser({ optional: true }),
     uploader().single("paymentScreenshot"),
     parseOrderJsonFields,
     bodyValidator(OrderCreateDTO),

@@ -6,6 +6,22 @@ class ItemService {
         try {
             let data = { ...req.body };
 
+            // Parse specs from flat form-data fields like specs[batteryCapacity],
+            // specs[colorOptions], etc. into a nested object.
+            if (data.specs) {
+                Object.keys(data.specs).forEach((key) => {
+                    const val = data.specs[key];
+                    // Convert comma-separated colorOptions string into an array
+                    if (key === "colorOptions" && typeof val === "string" && val.trim()) {
+                        data.specs[key] = val.split(",").map((c) => c.trim()).filter(Boolean);
+                    } else if (key === "fastCharging" && typeof val === "string") {
+                        data.specs[key] = val.toLowerCase() === "true";
+                    } else if (val === "" || val === undefined || val === null) {
+                        delete data.specs[key];
+                    }
+                });
+            }
+
             const basePrice = Number(data.price);
 
             // discountPercent (0-100). When provided and valid, the discount price

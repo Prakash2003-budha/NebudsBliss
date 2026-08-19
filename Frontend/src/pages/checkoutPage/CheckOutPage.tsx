@@ -224,11 +224,6 @@ const CheckOutPage: React.FC = () => {
     }
 
     const token = localStorage.getItem("accessToken") || localStorage.getItem("token") || "";
-    if (!token) {
-      setSubmitError("Please log in to place your order.");
-      return;
-    }
-
     const requiredFields = [formData.fullName, formData.phone, formData.address, formData.city];
     const isComplete = requiredFields.every((field) => field.trim().length > 0);
 
@@ -282,9 +277,9 @@ const CheckOutPage: React.FC = () => {
 
       const response = await fetch(API_ENDPOINTS.CREATE_ORDER, {
         method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}` 
-        },
+        headers: token
+          ? { "Authorization": `Bearer ${token}` }
+          : {},
         body: orderForm,
       });
 

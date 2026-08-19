@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
+import axios from "axios";
 import styles from "./CartDrawer.module.scss";
 import { useCart } from "../../context/userCart";
+import { API_ENDPOINTS } from "../../constants/constants";
 import { effectivePrice, isValidDiscount } from "../../utils/price";
 
 interface CartDrawerProps {
@@ -9,14 +11,63 @@ interface CartDrawerProps {
   onClose: () => void;
 }
 
+// A lightweight recommended item shape for cross-selling/upselling.
+interface RecommendedItem {
+  _id: string;
+  name: string;
+  price: number;
+  discountPrice?: number;
+  image?: string;
+}
+
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
-  const { cartItems, removeFromCart, clearCart, totalCount } = useCart();
+  const { cartItems, removeFromCart, clearCart, totalCount, addToCart } = useCart();
   const navigate = useNavigate(); // 2. Initialize the navigate function
+  const [recommendations, setRecommendations] = useState<RecommendedItem[]>([]);
 
   const subtotal = cartItems.reduce((sum, item) => {
     const price = effectivePrice(item.price, item.discountPrice);
     return sum + price * item.quantity;
   }, 0);
+
+  // Cross-sell / upsell: when the cart is open with items, fetch popular
+  // products from the same categories so the customer can add compatible
+  // accessories or complementary items easily.
+  useEffect(() => {
+    if (!isOpen || cartItems.length === 0) {
+      setRecommendations([]);
+      return;
+    }
+
+    const controller = new AbortController();
+    axios
+      .get(API_ENDPOINTS.GET_ALL_ITEMS, {
+        signal: controller.signal,
+        params: { limit: 6, page: 1 },
+      })
+      .then((res) => {
+        const all: any[] = res.data.data || [];
+        const inCart = new Set(cartItems.map((i) => i._id));
+        const recos = all
+          .filter((i) => !inCart.has(i._id) && i.isActive !== false)
+          .slice(0, 4)
+          .map((i) => ({
+            _id: i._id,
+            name: i.name,
+            price: i.price,
+            discountPrice: isValidDiscount(i.price, i.discountPrice)
+              ? i.discountPrice
+              : undefined,
+            image: i.images?.[0]?.optimizeUrl || i.images?.[0]?.url || "",
+          }));
+        setRecommendations(recos);
+      })
+      .catch(() => {
+        /* silently ignore — recommendations are optional */
+      });
+
+    return () => controller.abort();
+  }, [isOpen, cartItems]);
 
   const handleCheckout = () => {
     onClose(); 
@@ -93,6 +144,52 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 </div>
               ))}
             </div>
+
+            {/* Cross-sell / upsell recommendations */}
+            {recommendations.length > 0 && (
+              <div className={styles.recommendations}>
+                <h4 className={styles.recoTitle}>Frequently Bought Together</h4>
+                <div className={styles.recoList}>
+                  {recommendations.map((rec) => (
+                    <div key={rec._id} className={styles.recoItem}>
+                      {rec.image ? (
+                        <img
+                          src={rec.image}
+                          alt={rec.name}
+                          className={styles.recoImage}
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                      ) : (
+                        <div className={styles.recoImagePlaceholder} />
+                      )}
+                      <div className={styles.recoInfo}>
+                        <h5>{rec.name}</h5>
+                        <p className={styles.recoPrice}>
+                          Rs. {effectivePrice(rec.price, rec.discountPrice).toLocaleString()}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.recoAddBtn}
+                        onClick={() =>
+                          addToCart({
+                            _id: rec._id,
+                            name: rec.name,
+                            price: rec.price,
+                            discountPrice: rec.discountPrice,
+                            image: rec.image || "",
+                          })
+                        }
+                      >
+                        + Add
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Footer */}
             <div className={styles.drawerFooter}>

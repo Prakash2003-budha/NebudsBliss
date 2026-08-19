@@ -220,6 +220,32 @@ $danger: #d64545;
   margin-top: auto;
 }
 
+.compareBtn {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid $hairline;
+  background: #fff;
+  color: $muted;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: $primary-color;
+    border-color: $primary-color;
+  }
+
+  &.compareBtnActive {
+    background: rgba($primary-color, 0.12);
+    color: $primary-color;
+    border-color: $primary-color;
+  }
+}
+
 .addToCartBtn {
   flex: 1;
   background: linear-gradient(120deg, $primary-color 0%, $primary-dark 100%);

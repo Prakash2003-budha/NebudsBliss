@@ -8,7 +8,7 @@ const OrderItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const OrderSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, index: true },
     fullName: { type: String, required: true, trim: true },
     phone: { type: String, required: true },
     email: { type: String, lowercase: true },

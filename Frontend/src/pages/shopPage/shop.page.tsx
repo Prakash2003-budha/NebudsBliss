@@ -4,6 +4,7 @@ import axios from "axios";
 import Layout from "../../components/layout/layout";
 import ProductCard, { type Item } from "../../components/productCard/ProductCard";
 import ProductDetailModal from "../../components/productDetailModal/ProductDetailModel";
+import CompareModal from "../../components/compareModal/CompareModal";
 import PasswordConfirmModal from "../../components/passwordAsking/PasswordConfirmModal";
 import Pagination from "../../components/pagination/Pagination";
 import FilterSidebar, {
@@ -62,11 +63,34 @@ const ShopPage: React.FC = () => {
   const [availableBrands, setAvailableBrands] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
 
+  // Spec-based filters
+  const [batteryMin, setBatteryMin] = useState<string>("");
+  const [bluetoothVersion, setBluetoothVersion] = useState<string>("");
+  const [fastChargingOnly, setFastChargingOnly] = useState(false);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+
   const [user] = useState<User | null>(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
   });
   const isAdmin = user?.role === "Admin";
+
+  // Compare feature (side-by-side, max 4)
+  const [compareItems, setCompareItems] = useState<Item[]>([]);
+  const [compareModalOpen, setCompareModalOpen] = useState(false);
+
+  const handleCompareToggle = (item: Item) => {
+    setCompareItems((prev) => {
+      if (prev.some((i) => i._id === item._id)) {
+        return prev.filter((i) => i._id !== item._id);
+      }
+      if (prev.length >= 4) {
+        toast.warning("You can compare up to 4 products at once.");
+        return prev;
+      }
+      return [...prev, item];
+    });
+  };
 
   const setPage = (page: number) => {
     const next = new URLSearchParams(searchParams);
@@ -115,6 +139,13 @@ const ShopPage: React.FC = () => {
     if (selectedBrands.length > 0) params.brand = selectedBrands.join(",");
     if (priceRange.min) params.minPrice = priceRange.min;
     if (priceRange.max) params.maxPrice = priceRange.max;
+
+    // Spec-based filters
+    if (batteryMin) params.batteryMin = Number(batteryMin);
+    if (bluetoothVersion) params.bluetooth = bluetoothVersion;
+    if (fastChargingOnly) params.fastCharging = "true";
+    if (selectedColors.length > 0) params.color = selectedColors.join(",");
+
     if (sortBy === "priceLow" || sortBy === "priceHigh" || sortBy === "oldest" || sortBy === "newest") {
       params.sortBy = sortBy;
     }
@@ -148,7 +179,7 @@ const ShopPage: React.FC = () => {
       .finally(() => setLoading(false));
 
     return () => controller.abort();
-  }, [currentPage, selectedCategorySlugs, selectedBrands, priceRange, sortBy, stockFilter, availability]);
+  }, [currentPage, selectedCategorySlugs, selectedBrands, priceRange, sortBy, stockFilter, availability, batteryMin, bluetoothVersion, fastChargingOnly, selectedColors]);
 
   const toggleCategory = (slug: string) => {
     setSelectedCategorySlugs((prev) =>
@@ -176,6 +207,10 @@ const ShopPage: React.FC = () => {
     setSelectedCategorySlugs([]);
     setSelectedBrands([]);
     setPriceRange({ min: "", max: "" });
+    setBatteryMin("");
+    setBluetoothVersion("");
+    setFastChargingOnly(false);
+    setSelectedColors([]);
     updateFilters(1);
   };
 
@@ -246,6 +281,19 @@ const ShopPage: React.FC = () => {
             priceRange={priceRange}
             onPriceRangeChange={handlePriceRangeChange}
             onClearFilters={handleClearFilters}
+            batteryMin={batteryMin}
+            onBatteryMinChange={(v) => { setBatteryMin(v); updateFilters(1); }}
+            bluetoothVersion={bluetoothVersion}
+            onBluetoothChange={(v) => { setBluetoothVersion(v); updateFilters(1); }}
+            fastChargingOnly={fastChargingOnly}
+            onFastChargingChange={(v) => { setFastChargingOnly(v); updateFilters(1); }}
+            selectedColors={selectedColors}
+            onColorToggle={(c) => {
+              setSelectedColors((prev) =>
+                prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]
+              );
+              updateFilters(1);
+            }}
           />
 
           <div className={styles.content}>
@@ -270,6 +318,8 @@ const ShopPage: React.FC = () => {
                     onOpenProduct={handleOpenProduct}
                     onDeleteClick={handleDeleteClick}
                     addToCart={addToCart}
+                    isComparing={compareItems.some((c) => c._id === item._id)}
+                    onCompareToggle={handleCompareToggle}
                   />
                 ))}
               </div>
@@ -299,6 +349,43 @@ const ShopPage: React.FC = () => {
           isOpen={isProductModalOpen}
           onClose={() => setIsProductModalOpen(false)}
         />
+
+        {/* Compare modal */}
+        {compareModalOpen && (
+          <CompareModal
+            items={compareItems}
+            onClose={() => setCompareModalOpen(false)}
+            onRemove={handleCompareToggle}
+          />
+        )}
+
+        {/* Floating compare bar */}
+        {compareItems.length > 0 && (
+          <div className={styles.compareBar}>
+            <div className={styles.compareBarInfo}>
+              <strong>{compareItems.length}</strong>
+              <span>
+                product{compareItems.length > 1 ? "s" : ""} selected for comparison
+              </span>
+            </div>
+            <div className={styles.compareBarActions}>
+              <button
+                type="button"
+                className={styles.compareBarClear}
+                onClick={() => setCompareItems([])}
+              >
+                Clear
+              </button>
+              <button
+                type="button"
+                className={styles.compareBarCompare}
+                onClick={() => setCompareModalOpen(true)}
+              >
+                Compare
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );

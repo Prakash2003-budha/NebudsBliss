@@ -796,3 +796,52 @@ $breakpoint-mobile: 768px;
     background: $bg-color;
   }
 }
+// Technical specifications table
+.specSection {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid $border-color;
+}
+
+.specHeading {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: $title-color;
+  margin: 0 0 12px;
+}
+
+.specTable {
+  border: 1px solid $border-color;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.specRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px;
+  font-size: 0.85rem;
+}
+
+.specRowEven {
+  background: #fafbfc;
+}
+
+.specRowOdd {
+  background: #fff;
+}
+
+.specCell {
+  flex: 1;
+}
+
+.specCell:first-child {
+  font-weight: 600;
+  color: $text-color;
+}
+
+.specCell:last-child {
+  color: $title-color;
+  text-align: right;
+}
