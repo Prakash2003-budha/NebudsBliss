@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./CartDrawer.module.scss";
 import { useCart } from "../../context/userCart";
@@ -11,7 +11,18 @@ interface CartDrawerProps {
   onClose: () => void;
 }
 
-// A lightweight recommended item shape for cross-selling/upselling.
+interface CatalogItem {
+  _id: string;
+  name: string;
+  price: number;
+  discountPrice?: number;
+  isActive?: boolean;
+  images?: Array<{
+    optimizeUrl?: string;
+    url?: string;
+  }>;
+}
+
 interface RecommendedItem {
   _id: string;
   name: string;
@@ -22,7 +33,7 @@ interface RecommendedItem {
 
 const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { cartItems, removeFromCart, clearCart, totalCount, addToCart } = useCart();
-  const navigate = useNavigate(); // 2. Initialize the navigate function
+  const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<RecommendedItem[]>([]);
 
   const subtotal = cartItems.reduce((sum, item) => {
@@ -30,23 +41,21 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
     return sum + price * item.quantity;
   }, 0);
 
-  // Cross-sell / upsell: when the cart is open with items, fetch popular
-  // products from the same categories so the customer can add compatible
-  // accessories or complementary items easily.
   useEffect(() => {
     if (!isOpen || cartItems.length === 0) {
-      setRecommendations([]);
       return;
     }
 
     const controller = new AbortController();
+
     axios
       .get(API_ENDPOINTS.GET_ALL_ITEMS, {
         signal: controller.signal,
         params: { limit: 6, page: 1 },
       })
       .then((res) => {
-        const all: any[] = res.data.data || [];
+        const payload = res.data as { data?: CatalogItem[] };
+        const all = payload.data ?? [];
         const inCart = new Set(cartItems.map((i) => i._id));
         const recos = all
           .filter((i) => !inCart.has(i._id) && i.isActive !== false)
@@ -60,6 +69,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
               : undefined,
             image: i.images?.[0]?.optimizeUrl || i.images?.[0]?.url || "",
           }));
+
         setRecommendations(recos);
       })
       .catch(() => {
@@ -146,7 +156,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
             </div>
 
             {/* Cross-sell / upsell recommendations */}
-            {recommendations.length > 0 && (
+            {isOpen && cartItems.length > 0 && recommendations.length > 0 && (
               <div className={styles.recommendations}>
                 <h4 className={styles.recoTitle}>Frequently Bought Together</h4>
                 <div className={styles.recoList}>

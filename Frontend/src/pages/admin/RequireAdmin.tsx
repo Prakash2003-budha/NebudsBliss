@@ -7,15 +7,16 @@ import { Navigate, Outlet } from "react-router-dom";
  * everyone else is redirected back to the storefront.
  */
 const RequireAdmin: React.FC = () => {
-  let isAdmin = false;
+  const user = (() => {
+    try {
+      const raw = localStorage.getItem("user");
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  })();
 
-  try {
-    const raw = localStorage.getItem("user");
-    const user = raw ? JSON.parse(raw) : null;
-    isAdmin = !!user && user.role === "Admin";
-  } catch {
-    isAdmin = false;
-  }
+  const isAdmin = !!user && user.role === "Admin";
 
   if (!isAdmin) {
     return <Navigate to="/" replace />;
