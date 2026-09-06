@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
@@ -22,6 +22,7 @@ interface SidebarProps {
 // 2. Component
 export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRequireLogin }: SidebarProps) {
   const navigate = useNavigate();
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
 
   // Open My Orders if signed in, otherwise trigger the login popup.
   const handleMyOrdersClick = () => {
@@ -98,14 +99,33 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRe
 
           <Link to="/shop" className={styles.sidebarNavLink} onClick={closeSidebar}>Shop</Link>
 
-          <div className={styles.sidebarSectionHeading}>Categories</div>
-          <div className={styles.sidebarSubMenu}>
-            <Link to="/shop" className={styles.sidebarSubLink} onClick={closeSidebar}>All Products</Link>
-            <Link to="/category/earbuds" className={styles.sidebarSubLink} onClick={closeSidebar}>Earbuds</Link>
-            <Link to="/category/powerbanks" className={styles.sidebarSubLink} onClick={closeSidebar}>Powerbank</Link>
-            <Link to="/category/cameras" className={styles.sidebarSubLink} onClick={closeSidebar}>Camera</Link>
-            <Link to="/category/accessories" className={styles.sidebarSubLink} onClick={closeSidebar}>Accessories</Link>
-            <Link to="/category/fans" className={styles.sidebarSubLink} onClick={closeSidebar}>Fan</Link>
+          <div className={styles.sidebarCategoryBlock}>
+            <button
+              type="button"
+              className={styles.sidebarCategoryToggle}
+              onClick={() => setIsCategoriesOpen((current) => !current)}
+              aria-expanded={isCategoriesOpen}
+            >
+              <span>Categories</span>
+              <svg
+                viewBox="0 0 20 20"
+                className={`${styles.categoryChevron} ${isCategoriesOpen ? styles.categoryChevronOpen : ''}`}
+                aria-hidden="true"
+              >
+                <path d="M5.5 7.5L10 12l4.5-4.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            {isCategoriesOpen && (
+              <div className={styles.sidebarSubMenu}>
+                <Link to="/shop" className={styles.sidebarSubLink} onClick={closeSidebar}>All Products</Link>
+                <Link to="/category/earbuds" className={styles.sidebarSubLink} onClick={closeSidebar}>Earbuds</Link>
+                <Link to="/category/powerbanks" className={styles.sidebarSubLink} onClick={closeSidebar}>Powerbank</Link>
+                <Link to="/category/cameras" className={styles.sidebarSubLink} onClick={closeSidebar}>Camera</Link>
+                <Link to="/category/accessories" className={styles.sidebarSubLink} onClick={closeSidebar}>Accessories</Link>
+                <Link to="/category/fans" className={styles.sidebarSubLink} onClick={closeSidebar}>Fan</Link>
+              </div>
+            )}
           </div>
 
           <div className={styles.sidebarDivider} />

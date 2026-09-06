@@ -1,8 +1,14 @@
 $breakpoint-mobile: 768px;
-$primary-color: #085ff6;
-$dark-text: #222222;
-$light-bg: #f8f9fa;
-$font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+$primary-color: var(--nb-primary);
+$primary-dark: var(--nb-primary-dark);
+$primary-light: var(--nb-primary-light);
+$accent-color: var(--nb-accent);
+$dark-text: var(--nb-text);
+$muted-text: var(--nb-text-muted);
+$light-bg: var(--nb-bg);
+$surface: var(--nb-surface);
+$border: var(--nb-border);
+$font-primary: var(--nb-font);
 
 /* =========================================
    WRAPPER (Hides on Desktop)
@@ -12,7 +18,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   display: block;
 
   @media (min-width: 769px) {
-    display: none !important;
+   display: none !important;
   }
 }
 
@@ -25,17 +31,17 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(26, 34, 51, 0.45);
   backdrop-filter: blur(4px);
   overscroll-behavior: none;
-  z-index: 1100; /* Above the sticky header (1001) so it covers it too */
+  z-index: 1100;
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
 
   &.overlayVisible {
-    opacity: 1;
-    visibility: visible;
+   opacity: 1;
+   visibility: visible;
   }
 }
 
@@ -52,16 +58,16 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   max-width: 420px;
   height: 100vh;
   height: 100dvh;
-  background: #ffffff;
-  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
-  z-index: 1101; /* Above the sticky header (1001) and cart drawer */
+  background: linear-gradient(180deg, $surface 0%, $light-bg 100%);
+  box-shadow: var(--nb-shadow-lg);
+  z-index: 1101;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
   transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
 
   &.sidebarOpen {
-    transform: translateX(0);
+   transform: translateX(0);
   }
 }
 
@@ -73,10 +79,10 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.1rem 1.25rem;
+  padding: 1rem 1.1rem;
   flex-shrink: 0;
-  background-color: $light-bg;
-  border-bottom: 1px solid #eeeeee;
+  background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .sidebarProfileHeader {
@@ -89,25 +95,26 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   transition: opacity 0.2s ease;
 
   &:hover {
-    opacity: 0.8;
+   opacity: 0.92;
   }
 
   .sidebarProfileImage {
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid $primary-color;
-    flex-shrink: 0;
+   width: 48px;
+   height: 48px;
+   border-radius: 50%;
+   object-fit: cover;
+   border: 2px solid rgba(255, 255, 255, 0.8);
+   background: rgba(255, 255, 255, 0.12);
+   flex-shrink: 0;
   }
 
   .sidebarProfileName {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: $dark-text;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+   font-size: 1rem;
+   font-weight: 600;
+   color: #ffffff;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
   }
 }
 
@@ -121,16 +128,14 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: #ffffff;
-  color: $dark-text;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    background-color: $primary-color;
-    color: #ffffff;
-    transform: rotate(90deg);
+   background: rgba(255, 255, 255, 0.2);
+   transform: rotate(90deg);
   }
 }
 
@@ -142,64 +147,105 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  padding: 1.5rem 1.25rem;
+  padding: 1rem 1rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .sidebarNavLink {
-  font-size: 1.05rem;
-  font-weight: 500;
-  color: #333333;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: $dark-text;
   text-decoration: none;
-  padding: 0.5rem 0.5rem;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0.82rem 0.9rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: $light-bg;
-    color: $primary-color;
+   background: $primary-light;
+   color: $primary-color;
+   border-color: rgba($primary-color, 0.12);
   }
 }
 
-.sidebarSectionHeading {
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #999999;
-  margin-top: 0.75rem;
-  padding: 0 0.5rem;
-  font-weight: 600;
+.sidebarCategoryBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.2rem;
+}
+
+.sidebarCategoryToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.9rem 0.95rem;
+  border: 1px solid rgba($primary-color, 0.18);
+  border-radius: 14px;
+  background: linear-gradient(135deg, $primary-light 0%, rgba(255, 255, 255, 0.9) 100%);
+  color: $primary-dark;
+  font-size: 1.02rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(8, 95, 246, 0.08);
+  transition: all 0.2s ease;
+
+  &:hover {
+   background: linear-gradient(135deg, rgba($primary-color, 0.08) 0%, rgba($primary-color, 0.15) 100%);
+   transform: translateY(-1px);
+  }
+}
+
+.categoryChevron {
+  width: 18px;
+  height: 18px;
+  color: $primary-color;
+  transition: transform 0.22s ease;
+}
+
+.categoryChevronOpen {
+  transform: rotate(180deg);
 }
 
 .sidebarSubMenu {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  padding-left: 0.75rem;
-  border-left: 2px solid #eeeeee;
-  margin-left: 0.5rem;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  margin-left: 0.2rem;
+  border-left: 2px solid rgba($primary-color, 0.18);
+  background: rgba(255, 255, 255, 0.62);
+  border-radius: 0 12px 12px 0;
+  box-shadow: inset 0 0 0 1px rgba(8, 95, 246, 0.03);
 }
 
 .sidebarSubLink {
-  font-size: 0.98rem;
-  color: #555555;
+  font-size: 0.96rem;
+  color: $dark-text;
   text-decoration: none;
-  padding: 0.45rem 0.5rem;
-  border-radius: 8px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0.75rem 0.85rem;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: $light-bg;
-    color: $primary-color;
+   background: $primary-light;
+   color: $primary-color;
+   border-color: rgba($primary-color, 0.12);
+   transform: translateX(2px);
   }
 }
 
 .sidebarDivider {
   height: 1px;
-  background: #eeeeee;
-  margin: 0.75rem 0.25rem;
+  background: $border;
+  margin: 0.9rem 0.25rem 0.5rem;
 }
 
 /* =========================================
@@ -209,53 +255,52 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  padding: 1.25rem;
-  // Keep the buttons clear of the iOS home indicator on devices with a notch.
+  padding: 1.1rem 1rem 1.4rem;
   padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid #eeeeee;
-  background-color: #ffffff;
+  border-top: 1px solid $border;
+  background: rgba(255, 255, 255, 0.8);
   flex-shrink: 0;
 
   .SignInButton,
   .SignUpButton,
   .LogoutButton {
-    font-family: inherit; 
-    width: 100%;
-    padding: 13px;
-    border-radius: 10px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
+   font-family: inherit;
+   width: 100%;
+   padding: 0.88rem 1rem;
+   border-radius: 12px;
+   font-size: 0.98rem;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.2s ease;
   }
 
   .SignInButton {
-    background: transparent;
-    border: 1px solid #e0e0e0;
-    color: #333333;
+   background: $primary-light;
+   border: 1px solid rgba($primary-color, 0.18);
+   color: $primary-color;
 
-    &:hover {
-      background: $light-bg;
-    }
+   &:hover {
+     background: rgba($primary-color, 0.08);
+   }
   }
 
   .SignUpButton {
-    background: $dark-text;
-    border: 1px solid $dark-text;
-    color: #ffffff;
+   background: $primary-color;
+   border: 1px solid $primary-color;
+   color: #ffffff;
 
-    &:hover {
-      background: #000000;
-    }
+   &:hover {
+     background: $primary-dark;
+   }
   }
 
   .LogoutButton {
-    background: #fff5f5;
-    border: 1px solid #ffe3e3;
-    color: #e53e3e;
+   background: #fff5f5;
+   border: 1px solid #ffe3e3;
+   color: #e53e3e;
 
-    &:hover {
-      background: #fff0f0;
-    }
+   &:hover {
+     background: #fff0f0;
+   }
   }
 }
