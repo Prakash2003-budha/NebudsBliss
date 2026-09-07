@@ -20,16 +20,14 @@ $card-bg: #ffffff;
 
 .container {
   font-family: $font-primary;
-  background-color: $bg-color;
-  background-image:
-    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
+  background:
+    radial-gradient(circle at 90% 18%, rgba(249, 115, 22, 0.06), transparent 22rem),
+    linear-gradient(180deg, #f8fbff 0%, $bg-color 28rem);
 
   .sectionHeader {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     h2 {
-      font-size: 2rem;
+      font-size: clamp(1.45rem, 3vw, 2rem);
       font-weight: 800;
       color: $dark-text;
       letter-spacing: -0.5px;
@@ -41,7 +39,7 @@ $card-bg: #ffffff;
   }
 
   .categorySection {
-    margin: 4rem auto;
+    margin: 3.5rem auto;
     max-width: 1300px;
     padding: 0 1rem;
 
@@ -106,7 +104,7 @@ $card-bg: #ffffff;
   .productGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
+    gap: 20px;
 
     @media (max-width: 600px) {
       grid-template-columns: repeat(2, 1fr);

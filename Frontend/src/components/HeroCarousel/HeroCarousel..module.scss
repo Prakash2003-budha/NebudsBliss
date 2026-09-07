@@ -1,10 +1,13 @@
 .carouselSection {
   position: relative;
   width: 100%;
-  height: 60vh;
-  min-height: 400px;
-  background-color: var(--nb-primary-light); // Brand-tinted fallback behind hero posters
+  height: min(620px, 68vh);
+  min-height: 430px;
+  background:
+    radial-gradient(circle at 78% 30%, rgba(96, 165, 250, 0.4), transparent 24rem),
+    linear-gradient(120deg, #071a3a 0%, #123a7a 52%, #2563eb 100%);
   overflow: hidden;
+  isolation: isolate;
 
   &:hover .navBtn {
     opacity: 1;
@@ -36,6 +39,7 @@
   height: 100%;
   object-fit: cover;
   animation: heroFadeIn 0.4s ease;
+  filter: saturate(1.05);
 }
 
 @keyframes heroFadeIn {
@@ -44,19 +48,38 @@
 }
 
 .heroContent {
-  text-align: center;
+  width: min(1120px, 100%);
+  padding: 4rem 2rem;
+  text-align: left;
   z-index: 1;
+  color: #fff;
+  position: relative;
+
+  &::before {
+    content: "NEBUDS BLISS • SMART TECH FOR EVERYDAY LIFE";
+    display: block;
+    margin-bottom: 1rem;
+    color: #93c5fd;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+  }
   
   h1 {
-    font-size: 3rem;
-    color: #222;
-    margin-bottom: 0.5rem;
+    max-width: 640px;
+    font-size: clamp(2.7rem, 6vw, 5.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.06em;
+    color: #fff;
+    margin: 0 0 1.25rem;
   }
   
   p {
-    font-size: 1.5rem;
-    color: #555;
-    margin-bottom: 1.5rem;
+    max-width: 460px;
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    line-height: 1.6;
+    color: #dbeafe;
+    margin: 0 0 2rem;
   }
 }
 
@@ -67,26 +90,34 @@
 }
 
 .heroBtn {
-  background-color: var(--nb-primary);
+  background: #fff;
+  color: #174ea6;
   color: #fff;
   border: none;
   padding: 12px 30px;
-  border-radius: 30px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  &:hover { background-color: var(--nb-primary-dark); }
+  &:hover { background-color: #dbeafe; transform: translateY(-2px); }
+
+  &:last-child {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+  }
 }
 
 .navBtn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.16);
   color: white;
   border: none;
   width: 40px;
   height: 40px;
-  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
   cursor: pointer;
   opacity: 0.85;
   transition: opacity 0.3s;
@@ -94,7 +125,7 @@
 
   &.leftBtn { left: 20px; }
   &.rightBtn { right: 20px; }
-  &:hover { background: rgba(0, 0, 0, 0.8); }
+  &:hover { background: rgba(255, 255, 255, 0.3); }
 }
 
 .pagination {
