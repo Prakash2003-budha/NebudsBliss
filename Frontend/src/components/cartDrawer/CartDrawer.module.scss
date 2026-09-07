@@ -28,11 +28,11 @@ $drawer-width: 420px;
   height: 100vh;
   width: $drawer-width;
   max-width: 95vw;
-  background: $white;
+  background: #f8fafc;
   z-index: 1003;
   display: flex;
   flex-direction: column;
-  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.15);
+  box-shadow: -16px 0 46px rgba(15, 23, 42, 0.2);
   transform: translateX(100%);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -46,7 +46,8 @@ $drawer-width: 420px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
+  padding: 22px 24px;
+  background: rgba(255, 255, 255, 0.92);
   border-bottom: 1px solid $border;
 
   h2 {
@@ -144,8 +145,9 @@ $drawer-width: 420px;
   align-items: flex-start;
   padding: 12px;
   border-radius: 12px;
-  background: $bg;
-  border: 1px solid $border;
+  background: $white;
+  border: 1px solid #e4ebf5;
+  box-shadow: 0 4px 12px rgba(26, 48, 84, 0.05);
 }
 
 .itemImage {
@@ -258,7 +260,7 @@ $drawer-width: 420px;
 .checkoutBtn {
   width: 100%;
   padding: 14px;
-  background: $primary;
+  background: linear-gradient(135deg, var(--nb-primary), var(--nb-primary-dark));
   color: $white;
   border: none;
   border-radius: 10px;

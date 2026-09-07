@@ -7,7 +7,7 @@ $border-color: #eaeaea;
 
 .container {
   font-family: $font-primary;
-  background-color: $bg-color;
+  background: linear-gradient(180deg, #f8fbff 0%, $bg-color 26rem);
   min-height: 60vh;
   padding: 2.5rem 1.5rem 4rem;
   max-width: 860px;
@@ -41,9 +41,10 @@ $border-color: #eaeaea;
 }
 
 .orderCard {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   border: 1px solid $border-color;
-  border-radius: 14px;
+  border-radius: 16px;
+  box-shadow: 0 8px 22px rgba(26, 48, 84, 0.06);
   overflow: hidden;
 }
 

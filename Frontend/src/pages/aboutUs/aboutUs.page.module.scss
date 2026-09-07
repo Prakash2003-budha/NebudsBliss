@@ -3,7 +3,7 @@ $breakpoint-mobile: 480px;
 
 .container {
   min-height: 60vh;
-  background-color: var(--nb-bg);
+  background: linear-gradient(180deg, #f8fbff 0%, var(--nb-bg) 30rem);
   padding: 4rem 1.5rem 6rem;
   text-align: center;
 
@@ -111,7 +111,7 @@ $breakpoint-mobile: 480px;
     }
 
     .statCard {
-      background-color: var(--nb-surface);
+      background: rgba(255, 255, 255, 0.88);
       border: 1px solid var(--nb-border);
       border-radius: var(--nb-radius);
       box-shadow: var(--nb-shadow-sm);
@@ -173,7 +173,7 @@ $breakpoint-mobile: 480px;
     }
 
     .valueCard {
-      background-color: var(--nb-surface);
+      background: rgba(255, 255, 255, 0.88);
       border: 1px solid var(--nb-border);
       border-radius: var(--nb-radius-lg);
       box-shadow: var(--nb-shadow-sm);

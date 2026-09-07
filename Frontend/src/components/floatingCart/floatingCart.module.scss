@@ -16,10 +16,10 @@ $breakpoint-mobile:  768px;
   position: relative;
   width: 60px;
   height: 60px;
-  background-color: $secoundary-color;
+  background: linear-gradient(135deg, var(--nb-primary), var(--nb-primary-dark));
   border: none;
   border-radius: 50%;
-  box-shadow: 0 10px 25px -5px rgba(8, 95, 246, 0.25);
+  box-shadow: 0 12px 28px -6px rgba(37, 99, 235, 0.42);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -28,7 +28,7 @@ $breakpoint-mobile:  768px;
 
   &:hover {
     transform: scale(1.1);
-    background-color: $hover-color;
+    background: linear-gradient(135deg, var(--nb-primary-dark), #1e40af);
   }
 
   &:active {

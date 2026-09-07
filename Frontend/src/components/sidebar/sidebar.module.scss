@@ -30,7 +30,8 @@ $font-primary: var(--nb-font);
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(17, 24, 39, 0.18);
+  background: rgba(15, 23, 42, 0.42);
+  backdrop-filter: blur(4px);
   z-index: 1100;
   opacity: 0;
   visibility: hidden;
@@ -55,8 +56,8 @@ $font-primary: var(--nb-font);
   max-width: 420px;
   height: 100vh;
   height: 100dvh;
-  background: $surface;
-  box-shadow: -8px 0 24px rgba(15, 23, 42, 0.12);
+  background: #f8fafc;
+  box-shadow: -16px 0 40px rgba(15, 23, 42, 0.2);
   z-index: 1101;
   display: flex;
   flex-direction: column;
@@ -78,7 +79,10 @@ $font-primary: var(--nb-font);
   gap: 1rem;
   padding: 0.95rem 1.1rem;
   flex-shrink: 0;
-  background: linear-gradient(135deg, #1d8cff 0%, #0f67ee 100%);
+  padding: 1.1rem 1.1rem;
+  background:
+    radial-gradient(circle at 90% 0%, rgba(147, 197, 253, 0.45), transparent 12rem),
+    linear-gradient(135deg, #123b82 0%, #2563eb 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -139,7 +143,7 @@ $font-primary: var(--nb-font);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
-  padding: 0.8rem 1rem 0.75rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -150,13 +154,14 @@ $font-primary: var(--nb-font);
   font-weight: 500;
   color: $dark-text;
   text-decoration: none;
-  padding: 0.8rem 0.2rem;
-  border-radius: 0;
+  padding: 0.85rem 0.95rem;
+  border-radius: 11px;
   background: transparent;
   border: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
 
   &:hover {
+   background: #eef5ff;
    color: $primary-color;
   }
 }
@@ -173,9 +178,10 @@ $font-primary: var(--nb-font);
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.8rem 0.2rem;
+  padding: 0.85rem 0.95rem;
   border: none;
-  border-bottom: 1px solid $border;
+  border: none;
+  border-radius: 11px;
   background: transparent;
   color: $dark-text;
   font-size: 1.05rem;
@@ -184,6 +190,7 @@ $font-primary: var(--nb-font);
   transition: color 0.2s ease;
 
   &:hover {
+   background: #eef5ff;
    color: $primary-color;
   }
 }
@@ -203,9 +210,10 @@ $font-primary: var(--nb-font);
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  padding: 0.45rem 0 0.15rem;
-  margin-left: 0;
-  border-bottom: 1px solid $border;
+  padding: 0.45rem 0 0.15rem 0.7rem;
+  margin-left: 0.25rem;
+  border-left: 2px solid #dbeafe;
+  border-bottom: none;
 }
 
 .sidebarSubLink {

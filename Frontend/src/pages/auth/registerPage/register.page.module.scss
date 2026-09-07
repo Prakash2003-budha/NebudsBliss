@@ -1,16 +1,16 @@
 // ── Brand tokens ──────────────────────────────────────────
-$card-bg:      #1c1c1e;
-$text-color:   #aaaaaa;
-$title-color:  #ffffff;
+$card-bg:      #ffffff;
+$text-color:   #64748b;
+$title-color:  #172033;
 $accent-color: var(--nb-primary);
-$input-bg:     #262629;
-$border-color: #333333;
+$input-bg:     #f8fafc;
+$border-color: #dbe3ef;
 
 // ── Overlay ───────────────────────────────────────────────
 .modalOverlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(15, 23, 42, 0.52);
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
@@ -28,11 +28,11 @@ $border-color: #333333;
   max-width: 660px;
   max-height: 92vh;
   overflow-y: auto;
-  background-color: $card-bg;
-  border: 1px solid $border-color;
-  border-radius: 14px;
-  padding: 2.5rem 2.5rem 2rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  padding: 2.75rem 2.5rem 2.25rem;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -61,7 +61,7 @@ $border-color: #333333;
   border: none;
   font-size: 1.6rem;
   line-height: 1;
-  color: #666;
+  color: #94a3b8;
   cursor: pointer;
   transition: color 0.15s ease;
 
@@ -166,7 +166,7 @@ $border-color: #333333;
     box-shadow: 0 0 0 3px rgba(8, 95, 246, 0.12);
   }
 
-  &::placeholder { color: #505050; }
+  &::placeholder { color: #94a3b8; }
 }
 
 // Select — no left icon, so remove the padding offset
