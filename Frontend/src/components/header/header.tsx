@@ -126,7 +126,14 @@ export default function Header() {
 
       {/* Sidebar remains the same */}
       <div className={styles.mobileOnlySidebar}>
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} user={user} handleLogout={handleLogout} onRequireLogin={() => { closeSidebar(); setIsLoginModalOpen(true); }} />
+        <Sidebar
+          isOpen={isSidebarOpen}
+          closeSidebar={closeSidebar}
+          user={user}
+          handleLogout={handleLogout}
+          onRequireLogin={() => setIsLoginModalOpen(true)}
+          onRequireRegister={() => setIsRegisterModalOpen(true)}
+        />
       </div>
 
       {/* 4. RENDER MODALS WITH ALL REQUIRED PROPS */}

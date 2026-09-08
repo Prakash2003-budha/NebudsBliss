@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
+import { useTheme } from "../../context/ThemeContext";
 
 // 1. Types
 interface UserType {
   fullName: string;
+  role?: string;
   image?: {
     url: string;
   };
@@ -17,11 +19,13 @@ interface SidebarProps {
   user: UserType | null; 
   handleLogout: () => void;
   onRequireLogin?: () => void;
+  onRequireRegister?: () => void;
 }
 
 // 2. Component
-export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRequireLogin }: SidebarProps) {
+export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRequireLogin, onRequireRegister }: SidebarProps) {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
 
   // Open My Orders if signed in, otherwise trigger the login popup.
@@ -80,17 +84,29 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRe
             </span>
           </div>
 
-          <button
-            className={styles.sidebarClose}
-            onClick={closeSidebar}
-            aria-label="Close menu"
-          >
+          <div className={styles.sidebarTopActions}>
+            <button
+              type="button"
+              className={styles.sidebarThemeToggle}
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+              title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+            >
+              <span aria-hidden="true">{theme === "light" ? "☾" : "☀"}</span>
+            </button>
+            <button
+              type="button"
+              className={styles.sidebarClose}
+              onClick={closeSidebar}
+              aria-label="Close menu"
+            >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                  strokeWidth="2.4" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
-          </button>
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -131,12 +147,18 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRe
           <div className={styles.sidebarDivider} />
 
           <button
+            type="button"
             className={styles.sidebarNavLink}
             onClick={handleMyOrdersClick}
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontFamily: 'inherit', fontSize: 'inherit', textAlign: 'left', width: '100%' }}
           >
             My Orders
           </button>
+          {user?.role === 'Admin' && (
+            <Link to="/admin" className={styles.sidebarNavLink} onClick={closeSidebar}>
+              Admin Dashboard
+            </Link>
+          )}
           <Link to="/AboutUs" className={styles.sidebarNavLink} onClick={closeSidebar}>About Us</Link>
           <Link to="/contact" className={styles.sidebarNavLink} onClick={closeSidebar}>Contact</Link>
         </nav>
@@ -144,11 +166,49 @@ export default function Sidebar({ isOpen, closeSidebar, user, handleLogout, onRe
         {/* Bottom Action Buttons */}
         <div className={styles.sidebarAuthButtons}>
           {user ? (
-            <button className={styles.LogoutButton} onClick={handleLogout}>Logout</button>
+            <button 
+              type="button" 
+              className={styles.LogoutButton} 
+              onClick={() => {
+                handleLogout();
+                closeSidebar();
+              }}
+            >
+              Logout
+            </button>
           ) : (
             <>
-              <button className={styles.SignInButton} onClick={() => { navigate('/LoginPage'); closeSidebar(); }}>Sign In</button>
-              <button className={styles.SignUpButton} onClick={() => { navigate('/SignUp'); closeSidebar(); }}>Sign Up</button>
+            {/* Sign In Button */}
+              <button
+                type="button"
+                className={styles.SignInButton}
+                onClick={() => {
+                  closeSidebar();
+                  if (onRequireLogin) {
+                    onRequireLogin();
+                  } else {
+                    navigate('/LoginPage');
+                  }
+                }}
+              >
+                Sign In
+              </button>
+              
+              {/* Sign Up Button */}
+              <button
+                type="button"
+                className={styles.SignUpButton}
+                onClick={() => {
+                  closeSidebar();
+                  if (onRequireRegister) {
+                    onRequireRegister();
+                  } else {
+                    navigate('/SignUp');
+                  }
+                }}
+              >
+                Sign Up
+              </button> 
             </>
           )}
         </div>

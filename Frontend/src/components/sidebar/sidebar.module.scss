@@ -77,9 +77,8 @@ $font-primary: var(--nb-font);
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.95rem 1.1rem;
-  flex-shrink: 0;
   padding: 1.1rem 1.1rem;
+  flex-shrink: 0;
   background:
     radial-gradient(circle at 90% 0%, rgba(147, 197, 253, 0.45), transparent 12rem),
     linear-gradient(135deg, #123b82 0%, #2563eb 100%);
@@ -111,6 +110,35 @@ $font-primary: var(--nb-font);
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
+  }
+}
+
+.sidebarTopActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.sidebarThemeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: rotate(12deg);
   }
 }
 
@@ -179,7 +207,6 @@ $font-primary: var(--nb-font);
   justify-content: space-between;
   width: 100%;
   padding: 0.85rem 0.95rem;
-  border: none;
   border: none;
   border-radius: 11px;
   background: transparent;
@@ -251,47 +278,105 @@ $font-primary: var(--nb-font);
   border-top: 1px solid $border;
   background: $surface;
   flex-shrink: 0;
+}
 
-  .SignInButton,
-  .SignUpButton,
-  .LogoutButton {
-   font-family: inherit;
-   width: 100%;
-   padding: 0.9rem 1rem;
-   border-radius: 10px;
-   font-size: 1rem;
-   font-weight: 600;
-   cursor: pointer;
-   transition: all 0.2s ease;
+/* Extracted from wrapper so React can find them via CSS modules */
+.SignInButton,
+.SignUpButton,
+.LogoutButton {
+  font-family: inherit;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.SignInButton {
+  background: transparent;
+  border: 1px solid #dfe8f7;
+  color: $dark-text;
+
+  &:hover {
+   background: #f1f6ff;
+  }
+}
+
+.SignUpButton {
+  background: $primary-color;
+  border: 1px solid $primary-color;
+  color: #ffffff;
+
+  &:hover {
+   background: $primary-dark;
+  }
+}
+
+.LogoutButton {
+  background: #fff1f0;
+  border: 1px solid #f6d7d3;
+  color: #d64a45;
+
+  &:hover {
+   background: #ffe9e7;
+  }
+}
+
+/* =========================================
+   DARK MODE (Moved to ROOT Level)
+========================================= */
+:global(:root[data-theme="dark"]) .sidebarDrawer {
+  background: #101a2a;
+
+  .sidebarNavLink,
+  .sidebarCategoryToggle,
+  .sidebarSubLink {
+   color: #78aaff;
   }
 
+  .sidebarNavLink:hover,
+  .sidebarCategoryToggle:hover {
+   background: #172f58;
+   color: #8db8ff;
+  }
+
+  .sidebarSubLink {
+   background: #0d1727;
+   border-color: var(--nb-border);
+  }
+
+  .sidebarAuthButtons {
+   background: #121c2d;
+   border-color: var(--nb-border);
+  }
+
+  /* Extracted button class inside dark mode scope */
   .SignInButton {
-   background: transparent;
-   border: 1px solid #dfe8f7;
-   color: $dark-text;
+   background: #1b2940;
+   border-color: #52709b;
+   color: #f1f6ff;
 
    &:hover {
-     background: #f1f6ff;
+     background: #263b5c;
+     border-color: #79a9ef;
    }
   }
 
-  .SignUpButton {
-   background: $primary-color;
-   border: 1px solid $primary-color;
-   color: #ffffff;
-
-   &:hover {
-     background: $primary-dark;
+  @media (max-width: 768px) {
+   .sidebarNavLink,
+   .sidebarCategoryToggle,
+   .sidebarSubLink {
+     color: #78aaff !important;
    }
-  }
 
-  .LogoutButton {
-   background: #fff1f0;
-   border: 1px solid #f6d7d3;
-   color: #d64a45;
-
-   &:hover {
-     background: #ffe9e7;
+   .sidebarNavLink:hover,
+   .sidebarCategoryToggle:hover,
+   .sidebarSubLink:hover {
+     background: transparent;
+     border-color: $border;
+     color: #78aaff !important;
    }
   }
 }

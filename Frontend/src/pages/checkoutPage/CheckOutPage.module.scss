@@ -75,6 +75,14 @@ $card-bg: #ffffff;
   @media (max-width: 880px) {
     grid-template-columns: 1fr;
     gap: 1.5rem;
+
+    .summaryCard {
+      order: -1;
+    }
+
+    .formCard {
+      order: 1;
+    }
   }
 }
 
