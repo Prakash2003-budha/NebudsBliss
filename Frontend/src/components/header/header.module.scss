@@ -77,9 +77,25 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   padding: 8px 0;
   letter-spacing: 0.3px; 
   transition: color 0.2s ease;
+  position: relative;
 
   &:hover {
     color: $secoundary-color;
+  }
+}
+
+.activeNavLink {
+  color: var(--nb-primary) !important;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: var(--nb-primary);
   }
 }
 

@@ -47,6 +47,53 @@ $ease: cubic-bezier(0.16, 1, 0.3, 1);
   @media (max-width: 768px) {
     padding: 2rem 1rem; 
   }
+
+}
+
+:global(:root[data-theme="dark"]) .container {
+  color: var(--nb-text);
+  background: linear-gradient(180deg, #101d32 0%, var(--nb-bg) 32rem);
+
+  .header h1,
+  .leftColumn .contactDetails .detailBlock h3,
+  .leftColumn .contactDetails .detailBlock p strong,
+  .contactForm .inputGroup label,
+  .rightColumn .mapCard h3,
+  .socialRow .socialPill {
+    color: var(--nb-text);
+  }
+
+  .header p,
+  .leftColumn .contactDetails .detailBlock p,
+  .leftColumn .contactDetails .detailBlock p a {
+    color: var(--nb-text-muted);
+  }
+
+  .leftColumn,
+  .rightColumn .mapCard {
+    background: #121c2d;
+    border-color: var(--nb-border);
+  }
+
+  .leftColumn .contactDetails .detailBlock,
+  .contactForm .inputGroup input,
+  .contactForm .inputGroup textarea,
+  .rightColumn .mapCard .mapContainer,
+  .socialRow .socialPill {
+    background: #0d1727;
+    border-color: var(--nb-border);
+  }
+
+  .contactForm .inputGroup label,
+  .contactForm .inputGroup input,
+  .contactForm .inputGroup textarea {
+    color: var(--nb-text);
+  }
+
+  .contactForm .inputGroup input::placeholder,
+  .contactForm .inputGroup textarea::placeholder {
+    color: var(--nb-text-light);
+  }
 }
 
 // ===== Header =====

@@ -257,4 +257,14 @@ $breakpoint-mobile: 480px;
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
     }
   }
+
+}
+
+:global(:root[data-theme="dark"]) .container {
+  background: linear-gradient(180deg, #101d32 0%, var(--nb-bg) 30rem);
+
+  .storyCards .statCard,
+  .valueGrid .valueCard {
+    background: #121c2d;
+  }
 }

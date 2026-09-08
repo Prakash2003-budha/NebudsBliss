@@ -20,6 +20,11 @@ $accent-color: var(--nb-primary);
     content: "";
   }
 
+  &:focus-visible {
+    outline: 2px solid #58e3dc;
+    outline-offset: 3px;
+  }
+
   &::after {
     position: absolute;
     top: -180px;
@@ -48,7 +53,8 @@ $accent-color: var(--nb-primary);
 
     @media (max-width: 640px) {
       grid-template-columns: 1fr 1fr;
-      gap: 2.5rem 1.5rem;
+      gap: 2.75rem 1.25rem;
+      padding: 0 0.25rem;
     }
   }
 
@@ -60,15 +66,22 @@ $accent-color: var(--nb-primary);
 
     @media (max-width: 640px) {
       grid-column: 1 / -1;
+      width: 100%;
+      justify-self: center;
       align-items: center;
       text-align: center;
+      gap: 1rem;
     }
 
     .logo {
-      max-width: 210px;
+    max-width: 190px;
       max-height: 44px;
       width: auto;
       object-fit: contain;
+
+    @media (max-width: 640px) {
+      margin: 0 auto;
+    }
     }
 
     .description {
@@ -84,8 +97,8 @@ $accent-color: var(--nb-primary);
       align-items: center;
 
       a {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         border: 1px solid rgba(148, 163, 184, 0.22);
         border-radius: 50%;
         display: flex;
@@ -108,6 +121,10 @@ $accent-color: var(--nb-primary);
   }
 
   .linksSection {
+    @media (max-width: 640px) {
+      text-align: center;
+    }
+
     .title {
       color: $title-color;
       font-size: 0.78rem;
@@ -118,7 +135,7 @@ $accent-color: var(--nb-primary);
       margin-bottom: 1.35rem;
 
       @media (max-width: 640px) {
-        margin-bottom: 1rem;
+        margin-bottom: 1.1rem;
       }
     }
 
@@ -130,10 +147,25 @@ $accent-color: var(--nb-primary);
       flex-direction: column;
       gap: 0.7rem;
 
+      @media (max-width: 640px) {
+        align-items: center;
+      }
+
       a {
-        display: inline-block;
+        display: inline-flex;
+        min-height: 32px;
+        align-items: center;
         color: #9caac0;
         text-decoration: none;
+
+        @media (max-width: 640px) {
+          width: 100%;
+          max-width: 260px;
+          min-height: 38px;
+          justify-content: center;
+          margin-left: auto;
+          margin-right: auto;
+        }
         font-size: 0.88rem;
         transition: color 0.2s ease, transform 0.2s ease;
 
@@ -146,6 +178,12 @@ $accent-color: var(--nb-primary);
   }
 
   .contactSection {
+    @media (max-width: 640px) {
+      grid-column: 1 / -1;
+      padding-top: 0.25rem;
+      text-align: center;
+    }
+
     .title {
       color: $title-color;
       font-size: 0.78rem;
@@ -161,6 +199,11 @@ $accent-color: var(--nb-primary);
       color: #9caac0;
       font-size: 0.85rem;
       line-height: 1.55;
+
+      @media (max-width: 640px) {
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
 
     .contactLink {
@@ -223,8 +266,10 @@ $accent-color: var(--nb-primary);
     @media (max-width: 640px) {
       flex-direction: column;
       align-items: center;
-      margin-top: 2.75rem;
+      margin-top: 2.25rem;
+      padding: 1.25rem 0.25rem 0;
       text-align: center;
+      gap: 0.65rem;
     }
   }
 }

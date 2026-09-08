@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../img/logo/logo.transparent.png';
 import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
@@ -12,6 +12,7 @@ import SignUpPage from '../../pages/auth/registerPage/register.page';
 
 export default function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -72,9 +73,9 @@ export default function Header() {
         </div>
 
         <nav className={styles.nav}>
-          <Link to="/" className={styles.navLink}>Home</Link>
+          <Link to="/" className={`${styles.navLink} ${location.pathname === '/' ? styles.activeNavLink : ''}`}>Home</Link>
           <div className={styles.categoryDropdown}>
-            <button onClick={handleShopClick} className={styles.navLink} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: 'inherit', fontFamily: 'inherit', padding: 0}}>Shop</button>
+            <button onClick={handleShopClick} className={`${styles.navLink} ${location.pathname.startsWith('/shop') || location.pathname.startsWith('/category') ? styles.activeNavLink : ''}`} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: 'inherit', fontFamily: 'inherit', padding: 0}}>Shop</button>
             <div className={styles.dropdownMenu}>
               <Link to="/shop" className={styles.dropdownItem}>All Products</Link>
               <Link to="/category/earbuds" className={styles.dropdownItem}>Earbuds</Link>
@@ -84,8 +85,8 @@ export default function Header() {
               <Link to="/category/fans" className={styles.dropdownItem}>Fan</Link>
             </div>
           </div>
-          <Link to="/AboutUs" className={styles.navLink}>About Us</Link>
-          <Link to="/ContactPage" className={styles.navLink}>Contact</Link>
+          <Link to="/AboutUs" className={`${styles.navLink} ${location.pathname === '/AboutUs' ? styles.activeNavLink : ''}`}>About Us</Link>
+          <Link to="/ContactPage" className={`${styles.navLink} ${location.pathname === '/ContactPage' ? styles.activeNavLink : ''}`}>Contact</Link>
           <button onClick={handleMyOrdersClick} className={styles.navLink} style={{background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: 'inherit', fontFamily: 'inherit', padding: 0}}>My Orders</button>
         </nav>
 

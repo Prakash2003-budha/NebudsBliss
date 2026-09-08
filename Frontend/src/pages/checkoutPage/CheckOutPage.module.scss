@@ -663,8 +663,95 @@ select {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+:global(:root[data-theme="dark"]) .page {
+  background:
+    radial-gradient(circle at 90% 0%, rgba(37, 99, 235, 0.18), transparent 24rem),
+    linear-gradient(180deg, #101d32 0%, var(--nb-bg) 28rem);
+  color: var(--nb-text);
+
+  .hero h1,
+  .formCard h2,
+  .summaryCard h2,
+  label,
+  .paymentLabel,
+  .paymentTitle,
+  .itemContent strong,
+  .itemActions span,
+  .qtyValue,
+  .totalBox div strong,
+  .totalRow span {
+    color: var(--nb-text);
+  }
+
+  .hero p,
+  .paymentOption,
+  .paymentDesc,
+  .itemContent p,
+  .totalBox div,
+  .emptyState,
+  .promoLabel {
+    color: var(--nb-text-muted);
+  }
+
+  .formCard,
+  .summaryCard,
+  .paymentOption {
+    background: #121c2d;
+    border-color: var(--nb-border);
+  }
+
+  input,
+  textarea,
+  select,
+  .promoBox,
+  .qtyControl,
+  .qtyBtn,
+  .qrContainer {
+    background: #0d1727;
+    border-color: var(--nb-border);
+    color: var(--nb-text);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--nb-text-light);
+  }
+
+  .paymentOption:hover {
+    border-color: var(--nb-primary);
+    color: var(--nb-text);
+
+    .paymentTitle {
+      color: var(--nb-text);
+    }
+  }
+
+  .itemImage,
+  .screenshotPreview {
+    background: #0d1727;
+    border-color: var(--nb-border);
+  }
+
+  .qrText {
+    color: var(--nb-text-muted);
+  }
+
+  .screenshotUpload {
+    border-color: var(--nb-border);
+  }
+
+  .formCard > div[style*="position: absolute"] {
+    background-color: rgba(9, 16, 30, 0.86) !important;
+  }
+
+  .formCard > div[style*="position: absolute"] p {
+    color: var(--nb-text) !important;
   }
 }

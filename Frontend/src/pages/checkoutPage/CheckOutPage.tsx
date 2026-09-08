@@ -88,6 +88,8 @@ const CheckOutPage: React.FC = () => {
   // after a code was applied).
   const discount = appliedPromo ? Math.min(appliedPromo.discountAmount, subtotal) : 0;
   const total = subtotal + shipping - discount;
+  const canPlaceOrder =
+    formData.payment !== PAYMENT_METHOD.BANK || Boolean(paymentScreenshot);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -471,7 +473,8 @@ const CheckOutPage: React.FC = () => {
 
                       <div className={styles.screenshotUpload}>
                         <p className={styles.qrText}>
-                          Then upload a screenshot of the completed transfer:
+                          Then upload a screenshot of the completed transfer. The Place order button
+                          will appear after the screenshot is uploaded.
                         </p>
 
                         <input
@@ -524,14 +527,16 @@ const CheckOutPage: React.FC = () => {
                   />
                 </label>
 
-                <button 
-                  type="submit" 
-                  className={styles.submitBtn} 
-                  disabled={isSubmitting}
-                  style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
-                >
-                  Place order
-                </button>
+                {canPlaceOrder && (
+                  <button 
+                    type="submit" 
+                    className={styles.submitBtn} 
+                    disabled={isSubmitting}
+                    style={{ opacity: isSubmitting ? 0.7 : 1, cursor: isSubmitting ? "not-allowed" : "pointer" }}
+                  >
+                    Place order
+                  </button>
+                )}
               </>
             )}
           </form>
