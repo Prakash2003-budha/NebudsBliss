@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../img/logo/logoFull.jpg';
+import logo from '../../img/logo/logo.transparent.png';
 import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
 import Sidebar from '../sidebar/Sidebar';

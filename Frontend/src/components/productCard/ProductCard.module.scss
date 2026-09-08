@@ -118,7 +118,7 @@ $danger: #d64545;
   justify-content: center;
 
   span {
-    background: $ink;
+    background: #172033;
     color: #fff;
     font-size: 0.72rem;
     font-weight: 700;
@@ -126,6 +126,16 @@ $danger: #d64545;
     letter-spacing: 0.05em;
     padding: 6px 14px;
     border-radius: 20px;
+  }
+
+  :global(:root[data-theme="dark"]) .outOfStockOverlay {
+    background: rgba(5, 12, 24, 0.66);
+
+    span {
+      background: #f87171;
+      color: #1f0b0b;
+      box-shadow: 0 4px 14px rgba(248, 113, 113, 0.28);
+    }
   }
 }
 
@@ -295,8 +305,8 @@ $danger: #d64545;
   }
 
   &:disabled {
-    background: $hairline;
-    color: $muted;
+    background: color-mix(in srgb, var(--nb-border) 72%, var(--nb-surface));
+    color: var(--nb-text-muted);
     cursor: not-allowed;
     box-shadow: none;
 

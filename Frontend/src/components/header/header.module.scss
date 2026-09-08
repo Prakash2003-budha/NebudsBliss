@@ -36,12 +36,23 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   .logoContainer {
     display: flex;
     align-items: center;
+
     .logo {
-      height: 42px;
-      width: auto;
+      width: 190px;
+      height: auto;
+      max-height: 44px;
       display: block;
+      object-fit: contain;
+      transition: opacity var(--nb-transition), transform var(--nb-transition);
+
+      &:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
       @media (max-width: $breakpoint-mobile) {
-        height: 30px;
+        width: 148px;
+        max-height: 34px;
       }
     }
   }
