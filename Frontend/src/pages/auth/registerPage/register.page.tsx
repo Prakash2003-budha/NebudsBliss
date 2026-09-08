@@ -149,17 +149,18 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalOverlay}>
       <ToastContainer style={{ zIndex: 9999 }} />
 
-      <main className={styles.signupModalCard} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
+      <main className={styles.signupModalCard} onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="signup-title">
+        <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close sign up">
           &times;
         </button>
 
         <header className={styles.headerSection}>
           <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
-          <h1 className={styles.title}>Create Account</h1>
+          <p className={styles.eyebrow}>START YOUR JOURNEY</p>
+          <h1 id="signup-title" className={styles.title}>Create Account</h1>
           <p className={styles.subtitle}>Join Nebuds Bliss today</p>
         </header>
 
@@ -171,7 +172,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="fullName">Full Name</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={userIcon} className={styles.icon} alt="" />
-                <input type="text" id="fullName" name="fullName" placeholder="Alex Johnson" value={formData.fullName} onChange={handleChange} required minLength={2} maxLength={50} />
+                <input type="text" id="fullName" name="fullName" autoComplete="name" placeholder="Alex Johnson" value={formData.fullName} onChange={handleChange} required minLength={2} maxLength={50} disabled={loading} />
               </div>
               {formErrors.fullName && <span className={styles.errorText}>{formErrors.fullName}</span>}
             </div>
@@ -181,7 +182,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="email">Email Address</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={gmailIcon} className={styles.icon} alt="" />
-                <input type="email" id="email" name="email" placeholder="alex@example.com" value={formData.email} onChange={handleChange} required />
+                <input type="email" id="email" name="email" autoComplete="email" placeholder="alex@example.com" value={formData.email} onChange={handleChange} required disabled={loading} />
               </div>
               {formErrors.email && <span className={styles.errorText}>{formErrors.email}</span>}
             </div>
@@ -191,7 +192,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="phone">Phone Number</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={phoneIcon} className={styles.icon} alt="" />
-                <input type="tel" id="phone" name="phone" placeholder="98XXXXXXXX" value={formData.phone} onChange={handleChange} required />
+                <input type="tel" id="phone" name="phone" autoComplete="tel" placeholder="98XXXXXXXX" value={formData.phone} onChange={handleChange} required disabled={loading} />
               </div>
               {formErrors.phone && <span className={styles.errorText}>{formErrors.phone}</span>}
             </div>
@@ -201,7 +202,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="dob">Date of Birth</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={calendarIcon} className={styles.icon} alt="" />
-                <input type="date" id="dob" name="dob" max={today} value={formData.dob} onChange={handleChange} required />
+                <input type="date" id="dob" name="dob" max={today} value={formData.dob} onChange={handleChange} required disabled={loading} />
               </div>
               {formErrors.dob && <span className={styles.errorText}>{formErrors.dob}</span>}
             </div>
@@ -210,7 +211,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
             <div className={styles.inputGroup}>
               <label htmlFor="gender">Gender</label>
               <div className={styles.inputFieldWrapper}>
-                <select id="gender" name="gender" value={formData.gender} onChange={handleChange} required className={styles.selectField}>
+                <select id="gender" name="gender" value={formData.gender} onChange={handleChange} required className={styles.selectField} disabled={loading}>
                   <option value="" disabled>Select Gender</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -225,7 +226,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
               <label htmlFor="address">Address</label>
               <div className={styles.inputFieldWrapper}>
                 <img src={locationIcon} className={styles.icon} alt="" />
-                <input type="text" id="address" name="address" placeholder="Street, City" value={formData.address} onChange={handleChange} required />
+                <input type="text" id="address" name="address" autoComplete="street-address" placeholder="Street, City" value={formData.address} onChange={handleChange} required disabled={loading} />
               </div>
               {formErrors.address && <span className={styles.errorText}>{formErrors.address}</span>}
             </div>
@@ -237,8 +238,9 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
                 <img src={passwordIcon} className={styles.icon} alt="" />
                 <input 
                   type={showPassword ? "text" : "password"} 
-                  id="password" 
+                  id="signup-password" 
                   name="password" 
+                  autoComplete="new-password"
                   placeholder="••••••••••••" 
                   value={formData.password} 
                   onChange={handleChange} 
@@ -248,7 +250,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
                   type="button"
                   className={styles.togglePasswordBtn}
                   onClick={() => setShowPassword(!showPassword)}
-                  tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
@@ -265,6 +267,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
                   type={showConfirmPassword ? "text" : "password"} 
                   id="confirmPassword" 
                   name="confirmPassword" 
+                  autoComplete="new-password"
                   placeholder="••••••••••••" 
                   value={formData.confirmPassword} 
                   onChange={handleChange} 
@@ -274,7 +277,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
                   type="button"
                   className={styles.togglePasswordBtn}
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  tabIndex={-1}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                 >
                   {showConfirmPassword ? "Hide" : "Show"}
                 </button>
@@ -287,12 +290,12 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ isOpen, onClose, onSwitchToLo
           <div className={styles.inputGroup} style={{ marginTop: "0.5rem" }}>
             <label htmlFor="image">Profile Image (Optional)</label>
             <div className={styles.inputFieldWrapper}>
-              <input type="file" id="image" name="image" accept="image/*" onChange={handleFileChange} className={styles.fileInput} />
+              <input type="file" id="image" name="image" accept="image/*" onChange={handleFileChange} className={styles.fileInput} disabled={loading} />
             </div>
           </div>
 
           {globalError && (
-            <div className={styles.globalErrorText}>
+            <div className={styles.globalErrorText} role="alert">
               {globalError}
             </div>
           )}

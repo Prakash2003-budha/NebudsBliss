@@ -3,8 +3,8 @@ $primary: var(--nb-primary);
 $primary-dark: var(--nb-primary-dark);
 $primary-light: var(--nb-primary-light);
 $accent: var(--nb-accent);
-$ink: #1a2233;
-$muted: #6b7688;
+$ink: var(--nb-text);
+$muted: var(--nb-text-muted);
 
 .featuredSection {
   font-family: $font-primary;
@@ -120,7 +120,7 @@ $muted: #6b7688;
   border-radius: 20px;
   overflow: hidden;
   cursor: pointer;
-  background: linear-gradient(135deg, #eef1f6 0%, #e5e9f0 100%);
+  background: linear-gradient(135deg, var(--nb-primary-light) 0%, var(--nb-surface) 100%);
   min-height: 220px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 10px rgba(26, 34, 51, 0.06);

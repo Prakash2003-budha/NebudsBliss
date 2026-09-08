@@ -1,14 +1,14 @@
 // Variables
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: var(--nb-primary);
-$dark-text: #222222;
-$light-text: #888888;
-$bg-color: #f7f8f9;
-$border-color: #eaeaea;
-$card-bg: #ffffff;
+$dark-text: var(--nb-text);
+$light-text: var(--nb-text-muted);
+$bg-color: var(--nb-bg);
+$border-color: var(--nb-border);
+$card-bg: var(--nb-surface);
 
 @mixin shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, var(--nb-border) 25%, var(--nb-surface) 50%, var(--nb-border) 75%);
   background-size: 200% 100%;
   animation: shimmerAnim 1.5s infinite;
 }
@@ -22,7 +22,7 @@ $card-bg: #ffffff;
   font-family: $font-primary;
   background:
     radial-gradient(circle at 90% 18%, rgba(249, 115, 22, 0.06), transparent 22rem),
-    linear-gradient(180deg, #f8fbff 0%, $bg-color 28rem);
+    linear-gradient(180deg, var(--nb-surface) 0%, $bg-color 28rem);
 
   .sectionHeader {
     margin-bottom: 1.5rem;
@@ -75,8 +75,8 @@ $card-bg: #ffffff;
         }
 
         &:hover {
-          border-color: $dark-text;
-          color: $dark-text;
+          border-color: var(--nb-primary);
+          color: var(--nb-primary);
         }
 
         &.activePill {
@@ -160,7 +160,7 @@ $card-bg: #ffffff;
     font-size: 2.5rem;
     font-weight: 900;
     font-style: italic;
-    color: #111;
+    color: var(--nb-text);
 
     @media (max-width: 600px) {
       font-size: 1.8rem;
@@ -183,7 +183,7 @@ $card-bg: #ffffff;
       transition: all 0.2s ease;
 
       &:hover {
-        background: #f0f0f0;
+        background: var(--nb-primary-light);
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       }
 

@@ -66,32 +66,27 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
   return (
     <>
       {!isForgotOpen && (
-        <div className={styles.modalOverlay} onClick={onClose}>
+        <div className={styles.modalOverlay}>
           <main
             className={styles.loginCard}
             onClick={(e) => e.stopPropagation()}
-            style={{ position: "relative" }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="login-title"
           >
             <button
+              type="button"
+              className={styles.closeBtn}
               onClick={onClose}
-              style={{
-                position: "absolute",
-                top: "15px",
-                right: "15px",
-                background: "none",
-                border: "none",
-                fontSize: "1.5rem",
-                cursor: "pointer",
-                color: "#888",
-              }}
-              aria-label="Close"
+              aria-label="Close sign in"
             >
               &times;
             </button>
 
             <header className={styles.headerSection}>
               <img src={logo} alt="Nebuds Bliss Logo" className={styles.logo} />
-              <h1 className={styles.title}>Welcome Back</h1>
+              <p className={styles.eyebrow}>NEBUDS BLISS ACCOUNT</p>
+              <h1 id="login-title" className={styles.title}>Welcome Back</h1>
               <p className={styles.subtitle}>Sign in to your account</p>
             </header>
 
@@ -102,7 +97,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
                   <img src={gmail} className={styles.icon} alt="Email icon" />
                   <input
                     type="email"
-                    id="email"
+                    id="login-email"
+                    autoComplete="email"
                     placeholder="alex@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -119,7 +115,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
                   <input
                     // NEW: Dynamically change input type based on state
                     type={showPassword ? "text" : "password"}
-                    id="password"
+                    id="login-password"
+                    autoComplete="current-password"
                     placeholder="••••••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -131,32 +128,26 @@ const LoginPage: React.FC<LoginPageProps> = ({ isOpen, onClose, onSwitchToRegist
                     type="button"
                     className={styles.togglePasswordBtn}
                     onClick={() => setShowPassword(!showPassword)}
-                    tabIndex={-1} // Prevents messing up the normal tab flow
+                    aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? "Hide" : "Show"}
                   </button>
                 </div>
 
                 {errorMessage && (
-                  <div
-                    style={{
-                      color: "#f87171",
-                      fontSize: "0.85rem",
-                      marginTop: "0.25rem",
-                      lineHeight: "1.4",
-                    }}
-                  >
+                  <div className={styles.errorText} role="alert">
                     {errorMessage}
                   </div>
                 )}
               </div>
 
-              <div
+              <button
+                type="button"
                 className={styles.forgotPassword}
                 onClick={() => setIsForgotOpen(true)}
               >
                 Forgot Password?
-              </div>
+              </button>
 
               <button type="submit" className={styles.submitBtn} disabled={isLoading}>
                 {isLoading ? "SIGNING IN..." : "SIGN IN"}

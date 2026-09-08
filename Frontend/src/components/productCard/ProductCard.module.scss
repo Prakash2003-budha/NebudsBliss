@@ -1,10 +1,10 @@
 $primary-color: var(--nb-primary);
 $primary-dark: var(--nb-primary-dark);
-$ink: #1a1d1f;
-$muted: #767c82;
-$hairline: #ececec;
-$hairline-dark: #dedede;
-$card-bg: #ffffff;
+$ink: var(--nb-text);
+$muted: var(--nb-text-muted);
+$hairline: var(--nb-border);
+$hairline-dark: var(--nb-border);
+$card-bg: var(--nb-surface);
 $danger: #d64545;
 
 .productCard {
@@ -27,7 +27,15 @@ $danger: #d64545;
     .imageWrapper img {
       transform: scale(1.07);
     }
+
   }
+}
+
+:global(:root[data-theme="dark"]) .productCard {
+  background: var(--nb-surface);
+  border-color: var(--nb-border);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  color: var(--nb-text);
 
   &.outOfStock {
     .imageWrapper img {
@@ -40,7 +48,7 @@ $danger: #d64545;
   width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  background: linear-gradient(145deg, #f4f8ff, #f8fafc);
+  background: linear-gradient(145deg, var(--nb-primary-light), var(--nb-surface));
   position: relative;
 
   img {
@@ -104,7 +112,7 @@ $danger: #d64545;
 .outOfStockOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.55);
+  background: color-mix(in srgb, var(--nb-surface) 70%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -226,7 +234,7 @@ $danger: #d64545;
   height: 42px;
   border-radius: 10px;
   border: 1px solid $hairline;
-  background: #fff;
+  background: var(--nb-surface);
   color: $muted;
   display: flex;
   align-items: center;
@@ -301,7 +309,7 @@ $danger: #d64545;
 
 .deleteBtn {
   flex: 0 0 40px;
-  background-color: #fff;
+  background-color: var(--nb-surface);
   color: $danger;
   border: 1.5px solid rgba($danger, 0.35);
   border-radius: 9px;

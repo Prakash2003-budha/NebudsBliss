@@ -1,5 +1,5 @@
 $font-primary: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
-$dark-text: #222222;
+$dark-text: var(--nb-text);
 
 .section {
   font-family: $font-primary;
@@ -21,7 +21,7 @@ $dark-text: #222222;
   font-size: 2.5rem;
   font-weight: 900;
   font-style: italic;
-  color: #111;
+  color: var(--nb-text);
   margin: 0;
   letter-spacing: -0.5px;
 

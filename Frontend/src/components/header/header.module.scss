@@ -17,9 +17,9 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   justify-content: space-between;
   align-items: center;
   padding: 0.85rem max(1.25rem, calc((100vw - 1240px) / 2));
-  background: rgba(255, 255, 255, 0.92);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  background: color-mix(in srgb, var(--nb-surface) 92%, transparent);
+  border-bottom: 1px solid var(--nb-border);
+  box-shadow: var(--nb-shadow-sm);
   backdrop-filter: blur(16px);
   position: fixed;
   top: 0;
@@ -60,7 +60,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 .navLink {
   font-size: 0.86rem;
   font-weight: 700;
-  color: #4b5563;
+  color: var(--nb-text-muted);
   text-decoration: none;
   cursor: pointer;
   padding: 8px 0;
@@ -86,10 +86,10 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .dropdownMenu {
   position: absolute;
-  background: #ffffff;
+  background: var(--nb-surface);
   min-width: 210px;
   box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
-  border: 1px solid #eef2f7;
+  border: 1px solid var(--nb-border);
   border-radius: 12px; 
   padding: 0.5rem 0;
   display: flex;
@@ -102,12 +102,12 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   .dropdownItem {
     padding: 10px 16px;
     text-decoration: none;
-    color: $dark-text;
+    color: var(--nb-text);
     font-size: 0.9rem;
     transition: background 0.15s, color 0.15s;
 
     &:hover {
-      background-color: $light-bg;
+      background-color: var(--nb-primary-light);
       color: $secoundary-color;
     }
   }
@@ -120,6 +120,25 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
   @media (max-width: $breakpoint-mobile) {
     display: none; 
+  }
+
+  .themeToggle {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--nb-border);
+    border-radius: 50%;
+    background: var(--nb-surface);
+    color: var(--nb-text);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background var(--nb-transition), color var(--nb-transition), transform var(--nb-transition);
+
+    &:hover {
+      background: var(--nb-primary-light);
+      color: var(--nb-primary);
+      transform: rotate(12deg);
+    }
   }
 }
 
@@ -143,9 +162,9 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
 .SignUpButton {
   background-color: transparent;
-  color: $dark-text;
-  border: 1px solid #dbe3ef; 
-  &:hover { background-color: $dark-text; color: #ffffff; border-color: $dark-text; }
+  color: var(--nb-text);
+  border: 1px solid var(--nb-border); 
+  &:hover { background-color: var(--nb-text); color: var(--nb-surface); border-color: var(--nb-text); }
 }
 
 /* --- Desktop Profile Styling with Premium Glow --- */
@@ -189,10 +208,10 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   position: absolute;
   top: 100%; 
   right: 0; 
-  background: #ffffff;
+  background: var(--nb-surface);
   min-width: 150px;
   box-shadow: 0 16px 34px rgba(15, 23, 42, 0.14);
-  border: 1px solid #eef2f7;
+  border: 1px solid var(--nb-border);
   border-radius: 12px; 
   padding: 0.5rem 0;
   display: flex;
@@ -206,7 +225,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   .dropdownItem {
     padding: 10px 16px;
     text-decoration: none;
-    color: $dark-text;
+    color: var(--nb-text);
     font-size: 0.9rem;
     transition: background 0.15s, color 0.15s;
     text-align: left;
@@ -217,7 +236,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     cursor: pointer;
 
     &:hover {
-      background-color: $light-bg;
+      background-color: var(--nb-primary-light);
       color: $secoundary-color;
     }
   }
@@ -229,7 +248,7 @@ $breakpoint-mobile: 768px;
   display: none; 
   background: none;
   border: none;
-  color: #222222;
+  color: var(--nb-text);
   cursor: pointer;
   z-index: 200; 
   padding: 4px;
@@ -249,7 +268,7 @@ $breakpoint-mobile: 768px;
   display: block;
   width: 22px;
   height: 2px;
-  background-color: #222222;
+  background-color: var(--nb-text);
   border-radius: 2px;
   transition: transform 0.25s ease, opacity 0.2s ease;
 }

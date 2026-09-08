@@ -4,6 +4,7 @@ import logo from '../../img/logo/logoFull.jpg';
 import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
 import Sidebar from '../sidebar/Sidebar';
+import { useTheme } from '../../context/ThemeContext';
 
 import LoginPage from '../../pages/auth/loginPage/login.page';
 import SignUpPage from '../../pages/auth/registerPage/register.page'; 
@@ -11,6 +12,7 @@ import SignUpPage from '../../pages/auth/registerPage/register.page';
 
 export default function Header() {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // 2. STATE FOR BOTH MODALS
@@ -88,6 +90,15 @@ export default function Header() {
         </nav>
 
         <div className={styles.signButton}>
+          <button
+            type="button"
+            className={styles.themeToggle}
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+            title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+          >
+            <span aria-hidden="true">{theme === "light" ? "☾" : "☀"}</span>
+          </button>
           {user ? (
             <div className={styles.profileContainer}>
               <img src={user.image?.url || profileIcon} alt="User Profile" className={styles.profileImage} />

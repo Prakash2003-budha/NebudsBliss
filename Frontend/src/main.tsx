@@ -22,11 +22,13 @@ import AdminReviews from './pages/admin/AdminReviews.tsx';
 import RequireAdmin from './pages/admin/RequireAdmin.tsx';
 import { PrivacyPage, TermsPage } from './pages/staticPage/static.page.tsx';
 import { StandaloneLogin, StandaloneRegister } from './pages/auth/StandaloneAuth.tsx';
+import { ThemeProvider } from './context/ThemeContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CartProvider>
-      <BrowserRouter>
+    <ThemeProvider>
+      <CartProvider>
+        <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<StandaloneLogin />} />
@@ -57,7 +59,8 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
-      </BrowserRouter>
-    </CartProvider>
+        </BrowserRouter>
+      </CartProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );

@@ -50,14 +50,12 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ isOpen, onClose, onBack
   };
 
   return (
-    // Clicking the background closes EVERYTHING, not just this modal
-    <div className={styles.modalOverlay} onClick={onClose}>
+    <div className={styles.modalOverlay}>
       <main
         className={styles.loginCard}
         onClick={(e) => e.stopPropagation()}
         style={{ position: "relative" }}
       >
-        {/* X button closes EVERYTHING */}
         <button
           onClick={onClose}
           style={{

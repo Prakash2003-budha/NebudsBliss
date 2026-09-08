@@ -25,10 +25,10 @@ $primary-light: var(--nb-primary-light);
     font-size: 2.25rem;
     font-weight: 900;
     font-style: italic;
-    color: #111;
+    color: var(--nb-text);
     margin: 0;
     letter-spacing: -0.5px;
-    background: linear-gradient(120deg, #111 0%, $primary 85%);
+    background: linear-gradient(120deg, var(--nb-text) 0%, $primary 85%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -45,7 +45,8 @@ $primary-light: var(--nb-primary-light);
   flex-shrink: 0;
 
   button {
-    background: #fff;
+    background: var(--nb-surface);
+    color: var(--nb-text);
     border: 1px solid $primary-light;
     border-radius: 50%;
     width: 42px;

@@ -16,7 +16,7 @@ $border-color: #dbe3ef;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1rem;
   font-family: var(--nb-font);
   overflow-y: auto;
 }
@@ -31,7 +31,7 @@ $border-color: #dbe3ef;
   background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
   border: 1px solid #e2e8f0;
   border-radius: 22px;
-  padding: 2.75rem 2.5rem 2.25rem;
+  padding: 2.5rem 2.5rem 2.25rem;
   box-shadow: 0 24px 70px rgba(15, 23, 42, 0.22);
   display: flex;
   flex-direction: column;
@@ -95,6 +95,14 @@ $border-color: #dbe3ef;
   margin: 0;
 }
 
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: $accent-color;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
 // ── Form layout ───────────────────────────────────────────
 .form {
   width: 100%;
@@ -143,7 +151,8 @@ $border-color: #dbe3ef;
   left: 0.9rem;
   width: 17px;
   height: 17px;
-  opacity: 0.4;
+  opacity: 0.55;
+  filter: grayscale(1) brightness(0.7);
   pointer-events: none;
 }
 
@@ -292,11 +301,9 @@ $border-color: #dbe3ef;
 }
 
 // Shared input + select styles
-.inputFieldWrapper input,
-.selectField {
+.inputFieldWrapper input {
   width: 100%;
-  /* CHANGED: Increased the right padding from 1rem to 3.5rem to make room for the toggle button */
-  padding: 0.78rem 3.5rem 0.78rem 2.5rem;
+  padding: 0.78rem 1rem 0.78rem 2.5rem;
   background-color: $input-bg;
   border: 1px solid $border-color;
   border-radius: 7px;
@@ -311,7 +318,7 @@ $border-color: #dbe3ef;
     box-shadow: 0 0 0 3px rgba(8, 95, 246, 0.12);
   }
 
-  &::placeholder { color: #505050; }
+  &::placeholder { color: #94a3b8; }
 }
 
 /* NEW: Styles for the Show/Hide Password button */
@@ -329,5 +336,22 @@ $border-color: #dbe3ef;
 
   &:hover {
     color: $accent-color;
+  }
+
+  &:focus-visible {
+    border-radius: 4px;
+    outline: 2px solid $accent-color;
+    outline-offset: 2px;
+  }
+}
+
+.inputGroup:has(.togglePasswordBtn) .inputFieldWrapper input {
+  padding-right: 3.5rem;
+}
+
+@media (max-width: 480px) {
+  .signupModalCard {
+    padding: 2.35rem 1.25rem 1.75rem;
+    border-radius: 18px;
   }
 }
