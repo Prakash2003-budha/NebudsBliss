@@ -16,6 +16,7 @@ import ProductHighlights from "../../components/productHighlights/ProductHighlig
 import BestSellerPosters from "../../components/bestSellerPosters/BestSellerPosters";
 import RandomPicks from "../../components/randomPicks/RandomPicks";
 import { useCart } from "../../context/userCart";
+import { authHeaders } from "../../lib/auth/session";
 
 interface User {
   role: string;
@@ -125,10 +126,8 @@ const Homepage: React.FC = () => {
     try {
       setDeletingId(itemPendingDelete._id);
       setIsPasswordModalOpen(false);
-      const accessToken = localStorage.getItem("accessToken");
-
       await axios.delete(API_ENDPOINTS.DELETE_ITEM(itemPendingDelete._id), {
-        headers: { Authorization: accessToken ? `Bearer ${accessToken}` : "" },
+        headers: authHeaders(),
         withCredentials: true,
       });
 

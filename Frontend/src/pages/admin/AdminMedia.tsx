@@ -2,14 +2,10 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import shared from "./admin.shared.module.scss";
 import styles from "./AdminMedia.module.scss";
 import ConfirmDialog from "./ConfirmDialog";
-
-const authHeaders = () => {
-  const token = localStorage.getItem("accessToken");
-  return { Authorization: token ? `Bearer ${token}` : "" };
-};
 
 interface Poster { imageUrl: string; optimizeUrl?: string; public_id?: string; }
 interface HeroSlide { _id: string; imageUrl: string; optimizeUrl?: string; order: number; createdAt?: string; }
@@ -388,6 +384,4 @@ const AdminMedia: React.FC = () => {
 };
 
 export default AdminMedia;
-
-
 

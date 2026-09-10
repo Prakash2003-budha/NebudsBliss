@@ -1,5 +1,5 @@
 import { Router } from "express";
-import authRouter from "../modules/auth/auth.router.js"
+import authRouter from "../modules/auth/auth.router.js";
 import itemRouter from "../modules/Items/item.router.js";
 import posterRouter from "../modules/poster/Poster.router.js";
 import orderRouter from "../modules/order/order.router.js";
@@ -8,14 +8,17 @@ import bestSellerRouter from "../modules/bestSeller/BestSeller.router.js";
 import reviewRouter from "../modules/reviews/review.router.js";
 import promoRouter from "../modules/promoCode/promoCode.router.js";
 
-const router = Router();
-router.use(authRouter)
-router.use(itemRouter)
-router.use(posterRouter)
-router.use(orderRouter)
-router.use(heroSlideRouter)
-router.use(bestSellerRouter)
-router.use(reviewRouter)
-router.use(promoRouter)
+const routes = Router();
 
-export default router
+[
+  authRouter,
+  itemRouter,
+  posterRouter,
+  orderRouter,
+  heroSlideRouter,
+  bestSellerRouter,
+  reviewRouter,
+  promoRouter,
+].forEach((route) => routes.use(route));
+
+export default routes;

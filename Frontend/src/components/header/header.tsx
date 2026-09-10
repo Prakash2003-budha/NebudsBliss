@@ -4,7 +4,7 @@ import logo from '../../img/logo/logo.transparent.png';
 import styles from './header.module.scss';
 import profileIcon from "../../img/icons/profile.white.png";
 import Sidebar from '../sidebar/Sidebar';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/useTheme';
 
 import LoginPage from '../../pages/auth/loginPage/login.page';
 import SignUpPage from '../../pages/auth/registerPage/register.page'; 

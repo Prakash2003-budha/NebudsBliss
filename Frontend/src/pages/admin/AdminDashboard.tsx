@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import shared from "./admin.shared.module.scss";
 import styles from "./AdminDashboard.module.scss";
 
@@ -67,11 +68,6 @@ const STATUS_ORDER = ["processing", "shipped", "delivered", "cancelled"];
 const PAYMENT_METHOD_LABEL: Record<string, string> = {
   cash: "Cash on delivery",
   bank: "Bank transfer",
-};
-
-const authHeaders = () => {
-  const token = localStorage.getItem("accessToken");
-  return { Authorization: token ? `Bearer ${token}` : "" };
 };
 
 const formatPrice = (value?: number): string => {
@@ -860,6 +856,4 @@ const AdminDashboard: React.FC = () => {
 };
 
 export default AdminDashboard;
-
-
 

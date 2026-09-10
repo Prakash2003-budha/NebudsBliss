@@ -2,7 +2,7 @@ import express from "express";
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import multer from 'multer'; // <-- ADDED: Needed for your error handler below
-import router from "./router.config.js";
+import router from "../routes/index.js";
 import './db.config.js'
 
 

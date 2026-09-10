@@ -14,6 +14,7 @@ import { API_ENDPOINTS, CATEGORY_SLUG_MAP } from "../../constants/constants";
 import { useCart } from "../../context/userCart";
 import { toast } from "react-toastify";
 import { effectivePrice } from "../../utils/price";
+import { authHeaders } from "../../lib/auth/session";
 import styles from "./category.page.module.scss";
 
 const NEW_WINDOW_DAYS = 21;
@@ -150,10 +151,8 @@ const CategoryPage: React.FC = () => {
     try {
       setDeletingId(itemPendingDelete._id);
       setIsPasswordModalOpen(false);
-      const accessToken = localStorage.getItem("accessToken");
-
       await axios.delete(API_ENDPOINTS.DELETE_ITEM(itemPendingDelete._id), {
-        headers: { Authorization: accessToken ? `Bearer ${accessToken}` : "" },
+        headers: authHeaders(),
         withCredentials: true,
       });
 

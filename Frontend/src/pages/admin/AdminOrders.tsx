@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import shared from "./admin.shared.module.scss";
 import styles from "./AdminOrders.module.scss";
 import ConfirmDialog from "./ConfirmDialog";
@@ -55,11 +56,6 @@ const PAYMENT_STATUS_META: Record<string, { label: string; className: string }> 
 const PAYMENT_METHOD_LABEL: Record<string, string> = {
   cash: "Cash on delivery",
   bank: "Bank transfer",
-};
-
-const authHeaders = () => {
-  const token = localStorage.getItem("accessToken");
-  return { Authorization: token ? `Bearer ${token}` : "" };
 };
 
 const formatPrice = (value?: number): string => {
@@ -605,4 +601,3 @@ const AdminOrders: React.FC = () => {
 };
 
 export default AdminOrders;
-

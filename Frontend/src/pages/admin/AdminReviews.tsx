@@ -2,14 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import shared from "./admin.shared.module.scss";
 import styles from "./AdminReviews.module.scss";
 import ConfirmDialog from "./ConfirmDialog";
-
-const authHeaders = () => {
-  const token = localStorage.getItem("accessToken");
-  return { Authorization: token ? `Bearer ${token}` : "" };
-};
 
 interface ReviewUser {
   _id: string;
@@ -227,6 +223,4 @@ const AdminReviews: React.FC = () => {
 };
 
 export default AdminReviews;
-
-
 

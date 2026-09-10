@@ -16,6 +16,7 @@ import { API_ENDPOINTS, CATEGORY_SLUG_MAP } from "../../constants/constants";
 import { useCart } from "../../context/userCart";
 import { toast } from "react-toastify";
 import styles from "./shop.page.module.scss";
+import { authHeaders } from "../../lib/auth/session";
 
 const PAGE_SIZE = 12;
 
@@ -229,10 +230,8 @@ const ShopPage: React.FC = () => {
     try {
       setDeletingId(itemPendingDelete._id);
       setIsPasswordModalOpen(false);
-      const accessToken = localStorage.getItem("accessToken");
-
       await axios.delete(API_ENDPOINTS.DELETE_ITEM(itemPendingDelete._id), {
-        headers: { Authorization: accessToken ? `Bearer ${accessToken}` : "" },
+        headers: authHeaders(),
         withCredentials: true,
       });
 

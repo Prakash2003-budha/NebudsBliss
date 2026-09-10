@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import shared from "./admin.shared.module.scss";
 import styles from "./AdminPromos.module.scss";
 import ConfirmDialog from "./ConfirmDialog";
@@ -48,11 +49,6 @@ const EMPTY_FORM: PromoFormState = {
   validFrom: "",
   expiresAt: "",
   isActive: true,
-};
-
-const authHeaders = () => {
-  const token = localStorage.getItem("accessToken");
-  return { Authorization: token ? `Bearer ${token}` : "" };
 };
 
 const formatPrice = (value?: number): string => {
@@ -707,4 +703,3 @@ const AdminPromos: React.FC = () => {
 };
 
 export default AdminPromos;
-

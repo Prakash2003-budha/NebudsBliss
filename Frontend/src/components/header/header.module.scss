@@ -1,11 +1,13 @@
 // Variables
-$primary-color: #085ff6;
+$primary-color: #dc2626;
 $dark-text: #222222;
 $light-bg: #f8f9fa;
-$border-color: #eeeeee;
-$secoundary-color: var(--nb-primary);
-$hover-color: var(--nb-primary-light);
+$border-color: rgba(255, 255, 255, 0.18);
+$secoundary-color: #fff;
+$hover-color: #ffe5e7;
 $breakpoint-mobile: 768px;
+$nav-red: #d91f26;
+$nav-red-dark: #b1141d;
 
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 
@@ -17,9 +19,9 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   justify-content: space-between;
   align-items: center;
   padding: 0.85rem max(1.25rem, calc((100vw - 1240px) / 2));
-  background: color-mix(in srgb, var(--nb-surface) 92%, transparent);
-  border-bottom: 1px solid var(--nb-border);
-  box-shadow: var(--nb-shadow-sm);
+  background: linear-gradient(135deg, $nav-red 0%, $nav-red-dark 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 24px rgba(145, 21, 27, 0.22);
   backdrop-filter: blur(16px);
   position: fixed;
   top: 0;
@@ -71,7 +73,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 .navLink {
   font-size: 0.86rem;
   font-weight: 700;
-  color: var(--nb-text-muted);
+  color: rgba(255, 255, 255, 0.88);
   text-decoration: none;
   cursor: pointer;
   padding: 8px 0;
@@ -80,12 +82,12 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   position: relative;
 
   &:hover {
-    color: $secoundary-color;
+    color: #fff;
   }
 }
 
 .activeNavLink {
-  color: var(--nb-primary) !important;
+  color: #fff !important;
 
   &::after {
     content: '';
@@ -95,7 +97,7 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
     bottom: 0;
     height: 3px;
     border-radius: 999px;
-    background: var(--nb-primary);
+    background: #fff;
   }
 }
 
@@ -152,18 +154,18 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   .themeToggle {
     width: 36px;
     height: 36px;
-    border: 1px solid var(--nb-border);
+    border: 1px solid rgba(255, 255, 255, 0.42);
     border-radius: 50%;
-    background: var(--nb-surface);
-    color: var(--nb-text);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
     font-size: 1.15rem;
     line-height: 1;
     cursor: pointer;
     transition: background var(--nb-transition), color var(--nb-transition), transform var(--nb-transition);
 
     &:hover {
-      background: var(--nb-primary-light);
-      color: var(--nb-primary);
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
       transform: rotate(12deg);
     }
   }
@@ -182,16 +184,17 @@ $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .SignInButton {
-  background: linear-gradient(135deg, $primary-color, var(--nb-primary-dark));
-  color: #ffffff;
-  &:hover { background-color: $secoundary-color; }
+  background: #fff;
+  color: $nav-red;
+  box-shadow: 0 8px 18px rgba(255, 255, 255, 0.18);
+  &:hover { background-color: #fff4f4; }
 }
 
 .SignUpButton {
   background-color: transparent;
-  color: var(--nb-text);
-  border: 1px solid var(--nb-border); 
-  &:hover { background-color: var(--nb-text); color: var(--nb-surface); border-color: var(--nb-text); }
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.5); 
+  &:hover { background-color: rgba(255, 255, 255, 0.1); border-color: #fff; }
 }
 
 /* --- Desktop Profile Styling with Premium Glow --- */

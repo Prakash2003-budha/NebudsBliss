@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './sidebar.module.scss'; 
 import profileIcon from "../../img/icons/profile.white.png";
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../context/useTheme";
 
 // 1. Types
 interface UserType {

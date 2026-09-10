@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import styles from "./HeroCarousel..module.scss";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import { compressImage } from "../../utils/imageCompression";
 
 interface HeroSlide {
@@ -69,11 +70,6 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ isAdmin, onLoginClick, onRe
   const goDirection = (direction: "left" | "right") => {
     if (slides.length === 0) return;
     goTo(activeIndex + (direction === "left" ? -1 : 1));
-  };
-
-  const authHeaders = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    return { Authorization: accessToken ? `Bearer ${accessToken}` : "" };
   };
 
   const handleAddSlide = async (e: React.ChangeEvent<HTMLInputElement>) => {

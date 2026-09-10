@@ -5,6 +5,7 @@ import styles from "./BestSellerPosters.module.scss";
 import profile from "../../img/icons/profile.black.png";
 import type { Item } from "../productCard/ProductCard";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import { compressImage } from "../../utils/imageCompression";
 
 export interface BestSellerPoster {
@@ -48,11 +49,6 @@ const BestSellerPosters: React.FC<BestSellerPostersProps> = ({ items, isAdmin, o
     // eslint-disable-next-line react-hooks/set-state-in-effect -- initial data fetch on mount
     fetchPosters();
   }, []);
-
-  const authHeaders = () => {
-    const accessToken = localStorage.getItem("accessToken");
-    return { Authorization: accessToken ? `Bearer ${accessToken}` : "" };
-  };
 
   const setBusy = (id: string, value: boolean) => {
     setBusyIds((prev) => {

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { API_ENDPOINTS } from "../../constants/constants";
+import { authHeaders } from "../../lib/auth/session";
 import { compressImages } from "../../utils/imageCompression";
 import shared from "./admin.shared.module.scss";
 import styles from "./AdminProducts.module.scss";
@@ -61,11 +62,6 @@ const EMPTY_FORM: ProductFormState = {
   stockQuantity: "0",
   isActive: true,
   isFeatured: false,
-};
-
-const authHeaders = () => {
-  const token = localStorage.getItem("accessToken");
-  return { Authorization: token ? `Bearer ${token}` : "" };
 };
 
 const formatPrice = (value?: number): string => {
@@ -818,8 +814,6 @@ const AdminProducts: React.FC = () => {
 };
 
 export default AdminProducts;
-
-
 
 
 
