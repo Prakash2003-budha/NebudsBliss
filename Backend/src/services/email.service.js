@@ -6,7 +6,8 @@ class EmailService{
         try{
             const mailConfig = {
                 host:SMTPConfig.host,
-                port:SMTPConfig.port,
+                port:Number(SMTPConfig.port) || 465,
+                secure:Number(SMTPConfig.port) === 465,
                 connectionTimeout: 10000,
                 greetingTimeout: 10000,
                 socketTimeout: 10000,
@@ -31,7 +32,7 @@ class EmailService{
         try{
             return await this.#transport.sendMail({
                 to:to,
-                from:SMTPConfig.fromAddress,
+                from:SMTPConfig.fromAddress || SMTPConfig.user,
                 subject:sub,
                 html:message
             })

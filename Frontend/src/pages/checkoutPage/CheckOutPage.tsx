@@ -70,6 +70,7 @@ const CheckOutPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [trackingUrl, setTrackingUrl] = useState<string | null>(null);
   const hasAuthToken = Boolean(
     localStorage.getItem("accessToken") || localStorage.getItem("token")
   );
@@ -319,6 +320,7 @@ const CheckOutPage: React.FC = () => {
         throw new Error(result.message || "Failed to place order.");
       }
 
+      setTrackingUrl(result.trackingUrl || null);
       setSubmitted(true);
       clearCart();
       clearScreenshot();
@@ -415,11 +417,41 @@ const CheckOutPage: React.FC = () => {
               <div style={{ textAlign: "center", padding: "2rem 0" }}>
                 <h2 style={{ color: "#28a745", borderBottom: "none" }}>🎉 Order Placed Successfully!</h2>
                 <p>Thank you for shopping with NebudsBliss.</p>
-                {!hasAuthToken && (
+                {trackingUrl ? (
+                  <div style={{ marginTop: "1.25rem" }}>
+                    <p>You can use this link to track your order:</p>
+                    <a
+                      href={trackingUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ color: "#085ff6", overflowWrap: "anywhere" }}
+                    >
+                      {trackingUrl}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void navigator.clipboard?.writeText(trackingUrl);
+                      }}
+                      style={{
+                        display: "block",
+                        margin: "0.75rem auto 0",
+                        border: "1px solid #085ff6",
+                        borderRadius: "8px",
+                        background: "#fff",
+                        color: "#085ff6",
+                        cursor: "pointer",
+                        padding: "0.55rem 1rem"
+                      }}
+                    >
+                      Copy tracking link
+                    </button>
+                  </div>
+                ) : !hasAuthToken ? (
                   <p>
-                    Your order tracking link has been sent to your email address.
+                    Your order was saved. You can track it from the My Orders page after signing in.
                   </p>
-                )}
+                ) : null}
               </div>
             ) : (
               <>

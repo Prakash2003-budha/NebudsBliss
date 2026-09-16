@@ -39,6 +39,9 @@ class OrderController {
 
             res.json({
                 data: savedOrder,
+                trackingUrl: savedOrder.trackingToken
+                    ? `${(AppConfig.frontend_Url || "").replace(/\/$/, "")}/orders/track/${savedOrder.trackingToken}`
+                    : null,
                 message: "Order placed successfully",
                 status: "CREATE_SUCCESS"
             });

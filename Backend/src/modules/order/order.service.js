@@ -25,9 +25,10 @@ class OrderService {
                 if (!data.email && req.authUser.email) {
                     data.email = req.authUser.email;
                 }
-            } else {
-                data.trackingToken = randomBytes(32).toString("hex");
             }
+            // Every order gets a private tracking token so the link can be
+            // included in both guest and authenticated customer emails.
+            data.trackingToken = randomBytes(32).toString("hex");
 
             // Upload the payment screenshot (if provided) to Cloudinary, same as item/poster images
             if (req.file) {
