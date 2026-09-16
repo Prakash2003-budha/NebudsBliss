@@ -20,7 +20,7 @@ export default function Header() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
-  const [user, setUser] = useState(() => {
+  const [user] = useState(() => {
     const loggedInUser = localStorage.getItem('user');
     return loggedInUser ? JSON.parse(loggedInUser) : null;
   });
@@ -48,9 +48,8 @@ export default function Header() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('token');
-    setUser(null); 
-    navigate('/'); 
-    closeSidebar(); 
+    closeSidebar();
+    window.location.assign('/');
   };
 
   useEffect(() => {

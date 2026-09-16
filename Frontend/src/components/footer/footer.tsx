@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 import styles from './footer.module.scss';
 import logo from '../../img/logo/logo.transparent.png';
 import facebookIcon from "../../img/icons/socialMedia/Facebook.png";
@@ -34,10 +35,10 @@ const Footer: React.FC = () => {
                 <nav className={styles.linksSection} aria-label="Footer Category Links">
                     <h3 className={styles.title}>Categories</h3>
                     <ul>
-                        <li><a href="/category/earbuds">Earbuds</a></li>
-                        <li><a href="/category/fans">Fans</a></li>
-                        <li><a href="/category/powerbanks">Power Banks</a></li>
-                        <li><a href="/category/chargers">Chargers</a></li>
+                        <li><Link to="/category/earbuds">Earbuds</Link></li>
+                        <li><Link to="/category/fans">Fans</Link></li>
+                        <li><Link to="/category/powerbanks">Power Banks</Link></li>
+                        <li><Link to="/category/chargers">Chargers</Link></li>
                     </ul>
                 </nav>
 
@@ -45,10 +46,10 @@ const Footer: React.FC = () => {
                 <nav className={styles.linksSection} aria-label="Footer Information Links">
                     <h3 className={styles.title}>Information</h3>
                     <ul>
-                        <li><a href="/about">About Us</a></li>
-                        <li><a href="/contact">Contact</a></li>
-                        <li><a href="/terms">Terms of Service</a></li>
-                        <li><a href="/privacy">Privacy Policy</a></li>
+                        <li><Link to="/about">About Us</Link></li>
+                        <li><Link to="/contact">Contact</Link></li>
+                        <li><Link to="/terms">Terms of Service</Link></li>
+                        <li><Link to="/privacy">Privacy Policy</Link></li>
                     </ul>
                 </nav>
 
