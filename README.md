@@ -27,7 +27,9 @@ This repository contains a Vite frontend and an Express API. The included
    `https://nebudsbliss-api.onrender.com`.
 6. Set these API variables:
    - `BACKEND_URL`: the API HTTPS URL
-   - `FRONTEND_URL`: the frontend HTTPS URL
+   - `FRONTEND_URL`: the frontend HTTPS URL (only the origin, for example
+     `https://nebudsbliss-frontend.onrender.com`; do not add `/:9005` or any
+     `/orders/...` path)
    - `CORS_ORIGIN`: the frontend HTTPS URL (without a trailing slash)
 7. Set the frontend service's `VITE_API_URL` to the API HTTPS URL and redeploy
    the frontend.

@@ -4,6 +4,18 @@ import promoCodeSvc from "../promoCode/promoCode.service.js";
 import emailSvc from "../../services/email.service.js";
 import { AppConfig } from "../../config/constants.js";
 
+const getFrontendUrl = (req) => {
+    const configuredUrl = AppConfig.frontend_Url || "";
+    const requestOrigin = req.get("origin");
+    const baseUrl = requestOrigin || configuredUrl;
+
+    // Prevent a backend port accidentally entered as a URL path, e.g.
+    // https://store.example.com/:9005/orders/track/...
+    return baseUrl
+        .replace(/\/:\d+\/?$/, "")
+        .replace(/\/+$/, "");
+};
+
 class OrderController {
     createOrder = async (req, res, next) => {
         let orderData;
@@ -12,7 +24,7 @@ class OrderController {
             const savedOrder = await orderSvc.orderStore(orderData);
 
             if (orderData.email) {
-                const frontendUrl = (AppConfig.frontend_Url || "").replace(/\/$/, "");
+                const frontendUrl = getFrontendUrl(req);
                 const trackingUrl = savedOrder.trackingToken
                     ? `${frontendUrl}/orders/track/${savedOrder.trackingToken}`
                     : null;
@@ -40,7 +52,7 @@ class OrderController {
             res.json({
                 data: savedOrder,
                 trackingUrl: savedOrder.trackingToken
-                    ? `${(AppConfig.frontend_Url || "").replace(/\/$/, "")}/orders/track/${savedOrder.trackingToken}`
+                    ? `${getFrontendUrl(req)}/orders/track/${savedOrder.trackingToken}`
                     : null,
                 message: "Order placed successfully",
                 status: "CREATE_SUCCESS"
