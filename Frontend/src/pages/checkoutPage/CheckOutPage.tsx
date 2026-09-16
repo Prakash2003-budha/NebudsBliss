@@ -237,6 +237,22 @@ const CheckOutPage: React.FC = () => {
       return;
     }
 
+    const maxLengthChecks = [
+      { field: formData.fullName, label: "Full name", max: 100 },
+      { field: formData.phone, label: "Phone number", max: 15 },
+      { field: formData.email, label: "Email", max: 254 },
+      { field: formData.address, label: "Delivery address", max: 250 },
+      { field: formData.city, label: "City", max: 80 },
+      { field: formData.note, label: "Delivery note", max: 500 },
+      { field: formData.mapLink, label: "Map link", max: 2048 },
+    ];
+
+    const lengthIssue = maxLengthChecks.find(({ field, max }) => field.length > max);
+    if (lengthIssue) {
+      setSubmitError(`${lengthIssue.label} cannot exceed ${lengthIssue.max} characters.`);
+      return;
+    }
+
     if (formData.payment === PAYMENT_METHOD.BANK && !paymentScreenshot) {
       setSubmitError("Please upload a screenshot of your bank transfer before placing the order.");
       return;
@@ -396,6 +412,7 @@ const CheckOutPage: React.FC = () => {
                       onChange={handleChange}
                       placeholder="Enter your full name"
                       required
+                      maxLength={100}
                       disabled={isSubmitting}
                     />
                   </label>
@@ -408,6 +425,7 @@ const CheckOutPage: React.FC = () => {
                       onChange={handleChange}
                       placeholder="07XXXXXXXX"
                       required
+                      maxLength={15}
                       disabled={isSubmitting}
                     />
                   </label>
@@ -422,6 +440,7 @@ const CheckOutPage: React.FC = () => {
                     onChange={handleChange}
                     placeholder="you@example.com"
                     required={!hasAuthToken}
+                    maxLength={254}
                     disabled={isSubmitting}
                   />
                 </label>
@@ -435,6 +454,7 @@ const CheckOutPage: React.FC = () => {
                     placeholder="House number, street, area"
                     rows={3}
                     required
+                    maxLength={250}
                     disabled={isSubmitting}
                   />
                 </label>
@@ -447,6 +467,7 @@ const CheckOutPage: React.FC = () => {
                     onChange={handleChange}
                     placeholder="e.g. Birgunj"
                     required
+                    maxLength={80}
                     disabled={isSubmitting}
                   />
                 </label>
@@ -537,6 +558,7 @@ const CheckOutPage: React.FC = () => {
                     onChange={handleChange}
                     placeholder="Any special instructions?"
                     rows={3}
+                    maxLength={500}
                     disabled={isSubmitting}
                   />
                 </label>
