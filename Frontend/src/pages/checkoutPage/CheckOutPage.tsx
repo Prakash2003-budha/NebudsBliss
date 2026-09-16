@@ -58,6 +58,7 @@ const initialFormState: CheckoutFormState = {
 const CheckOutPage: React.FC = () => {
   const { cartItems, changeQuantity, clearCart } = useCart();
   const navigate = useNavigate();
+  const orderRequestRef = useRef<AbortController | null>(null);
   const [formData, setFormData] = useState<CheckoutFormState>(initialFormState);
 
   // Payment screenshot (only relevant for bank transfer)
@@ -298,6 +299,8 @@ const CheckOutPage: React.FC = () => {
     }
 
     // 3. Execution (Single try-catch block)
+    const orderRequest = new AbortController();
+    orderRequestRef.current = orderRequest;
     try {
       setIsSubmitting(true);
 
@@ -307,6 +310,7 @@ const CheckOutPage: React.FC = () => {
           ? { "Authorization": `Bearer ${token}` }
           : {},
         body: orderForm,
+        signal: orderRequest.signal,
       });
 
       const result = await response.json();
@@ -321,14 +325,23 @@ const CheckOutPage: React.FC = () => {
       handleRemovePromo();
     } catch (error) { 
       console.error("Order submission failed:", error);
-      if (error instanceof Error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        setSubmitError("Waiting was cancelled. The order may still have been saved; please check your orders before trying again.");
+      } else if (error instanceof Error) {
         setSubmitError(error.message);
       } else {
         setSubmitError("An unexpected error occurred.");
       }
     } finally {
+      if (orderRequestRef.current === orderRequest) {
+        orderRequestRef.current = null;
+      }
       setIsSubmitting(false);
     }
+  };
+
+  const cancelOrderRequest = () => {
+    orderRequestRef.current?.abort();
   };
 
   return (
@@ -345,16 +358,16 @@ const CheckOutPage: React.FC = () => {
             
             {isSubmitting && (
               <div style={{
-                position: "absolute",
-                top: 0, left: 0, right: 0, bottom: 0,
-                backgroundColor: "rgba(255, 255, 255, 0.8)",
-                zIndex: 10,
+                position: "fixed",
+                inset: 0,
+                backgroundColor: "rgba(255, 255, 255, 0.82)",
+                zIndex: 1000,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: "12px", // Matches your form card border radius
-                backdropFilter: "blur(2px)"
+                gap: "1rem",
+                backdropFilter: "blur(3px)"
               }}>
                 <svg
                   width="50"
@@ -379,7 +392,22 @@ const CheckOutPage: React.FC = () => {
                     </g>
                   </g>
                 </svg>
-                <p style={{ marginTop: "1rem", fontWeight: 600, color: "#333" }}>Processing your order...</p>
+                <p style={{ margin: 0, fontWeight: 600, color: "#333" }}>Processing your order...</p>
+                <button
+                  type="button"
+                  onClick={cancelOrderRequest}
+                  style={{
+                    border: "1px solid #d9534f",
+                    borderRadius: "8px",
+                    background: "#fff",
+                    color: "#d9534f",
+                    cursor: "pointer",
+                    fontWeight: 600,
+                    padding: "0.65rem 1.25rem"
+                  }}
+                >
+                  Cancel waiting
+                </button>
               </div>
             )}
 

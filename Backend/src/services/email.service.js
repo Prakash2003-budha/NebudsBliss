@@ -7,6 +7,9 @@ class EmailService{
             const mailConfig = {
                 host:SMTPConfig.host,
                 port:SMTPConfig.port,
+                connectionTimeout: 10000,
+                greetingTimeout: 10000,
+                socketTimeout: 10000,
                 auth:{
                     user:SMTPConfig.user,
                     pass:SMTPConfig.password
@@ -34,7 +37,7 @@ class EmailService{
             })
 
         }catch(exception){
-            console.log("!!!!!!!!!!!error while sending email!!!!!!!!!!!!!!");
+            console.error("Email delivery failed:", exception);
             throw{
                 message:"sending email failed",
                 status:"EMAIL_SEND_FAILED"

@@ -11,18 +11,24 @@ class OrderController {
             orderData = await orderSvc.orderDataTransform(req);
             const savedOrder = await orderSvc.orderStore(orderData);
 
-            if (!orderData.userId && orderData.email && savedOrder.trackingToken) {
+            if (orderData.email) {
                 const frontendUrl = (AppConfig.frontend_Url || "").replace(/\/$/, "");
-                const trackingUrl = `${frontendUrl}/orders/track/${savedOrder.trackingToken}`;
-                try {
-                    await emailSvc.sendEmail({
-                        to: orderData.email,
-                        sub: "Your NebudsBliss order tracking link",
-                        message: `<p>Thank you for your order, ${orderData.fullName}.</p><p>Track your order here: <a href="${trackingUrl}">${trackingUrl}</a></p>`
-                    });
-                } catch (emailError) {
+                const trackingUrl = savedOrder.trackingToken
+                    ? `${frontendUrl}/orders/track/${savedOrder.trackingToken}`
+                    : null;
+                const trackingMessage = trackingUrl
+                    ? `<p>Track your order here: <a href="${trackingUrl}">${trackingUrl}</a></p>`
+                    : "";
+                // Email delivery must not keep a successfully saved order pending.
+                // SMTP can be slow or unavailable, while the customer still needs
+                // an immediate success response.
+                void emailSvc.sendEmail({
+                    to: orderData.email,
+                    sub: "Your NebudsBliss order confirmation",
+                    message: `<p>Thank you for your order, ${orderData.fullName}.</p>${trackingMessage}`
+                }).catch((emailError) => {
                     console.error("Guest order tracking email failed:", emailError);
-                }
+                });
             }
 
             // Only count the promo redemption once the order actually saved —

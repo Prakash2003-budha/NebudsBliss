@@ -22,6 +22,9 @@ class OrderService {
             // Guard anyway in case the middleware chain ever changes.
             if (req.authUser && req.authUser._id) {
                 data.userId = req.authUser._id;
+                if (!data.email && req.authUser.email) {
+                    data.email = req.authUser.email;
+                }
             } else {
                 data.trackingToken = randomBytes(32).toString("hex");
             }
@@ -158,13 +161,13 @@ class OrderService {
         } catch (exception) {
             throw exception;
         }
+    }
 
-        getGuestOrderByTrackingToken = async (trackingToken) => {
-            try {
-                return await OrderModel.findOne({ trackingToken });
-            } catch (exception) {
-                throw exception;
-            }
+    getGuestOrderByTrackingToken = async (trackingToken) => {
+        try {
+            return await OrderModel.findOne({ trackingToken });
+        } catch (exception) {
+            throw exception;
         }
     }
 
