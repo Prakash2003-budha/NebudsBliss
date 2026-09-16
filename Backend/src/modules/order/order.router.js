@@ -28,6 +28,17 @@ const parseOrderJsonFields = (req, res, next) => {
     }
 };
 
+const requireGuestEmail = (req, res, next) => {
+    if (!req.authUser && !req.body.email) {
+        return next({
+            code: 400,
+            message: "Email is required for guest checkout so we can send your order tracking link.",
+            status: "GUEST_EMAIL_REQUIRED"
+        });
+    }
+    next();
+};
+
 // Users can create orders as a guest (no login required). If a token is present
 // in the Authorization header, allowUser() will attach the user to the order.
 orderRouter.post(
@@ -35,9 +46,12 @@ orderRouter.post(
     allowUser({ optional: true }),
     uploader().single("paymentScreenshot"),
     parseOrderJsonFields,
+    requireGuestEmail,
     bodyValidator(OrderCreateDTO),
     orderCtr.createOrder
 );
+
+orderRouter.get('/orders/track/:token', orderCtr.getGuestOrderByTrackingToken);
 
 // A user's own order history (must come before /orders/:id)
 orderRouter.get('/orders/my', allowUser(), orderCtr.getMyOrders);

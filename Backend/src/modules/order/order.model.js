@@ -9,6 +9,7 @@ const OrderItemSchema = new mongoose.Schema({
 
 const OrderSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false, index: true },
+    trackingToken: { type: String, required: false, unique: true, sparse: true, index: true },
     fullName: { type: String, required: true, trim: true },
     phone: { type: String, required: true },
     email: { type: String, lowercase: true },

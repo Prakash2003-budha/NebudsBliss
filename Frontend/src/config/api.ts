@@ -27,6 +27,7 @@ export const API_ENDPOINTS = {
   GET_ALL_ORDERS: `${BACKEND_URL}/orders`,
   GET_MY_ORDERS: `${BACKEND_URL}/orders/my`,
   GET_ORDER_DETAIL: (id: string) => `${BACKEND_URL}/orders/${id}`,
+  TRACK_ORDER: (token: string) => `${BACKEND_URL}/orders/track/${token}`,
   UPDATE_ORDER: (id: string) => `${BACKEND_URL}/orders/${id}`,
   DELETE_ORDER: (id: string) => `${BACKEND_URL}/orders/${id}`,
   GET_REVIEWS: (itemId: string) => `${BACKEND_URL}/reviews?itemId=${itemId}`,

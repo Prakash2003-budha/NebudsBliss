@@ -22,6 +22,7 @@ import AdminReviews from './pages/admin/AdminReviews.tsx';
 import RequireAdmin from './pages/admin/RequireAdmin.tsx';
 import { PrivacyPage, TermsPage } from './pages/staticPage/static.page.tsx';
 import NotFoundPage from './pages/notFoundPage/notFound.page.tsx';
+import OrderTrackingPage from './pages/orderTrackingPage/orderTracking.page.tsx';
 import { StandaloneLogin, StandaloneRegister } from './pages/auth/StandaloneAuth.tsx';
 import { ThemeProvider } from './context/ThemeContext.tsx';
 
@@ -46,6 +47,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/orders/track/:token" element={<OrderTrackingPage />} />
           <Route path="/admin" element={<RequireAdmin />}>
             <Route element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />

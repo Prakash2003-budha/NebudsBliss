@@ -2,6 +2,7 @@ import OrderModel from "./order.model.js";
 import ItemModel from "../ItemModel/item.model.js";
 import cloudianarySvc from "../../services/cloudinary.services.js";
 import promoCodeSvc from "../promoCode/promoCode.service.js";
+import { randomBytes } from "node:crypto";
 
 const SHIPPING_FEE = 200;
 
@@ -21,6 +22,8 @@ class OrderService {
             // Guard anyway in case the middleware chain ever changes.
             if (req.authUser && req.authUser._id) {
                 data.userId = req.authUser._id;
+            } else {
+                data.trackingToken = randomBytes(32).toString("hex");
             }
 
             // Upload the payment screenshot (if provided) to Cloudinary, same as item/poster images
@@ -154,6 +157,14 @@ class OrderService {
             return await OrderModel.findById(id);
         } catch (exception) {
             throw exception;
+        }
+
+        getGuestOrderByTrackingToken = async (trackingToken) => {
+            try {
+                return await OrderModel.findOne({ trackingToken });
+            } catch (exception) {
+                throw exception;
+            }
         }
     }
 

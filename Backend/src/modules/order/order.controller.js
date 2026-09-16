@@ -1,6 +1,8 @@
 import orderSvc from "./order.service.js";
 import cloudianarySvc from "../../services/cloudinary.services.js";
 import promoCodeSvc from "../promoCode/promoCode.service.js";
+import emailSvc from "../../services/email.service.js";
+import { AppConfig } from "../../config/constants.js";
 
 class OrderController {
     createOrder = async (req, res, next) => {
@@ -8,6 +10,20 @@ class OrderController {
         try {
             orderData = await orderSvc.orderDataTransform(req);
             const savedOrder = await orderSvc.orderStore(orderData);
+
+            if (!orderData.userId && orderData.email && savedOrder.trackingToken) {
+                const frontendUrl = (AppConfig.frontend_Url || "").replace(/\/$/, "");
+                const trackingUrl = `${frontendUrl}/orders/track/${savedOrder.trackingToken}`;
+                try {
+                    await emailSvc.sendEmail({
+                        to: orderData.email,
+                        sub: "Your NebudsBliss order tracking link",
+                        message: `<p>Thank you for your order, ${orderData.fullName}.</p><p>Track your order here: <a href="${trackingUrl}">${trackingUrl}</a></p>`
+                    });
+                } catch (emailError) {
+                    console.error("Guest order tracking email failed:", emailError);
+                }
+            }
 
             // Only count the promo redemption once the order actually saved —
             // a failed save shouldn't burn a usage slot.
@@ -86,6 +102,32 @@ class OrderController {
                     message: "Order not found",
                     status: "ORDER_NOT_FOUND"
                 };
+            }
+
+            getGuestOrderByTrackingToken = async (req, res, next) => {
+                try {
+                    const order = await orderSvc.getGuestOrderByTrackingToken(req.params.token);
+                    if (!order) {
+                        throw {
+                            code: 404,
+                            message: "Order tracking link is invalid or expired.",
+                            status: "ORDER_TRACKING_NOT_FOUND"
+                        };
+                    }
+
+                    const trackingOrder = order.toObject();
+                    delete trackingOrder.trackingToken;
+                    delete trackingOrder.paymentScreenshot;
+
+                    res.json({
+                        data: trackingOrder,
+                        message: "Order tracking details fetched successfully",
+                        status: "FETCH_SUCCESS",
+                        option: null
+                    });
+                } catch (exception) {
+                    next(exception);
+                }
             }
 
             // Only the order's owner or an Admin can view its details

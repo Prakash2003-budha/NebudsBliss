@@ -1,0 +1,20 @@
+.container {
+  min-height: 55vh;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  color: var(--nb-text);
+}
+
+.eyebrow {
+  color: var(--nb-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.status { color: var(--nb-primary); font-weight: 700; }
+.items { margin: 2rem 0 1rem; }
+.item { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--nb-border); }
+.total { font-size: 1.2rem; font-weight: 800; }
+.link { color: var(--nb-primary); font-weight: 700; }

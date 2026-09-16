@@ -69,6 +69,9 @@ const CheckOutPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const hasAuthToken = Boolean(
+    localStorage.getItem("accessToken") || localStorage.getItem("token")
+  );
 
   // Promo code state
   const [promoInput, setPromoInput] = useState("");
@@ -239,6 +242,11 @@ const CheckOutPage: React.FC = () => {
       return;
     }
 
+    if (!token && !formData.email.trim()) {
+      setSubmitError("Email is required for guest checkout so we can send your order tracking link.");
+      return;
+    }
+
     // 2. Prepare Payload as multipart/form-data so the payment screenshot can travel
     // alongside the rest of the order fields. Nested values (items, location) are
     // JSON-stringified since a multipart body can only hold flat string/file fields —
@@ -363,6 +371,11 @@ const CheckOutPage: React.FC = () => {
               <div style={{ textAlign: "center", padding: "2rem 0" }}>
                 <h2 style={{ color: "#28a745", borderBottom: "none" }}>🎉 Order Placed Successfully!</h2>
                 <p>Thank you for shopping with NebudsBliss.</p>
+                {!hasAuthToken && (
+                  <p>
+                    Your order tracking link has been sent to your email address.
+                  </p>
+                )}
               </div>
             ) : (
               <>
@@ -408,6 +421,7 @@ const CheckOutPage: React.FC = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="you@example.com"
+                    required={!hasAuthToken}
                     disabled={isSubmitting}
                   />
                 </label>
