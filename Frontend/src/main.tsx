@@ -21,6 +21,7 @@ import AdminMedia from './pages/admin/AdminMedia.tsx';
 import AdminReviews from './pages/admin/AdminReviews.tsx';
 import RequireAdmin from './pages/admin/RequireAdmin.tsx';
 import { PrivacyPage, TermsPage } from './pages/staticPage/static.page.tsx';
+import NotFoundPage from './pages/notFoundPage/notFound.page.tsx';
 import { StandaloneLogin, StandaloneRegister } from './pages/auth/StandaloneAuth.tsx';
 import { ThemeProvider } from './context/ThemeContext.tsx';
 
@@ -58,6 +59,7 @@ createRoot(document.getElementById('root')!).render(
           </Route>
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         </BrowserRouter>
       </CartProvider>
