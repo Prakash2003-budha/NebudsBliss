@@ -233,35 +233,36 @@ $hairline: var(--nb-border);
     transform: translateX(2px);
   }
 
-  @media (max-width: 900px) {
-    .filters {
-      position: static;
-      padding: 1rem;
-    }
+}
 
-    .header {
-      cursor: pointer;
-      margin-bottom: 0;
-      padding-bottom: 0;
-      border-bottom: none;
-    }
+@media (max-width: 900px) {
+  .filters {
+    position: static;
+    padding: 1rem;
+  }
 
-    .chevron {
-      display: inline-block;
-    }
+  .header {
+    cursor: pointer;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 
-    .filtersOpen .chevron {
-      transform: rotate(180deg);
-    }
+  .chevron {
+    display: inline-block;
+  }
 
-    .body {
-      display: none;
-      padding-top: 1rem;
-    }
+  .filtersOpen .chevron {
+    transform: rotate(180deg);
+  }
 
-    .filtersOpen .body {
-      display: block;
-    }
+  .body {
+    display: none;
+    padding-top: 1rem;
+  }
+
+  .filtersOpen .body {
+    display: block;
   }
 }
 
