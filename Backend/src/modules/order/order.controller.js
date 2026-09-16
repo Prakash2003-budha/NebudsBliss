@@ -104,32 +104,6 @@ class OrderController {
                 };
             }
 
-            getGuestOrderByTrackingToken = async (req, res, next) => {
-                try {
-                    const order = await orderSvc.getGuestOrderByTrackingToken(req.params.token);
-                    if (!order) {
-                        throw {
-                            code: 404,
-                            message: "Order tracking link is invalid or expired.",
-                            status: "ORDER_TRACKING_NOT_FOUND"
-                        };
-                    }
-
-                    const trackingOrder = order.toObject();
-                    delete trackingOrder.trackingToken;
-                    delete trackingOrder.paymentScreenshot;
-
-                    res.json({
-                        data: trackingOrder,
-                        message: "Order tracking details fetched successfully",
-                        status: "FETCH_SUCCESS",
-                        option: null
-                    });
-                } catch (exception) {
-                    next(exception);
-                }
-            }
-
             // Only the order's owner or an Admin can view its details
             const isOwner = order.userId && order.userId.toString() === req.authUser._id.toString();
             if (!isOwner && req.authUser.role !== "Admin") {
@@ -143,6 +117,32 @@ class OrderController {
             res.json({
                 data: order,
                 message: "Order detail fetched successfully",
+                status: "FETCH_SUCCESS",
+                option: null
+            });
+        } catch (exception) {
+            next(exception);
+        }
+    }
+
+    getGuestOrderByTrackingToken = async (req, res, next) => {
+        try {
+            const order = await orderSvc.getGuestOrderByTrackingToken(req.params.token);
+            if (!order) {
+                throw {
+                    code: 404,
+                    message: "Order tracking link is invalid or expired.",
+                    status: "ORDER_TRACKING_NOT_FOUND"
+                };
+            }
+
+            const trackingOrder = order.toObject();
+            delete trackingOrder.trackingToken;
+            delete trackingOrder.paymentScreenshot;
+
+            res.json({
+                data: trackingOrder,
+                message: "Order tracking details fetched successfully",
                 status: "FETCH_SUCCESS",
                 option: null
             });
