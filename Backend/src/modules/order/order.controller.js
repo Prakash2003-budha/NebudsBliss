@@ -193,24 +193,35 @@ class OrderController {
     }
 
     deleteOrder = async (req, res, next) => {
-        try {
-            const existingOrder = await orderSvc.getOrderById(req.params.id);
-            if (!existingOrder) {
-                throw { code: 404, message: "Order not found", status: "ORDER_NOT_FOUND" };
-            }
-
-            await orderSvc.deleteOrderById(req.params.id);
-            
-            res.json({
-                data: null,
-                message: "Order deleted successfully",
-                status: "DELETE_SUCCESS",
-                option: null
-            });
-        } catch (exception) {
-            next(exception);
+    try {
+        const existingOrder = await orderSvc.getOrderById(req.params.id);
+        if (!existingOrder) {
+            throw { code: 404, message: "Order not found", status: "ORDER_NOT_FOUND" };
         }
+
+        // 1. Delete the order from database first
+        await orderSvc.deleteOrderById(req.params.id);
+
+        // 2. CONDITION: Only attempt Cloudinary deletion if an image public_id exists
+        const publicId = existingOrder.paymentScreenshot?.public_id;
+        if (publicId) {
+            // Safely attempt deletion without throwing an unhandled error
+            await cloudianarySvc.deleteFile(publicId).catch((err) => {
+                console.error("Cloudinary deletion error ignored:", err);
+            });
+        }
+
+        // 3. Response succeeds in both cases (with or without image)
+        res.json({
+            data: null,
+            message: "Order deleted successfully",
+            status: "DELETE_SUCCESS",
+            option: null
+        });
+    } catch (exception) {
+        next(exception);
     }
+}
 }
 
 const orderCtr = new OrderController();
