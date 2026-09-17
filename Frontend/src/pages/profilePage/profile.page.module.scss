@@ -8,7 +8,7 @@ $surface-color: var(--nb-surface);
 
 .container {
   font-family: $font-primary;
-  background: linear-gradient(180deg, $surface-color 0%, $bg-color 26rem);
+  background-color: $bg-color;
   min-height: 60vh;
   padding: 2.5rem 1.5rem 4rem;
   max-width: 760px;
@@ -32,11 +32,11 @@ $surface-color: var(--nb-surface);
 }
 
 .card {
-  background: color-mix(in srgb, $surface-color 90%, transparent);
+  background-color: $surface-color;
   border-radius: 22px;
   border: 1px solid $border-color;
   padding: 2.25rem;
-  box-shadow: 0 12px 30px rgba(26, 48, 84, 0.08);
+  box-shadow: var(--nb-shadow-md, 0 12px 30px rgba(0, 0, 0, 0.08));
 
   @media (max-width: 720px) {
     padding: 1.5rem;
@@ -75,7 +75,7 @@ $surface-color: var(--nb-surface);
   object-fit: cover;
   background-color: $border-color;
   border: 3px solid $surface-color;
-  box-shadow: 0 0 0 1px $border-color, 0 6px 16px rgba(16, 24, 32, 0.12);
+  box-shadow: 0 0 0 1px $border-color, var(--nb-shadow-sm, 0 6px 16px rgba(0, 0, 0, 0.12));
   flex-shrink: 0;
 }
 
@@ -90,17 +90,17 @@ $surface-color: var(--nb-surface);
   font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: #fff;
-  background: linear-gradient(135deg, var(--nb-primary) 0%, var(--nb-primary-dark) 100%);
+  color: var(--nb-primary-contrast, #ffffff);
+  background: var(--nb-primary);
   border: 3px solid $surface-color;
-  box-shadow: 0 0 0 1px $border-color, 0 6px 12px rgba(16, 24, 32, 0.12);
+  box-shadow: 0 0 0 1px $border-color, var(--nb-shadow-sm, 0 6px 12px rgba(0, 0, 0, 0.12));
   user-select: none;
 }
 
 .roleBadge {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(8, 95, 246, 0.12);
+  background-color: var(--nb-primary-light, rgba(8, 95, 246, 0.12));
   color: $primary-color;
   font-size: 0.72rem;
   font-weight: 700;
@@ -113,8 +113,8 @@ $surface-color: var(--nb-surface);
 .statusActive {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(46, 160, 67, 0.14);
-  color: #1a7f37;
+  background-color: var(--nb-success-bg, rgba(46, 160, 67, 0.14));
+  color: var(--nb-success, #1a7f37);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -135,8 +135,8 @@ $surface-color: var(--nb-surface);
 .statusInactive {
   display: inline-flex;
   align-items: center;
-  background-color: rgba(233, 57, 53, 0.12);
-  color: #e53935;
+  background-color: var(--nb-danger-bg, rgba(233, 57, 53, 0.12));
+  color: var(--nb-danger, #e53935);
   font-size: 0.72rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -201,7 +201,7 @@ $surface-color: var(--nb-surface);
 
 .primaryBtn {
   background-color: var(--nb-primary);
-  color: #fff;
+  color: var(--nb-primary-contrast, #ffffff);
   padding: 12px 24px;
   border-radius: 10px;
   text-decoration: none;
@@ -235,14 +235,14 @@ $surface-color: var(--nb-surface);
 
   &:hover {
     border-color: var(--nb-primary);
-    background-color: rgba(8, 95, 246, 0.06);
+    background-color: var(--nb-primary-light, rgba(8, 95, 246, 0.06));
   }
 }
 
 .logoutBtn {
   background-color: $surface-color;
-  color: #e53935;
-  border: 1px solid rgba(229, 57, 53, 0.45);
+  color: var(--nb-danger, #e53935);
+  border: 1px solid var(--nb-danger-border, rgba(229, 57, 53, 0.45));
   padding: 12px 24px;
   border-radius: 10px;
   font-weight: 600;
@@ -251,8 +251,8 @@ $surface-color: var(--nb-surface);
   transition: background-color 0.2s ease, color 0.2s ease;
 
   &:hover {
-    background-color: #e53935;
-    color: #fff;
+    background-color: var(--nb-danger, #e53935);
+    color: var(--nb-danger-contrast, #ffffff);
   }
 
   &:active {
