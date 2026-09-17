@@ -48,3 +48,13 @@ export const SMTPConfig = {
     password: process.env.SMTP_PASSWORD,
     port: process.env.SMTP_PORT
 };
+
+// Resend's HTTP API is used instead of raw SMTP because Render's free tier
+// blocks outbound traffic on SMTP ports (25/465/587). The API key is the
+// same value Resend issues for SMTP auth, so RESEND_API_KEY falls back to
+// SMTP_PASSWORD if it isn't set separately — no new secret is required if
+// SMTP_PASSWORD already holds a Resend API key ("re_...").
+export const EmailConfig = {
+    apiKey: process.env.RESEND_API_KEY || process.env.SMTP_PASSWORD,
+    fromAddress: process.env.SMTP_FROM || process.env.EMAIL_FROM
+};
