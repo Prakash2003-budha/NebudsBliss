@@ -1,8 +1,8 @@
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: var(--nb-primary);
-$dark-text: #222222;
-$light-text: #888888;
-$bg-color: #f7f8f9;
+$dark-text: var(--nb-text);
+$light-text: var(--nb-text-muted);
+$bg-color: var(--nb-bg);
 
 .container {
   font-family: $font-primary;
