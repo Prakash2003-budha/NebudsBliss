@@ -1,13 +1,14 @@
 $font-primary: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
 $primary-color: var(--nb-primary);
-$dark-text: #222222;
-$light-text: #888888;
-$bg-color: #f7f8f9;
-$border-color: #eaeaea;
+$dark-text: var(--nb-text);
+$light-text: var(--nb-text-muted);
+$bg-color: var(--nb-bg);
+$border-color: var(--nb-border);
+$surface-color: var(--nb-surface);
 
 .container {
   font-family: $font-primary;
-  background: linear-gradient(180deg, #f8fbff 0%, $bg-color 26rem);
+  background: linear-gradient(180deg, $surface-color 0%, $bg-color 26rem);
   min-height: 60vh;
   padding: 2.5rem 1.5rem 4rem;
   max-width: 860px;
@@ -41,7 +42,7 @@ $border-color: #eaeaea;
 }
 
 .orderCard {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, $surface-color 90%, transparent);
   border: 1px solid $border-color;
   border-radius: 16px;
   box-shadow: 0 8px 22px rgba(26, 48, 84, 0.06);
@@ -193,7 +194,7 @@ $border-color: #eaeaea;
   height: 40px;
   border-radius: 50%;
   border: 1px solid $border-color;
-  background: #fff;
+  background: $surface-color;
   color: $primary-color;
   font-size: 1.2rem;
   line-height: 1;
@@ -234,7 +235,7 @@ $border-color: #eaeaea;
   padding: 0.45rem 0.9rem;
   border-radius: 999px;
   border: 1px solid $border-color;
-  background: #fff;
+  background: $surface-color;
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 600;
@@ -294,8 +295,8 @@ $border-color: #eaeaea;
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  border: 2px solid #d4d4d4;
-  background: #fff;
+  border: 2px solid $border-color;
+  background: $surface-color;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -336,7 +337,7 @@ $border-color: #eaeaea;
   flex: 1;
   height: 2px;
   margin-top: 11px; /* align the line's centre with the dot centre */
-  background: #e5e5e5;
+  background: $border-color;
 }
 
 .stepperLineDone {
